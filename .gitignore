@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# angular
+.angular/
+dist/
+
+# env
+.env
+venv/
+__pycache__/
+
+# vscode
+.vscode/
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

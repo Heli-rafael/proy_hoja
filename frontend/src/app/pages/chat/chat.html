@@ -1,0 +1,160 @@
+<!-- CONTENEDOR PRINCIPAL: Ahora tiene una clase para manejar Flexbox -->
+<div class="layout-container">
+
+    <!-- SIDEBAR WRAPPER -->
+    <div class="sidebar-wrapper" [class.closed]="!sidebarVisible">
+
+        <p-drawer 
+            [(visible)]="sidebarVisible" 
+            [closable]="false"
+            [modal]="false"
+            styleClass="custom-drawer">
+
+            <!-- Encabezado -->
+            <ng-template pTemplate="header" >
+                <div class="chat-header-container" style="margin: auto;">
+                    <div class="logo" style="font-size: 30px; font-weight: bold; color: #95d5b2;">
+                        PlantCare AI
+                    </div>
+                    <h3 style="margin:0; font-size: 1.1rem;">IA Especializada</h3>
+                </div>
+            </ng-template>
+
+            <!-- Contenido -->
+            <div class="new-analysis" (click)="crearNuevoEscaneo()">
+                <i class="pi pi-plus"></i> Nuevo Escaneo
+            </div>
+
+            <div class="section-title">Mis Diagnósticos (Chats)</div>
+
+            <div class="menu">
+                <!-- Bucle de Chats -->
+                <div *ngFor="let chat of chats" 
+                    class="menu-item" 
+                    [class.active]="chatSeleccionado?.id === chat.id"
+                    (click)="seleccionarChat(chat)">
+                    
+                    <div class="chat-info">
+                        <span class="icon">🌿</span>
+                        <span class="chat-title">{{ chat.titulo }}</span>
+                    </div>
+
+                    <!-- Botón de opciones -->
+                    <div class="chat-actions">
+                        <button pButton icon="pi pi-ellipsis-v" 
+                                class="p-button-rounded p-button-text p-button-sm"
+                                style="color: white"
+                                (click)="$event.stopPropagation(); menu.toggle($event)">
+                        </button>
+                        <p-menu #menu [model]="opcionesChat" [popup]="true"></p-menu>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie de página -->
+            <ng-template pTemplate="footer" >
+                <div class="community-card">
+                    <h3>Comunidad Global</h3>
+                    <p>Más de 240,000 usuarios compartiendo soluciones agrícolas.</p>
+                </div>
+            </ng-template>
+        </p-drawer>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content-container">
+
+        <!-- Botón para alternar (Toogle) el Drawer -->
+        <div class="toolbar">
+            <p-button 
+                (click)="sidebarVisible = !sidebarVisible" 
+                [icon]="sidebarVisible ? 'pi pi-chevron-left' : 'pi pi-comments'" 
+                [label]="sidebarVisible ? 'Ocultar Chat' : 'Ver Análisis IA'">
+            </p-button>
+
+            <p-button
+                label="Cerrar sesión"
+                icon="pi pi-sign-out"
+                (click)="logout()"
+            >
+            </p-button>
+
+            <p-button 
+                (click)="sidebarVisible = !sidebarVisible" 
+                [icon]="sidebarVisible ? 'pi pi-chevron-left' : 'pi pi-comments'" 
+                [label]="sidebarVisible ? 'Ocultar Chat' : 'Ver Análisis IA'">
+            </p-button>
+
+            <p-button
+                label="Cerrar sesión"
+                icon="pi pi-sign-out"
+                (click)="logout()"
+            >
+            </p-button>
+
+
+
+        </div>
+
+        <main class="main-content">
+            <!-- CASO A: Chat seleccionado -->
+            <div *ngIf="chatSeleccionado; else bienvenida" class="chat-window">
+                <h1>{{ chatSeleccionado.titulo }}</h1>
+                <p>Diagnóstico: {{ chatSeleccionado.diagnostico }}</p>
+                <hr>
+            </div>
+
+            <!-- CASO B: Pantalla de Introducción -->
+            <ng-template #bienvenida>
+                <div class="welcome-container">
+                    <div class="welcome-card">
+                        <i class="pi pi-bolt" style="font-size: 3rem; color: #95d5b2;"></i>
+                        <h1>PlantCare AI</h1>
+                        <p>Identifica enfermedades en tus cultivos en segundos usando IA.</p>
+                        
+                        <!-- Previsualización de imagen -->
+                        <div *ngIf="imagePreview" class="preview-container">
+                            <img [src]="imagePreview" alt="Preview">
+                            <button pButton icon="pi pi-times" class="p-button-danger p-button-rounded" (click)="cancelarImagen()"></button>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="action-buttons" *ngIf="!isAnalyzing">
+                            <input type="file" #fileInput accept="image/*" hidden (change)="onFileSelected($event)">
+                            <button pButton label="Subir Imagen" icon="pi pi-upload" class="p-button-outlined" (click)="fileInput.click()"></button>
+                            <button pButton label="Tomar Foto" icon="pi pi-camera" class="p-button-outlined" (click)="tomarFoto()"></button>
+                        </div>
+
+                        <!-- Loader -->
+                        <div *ngIf="isAnalyzing" class="loader">
+                            <p-progressSpinner styleClass="w-3rem h-3rem"></p-progressSpinner>
+                            <p>IA analizando tejidos vegetales...</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </main>
+
+    </div>
+    
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
