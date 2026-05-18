@@ -15,4 +15,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('me/', views.me, name='me'),
+    path('mensajes/enviar/', views.enviar_mensaje, name='enviar_mensaje'),
+    path('mensajes/chats/<int:chat_id>/mensajes/',views.obtener_mensajes, name='obtener_mensajes'),
 ]

@@ -4,139 +4,590 @@
     <!-- SIDEBAR WRAPPER -->
     <div class="sidebar-wrapper" [class.closed]="!sidebarVisible">
 
-        <p-drawer 
-            [(visible)]="sidebarVisible" 
+        <p-drawer
+            [(visible)]="sidebarVisible"
             [closable]="false"
-            [modal]="false"
+            [modal]="isMobile"
             styleClass="custom-drawer">
 
-            <!-- Encabezado -->
-            <ng-template pTemplate="header" >
-                <div class="chat-header-container" style="margin: auto;">
-                    <div class="logo" style="font-size: 30px; font-weight: bold; color: #95d5b2;">
-                        PlantCare AI
+            <!-- HEADER -->
+            <ng-template pTemplate="header">
+
+                <div class="drawer-header">
+
+                    <div class="logo-container">
+
+                        <div class="logo-icon">
+                            <img src="/logo_hoja.jpg" alt="logo">
+                        </div>
+
+                        <div class="logo-text">
+                            <h2>PlantCare AI</h2>
+                            <span>IA Especializada</span>
+                        </div>
+
                     </div>
-                    <h3 style="margin:0; font-size: 1.1rem;">IA Especializada</h3>
-                </div>
-            </ng-template>
 
-            <!-- Contenido -->
-            <div class="new-analysis" (click)="crearNuevoEscaneo()">
-                <i class="pi pi-plus"></i> Nuevo Escaneo
-            </div>
+                    <button
+                        pButton
+                        type="button"
+                        class="new-scan-btn"
+                        (click)="crearNuevoEscaneo()"
+                        style="width: 100%;">
 
-            <div class="section-title">Mis Diagnósticos (Chats)</div>
+                        <i class="pi pi-plus"></i>
 
-            <div class="menu">
-                <!-- Bucle de Chats -->
-                <div *ngFor="let chat of chats" 
-                    class="menu-item" 
-                    [class.active]="chatSeleccionado?.id === chat.id"
-                    (click)="seleccionarChat(chat)">
+                        <span>Nuevo Escaneo</span>
+
+                    </button>
                     
-                    <div class="chat-info">
-                        <span class="icon">🌿</span>
-                        <span class="chat-title">{{ chat.titulo }}</span>
-                    </div>
-
-                    <!-- Botón de opciones -->
-                    <div class="chat-actions">
-                        <button pButton icon="pi pi-ellipsis-v" 
-                                class="p-button-rounded p-button-text p-button-sm"
-                                style="color: white"
-                                (click)="$event.stopPropagation(); menu.toggle($event)">
-                        </button>
-                        <p-menu #menu [model]="opcionesChat" [popup]="true"></p-menu>
+                    <!-- TÍTULO -->
+                    <div class="section-title">
+                        Mis Diagnósticos
                     </div>
                 </div>
-            </div>
+                
 
-            <!-- Pie de página -->
-            <ng-template pTemplate="footer" >
-                <div class="community-card">
-                    <h3>Comunidad Global</h3>
-                    <p>Más de 240,000 usuarios compartiendo soluciones agrícolas.</p>
-                </div>
             </ng-template>
+
+            <!-- CONTENIDO -->
+            <ng-template pTemplate="content">
+
+                <div class="chat-list">
+
+                    <div
+                        *ngFor="let chat of chats"
+                        class="chat-item"
+                        [class.active]="chatSeleccionado?.id === chat.id"
+                        (click)="seleccionarChat(chat)">
+
+                        <div class="chat-left">
+
+                            <div class="chat-icon">
+                                <img src="/logo_hoja.jpg" alt="logo">
+                            </div>
+
+                            <div class="chat-info">
+
+                                <div class="chat-title">
+                                    {{ chat.titulo }}
+                                </div>
+
+                                <div class="chat-subtitle">
+                                    Diagnóstico agrícola
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            pButton
+                            type="button"
+                            icon="pi pi-ellipsis-v"
+                            class="p-button-text p-button-sm chat-menu-btn"
+                            (click)="chatSeleccionado = chat; op.toggle($event)">
+                        </button>
+                        
+                        <p-popover #op>
+                            <div style="display: flex; flex-direction: column; gap:10px;">
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-pencil"
+                                    label="Editar"
+                                    class="p-button-text"
+                                    (click)="editarChat(chatSeleccionado); op.hide()">
+                                </button>
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-trash"
+                                    label="Eliminar"
+                                    class="p-button-text p-button-danger"
+                                    (click)="eliminarChat(chatSeleccionado); op.hide()">
+                                </button>
+
+                            </div>
+                        </p-popover>
+
+                    </div>
+
+                </div>
+
+            </ng-template>
+
+            <!-- FOOTER -->
+            <ng-template pTemplate="footer">
+
+                <div class="user-bar">
+
+                    <button
+                        pButton
+                        type="button"
+                        class="user-button p-button-text p-button-plain"
+                    >
+
+                        <!-- IZQUIERDA: ICON + USER -->
+                        <div class="left">
+                            <i class="pi pi-user avatar-icon"></i>
+
+                            <span class="username">
+                            {{ user?.username || 'Usuario' }}
+                            </span>
+                        </div>
+
+                        <!-- DERECHA: MENU -->
+                        <button
+                            pButton
+                            type="button"
+                            icon="pi pi-ellipsis-v"
+                            class="ellipsis-button p-button-text p-button-plain"
+                            (click)="opUser.toggle($event)"
+                        >
+                    </button>
+
+                    </button>
+                    
+                </div>
+
+                <!-- POPOVER -->
+                <p-popover #opUser>
+
+                    <div class="popover-content">
+
+                        <div class="user-card">
+                            <h4>Hola, {{ user?.username }}</h4>
+                            <small><strong>Email:</strong> {{ user?.email }}</small>
+                            <small><strong>Nombre:</strong> {{ user?.first_name }}</small>
+                            <small><strong>Apellido:</strong> {{ user?.last_name }}</small>
+                        </div>
+
+                        <hr />
+
+                        <button 
+                            pButton
+                            class="p-button-text p-button-danger" 
+                            (click)="logout()"
+                            icon="pi pi-sign-out"
+                            style="width: 100%"
+                        >
+                            Cerrar sesión
+                        </button>
+
+                    </div>
+
+                </p-popover>
+
+            </ng-template>
+
         </p-drawer>
+
+
 
     </div>
 
-    <!-- CONTENIDO -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="content-container">
 
-        <!-- Botón para alternar (Toogle) el Drawer -->
-        <div class="toolbar">
-            <p-button 
-                (click)="sidebarVisible = !sidebarVisible" 
-                [icon]="sidebarVisible ? 'pi pi-chevron-left' : 'pi pi-comments'" 
-                [label]="sidebarVisible ? 'Ocultar Chat' : 'Ver Análisis IA'">
-            </p-button>
+        <!-- TOPBAR -->
+        <div class="topbar">
 
-            <p-button
-                label="Cerrar sesión"
-                icon="pi pi-sign-out"
-                (click)="logout()"
-            >
-            </p-button>
+            <!-- IZQUIERDA -->
+            <div class="topbar-left">
 
-            <p-button 
-                (click)="sidebarVisible = !sidebarVisible" 
-                [icon]="sidebarVisible ? 'pi pi-chevron-left' : 'pi pi-comments'" 
-                [label]="sidebarVisible ? 'Ocultar Chat' : 'Ver Análisis IA'">
-            </p-button>
+                <button
+                    pButton
+                    type="button"
+                    class="p-button-text"
+                    (click)="sidebarVisible = !sidebarVisible">
 
-            <p-button
-                label="Cerrar sesión"
-                icon="pi pi-sign-out"
-                (click)="logout()"
-            >
-            </p-button>
+                    <i 
+                        class="pi"
+                        [ngClass]="sidebarVisible ? 'pi-angle-left' : 'pi-angle-right'">
+                    </i>
 
+                    <span>
+                        {{ sidebarVisible ? 'Ocultar' : 'Menu' }}
+                    </span>
 
+                </button>
+
+            </div>
+
+            <!-- DERECHA -->
+            <div class="topbar-right">
+
+                <button
+                    pButton
+                    type="button"
+                    (click)="logout()">
+
+                    <i class="pi pi-sign-out"></i>
+
+                    <span>Cerrar sesión</span>
+
+                </button>
+
+            </div>
+
+            <!-- DERECHA -->
+            <div class="topbar-left" *ngIf="isMobile">
+
+                <button
+                    pButton
+                    type="button"
+                    class="p-button-text"
+                    (click)="chatVisible = !chatVisible">
+
+                    <i 
+                        class="pi"
+                        [ngClass]="chatVisible ? 'pi-angle-left' : 'pi-angle-right'">
+                    </i>
+
+                    <span>
+                        {{ chatVisible ? 'Ocultar' : 'Chat' }}
+                    </span>
+
+                </button>
+
+            </div>
 
         </div>
 
+        <!-- MAIN -->
         <main class="main-content">
-            <!-- CASO A: Chat seleccionado -->
-            <div *ngIf="chatSeleccionado; else bienvenida" class="chat-window">
-                <h1>{{ chatSeleccionado.titulo }}</h1>
-                <p>Diagnóstico: {{ chatSeleccionado.diagnostico }}</p>
-                <hr>
+
+            <!-- CHAT -->
+            
+            <div *ngIf="chatSeleccionado?.id; else bienvenida">
+
+                <div class="main-card-header">
+                    <h1>Centro Inteligente de Diagnóstico Vegetal</h1>
+
+                    <p>
+                        Escanea plantas, conversa con IA especializada,
+                        analiza patrones globales y recibe recomendaciones
+                        profesionales en tiempo real.
+                    </p>
+                </div>
+
+                <div class="main-container">
+
+                    <!-- Imagen -->
+                    <div class="main-container-card">
+
+                        <div class="main-card">
+                            <h3>Imagen Escaneada</h3>
+                        </div>
+
+                        <div class="main-card" style="margin: auto;">
+                            <img
+                                *ngIf="diagnosticoSeleccionado?.planta.imagen"
+                                [src]="diagnosticoSeleccionado?.planta.imagen"
+                                alt="Imagen planta"
+                                class="plant-image"
+                            />
+                        </div>
+
+                    </div>
+
+                    <!-- Salud -->
+                    <div class="main-container-card">
+                        <div class="main-card">
+                            <h3>Salud de planta</h3>
+                        </div>
+
+                        <div class="main-card" style="margin: auto;">
+
+                            <p-knob
+                                [(ngModel)]="diagnosticoSeleccionado.porcentaje_salud"
+                                [readonly]="true"
+                                [size]="150"
+                                [strokeWidth]="20"
+                                style="line-height: 0; display: block;">
+                            </p-knob>
+                        </div>
+
+                        <div class="main-card">
+                            <div class="info-row">
+                                <span class="label">Nombre :</span>
+                                <span class="value">{{ diagnosticoSeleccionado?.planta.nombre }}</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Enfermedad :</span>
+                                <span class="value">{{ diagnosticoSeleccionado?.enfermedad_detectada }}</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Severidad :</span>
+                                <span class="value">{{ diagnosticoSeleccionado?.severidad }}</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Confianza IA :</span>
+                                <span class="value">{{ diagnosticoSeleccionado?.confianza_ia }}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Prevención -->
+                <div class="main-container">
+                    <div class="diagnostic-card">
+                    <div class="main-card">
+                        <h3>Cómo prevenir</h3>
+                    </div>
+
+                    <div class="main-card">
+
+                        <p>
+                            {{ diagnosticoSeleccionado?.como_prevenir }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Tratamiento -->
+                <div class="diagnostic-card">
+
+                    <h3>Tratamiento</h3>
+
+                    <p>
+                        {{ diagnosticoSeleccionado?.tratamiento }}
+                    </p>
+
+                </div>
+                </div>
+
+                
+
             </div>
 
-            <!-- CASO B: Pantalla de Introducción -->
+            <!-- BIENVENIDA -->
             <ng-template #bienvenida>
+
                 <div class="welcome-container">
+
                     <div class="welcome-card">
-                        <i class="pi pi-bolt" style="font-size: 3rem; color: #95d5b2;"></i>
-                        <h1>PlantCare AI</h1>
-                        <p>Identifica enfermedades en tus cultivos en segundos usando IA.</p>
+
+                        <div class="card-principle">
+                            <!-- ICON -->
+                            <div class="hero-icon">
+                                <i class="pi pi-bolt"></i>
+                            </div>
+
+                            <!-- TITLE -->
+                            <h1>PlantCare AI</h1>
+
+                            <p class="welcome-description">
+                                Detecta enfermedades en cultivos usando inteligencia artificial avanzada.
+                            </p>
+
+                            <!-- ACTIONS -->
+                            <div class="action-buttons">
+
+                                <!-- Estado: sin imagen -->
+                                <ng-container *ngIf="!hasImage && !isAnalyzing">
+
+                                    <input
+                                        type="file"
+                                        #fileInput
+                                        accept="image/*"
+                                        hidden
+                                        (change)="onFileSelected($event)">
+
+                                    <button
+                                        pButton
+                                        type="button"
+                                        class="upload-btn"
+                                        (click)="fileInput.click()"
+                                    >
+                                        <i class="pi pi-upload"></i>
+                                        <span>Subir Imagen</span>
+                                    </button>
+
+                                    <button
+                                        pButton
+                                        type="button"
+                                        class="camera-btn"
+                                        (click)="tomarFoto()"
+                                    >
+                                        <i class="pi pi-camera"></i>
+                                        <span>Tomar Foto</span>
+                                    </button>
+
+                                </ng-container>
+
+                                <!-- Estado: imagen lista -->
+                                <ng-container *ngIf="hasImage && !isAnalyzing">
+                                    
+                                    <button
+                                        pButton
+                                        type="button"
+                                        class="analyze-btn"
+                                        (click)="enviarAnalisis()"
+                                    >
+                                        <i class="pi pi-search"></i>
+                                        <span>Analizar planta</span>
+                                    </button>
+
+                                </ng-container>
+
+                                <!-- Estado: analizando -->
+                                <ng-container *ngIf="isAnalyzing">
+                                    <p>Analizando planta...</p>
+                                </ng-container>
+
+                            </div>
+                        </div>
+
+                        <div class="card-secondary">
+                            <!-- PREVIEW -->
+                            <div *ngIf="imagePreview && !isAnalyzing" class="preview-container">
+
+                                <img
+                                    [src]="imagePreview"
+                                    alt="Preview">
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-times"
+                                    class="remove-image-btn p-button-rounded"
+                                    (click)="cancelarImagen()">
+                                </button>
+
+                            </div>
+                        </div>
                         
-                        <!-- Previsualización de imagen -->
-                        <div *ngIf="imagePreview" class="preview-container">
-                            <img [src]="imagePreview" alt="Preview">
-                            <button pButton icon="pi pi-times" class="p-button-danger p-button-rounded" (click)="cancelarImagen()"></button>
+                        <!-- LOADER -->
+                        <div
+                            *ngIf="isAnalyzing"
+                            class="loader-container">
+
+                            <p-progressSpinner
+                                strokeWidth="4"
+                                styleClass="custom-spinner">
+                            </p-progressSpinner>
+
+                            <h3>
+                                Analizando cultivo...
+                            </h3>
+
+                            <p>
+                                La IA está evaluando tejidos vegetales y posibles enfermedades.
+                            </p>
+
                         </div>
 
-                        <!-- Botones de Acción -->
-                        <div class="action-buttons" *ngIf="!isAnalyzing">
-                            <input type="file" #fileInput accept="image/*" hidden (change)="onFileSelected($event)">
-                            <button pButton label="Subir Imagen" icon="pi pi-upload" class="p-button-outlined" (click)="fileInput.click()"></button>
-                            <button pButton label="Tomar Foto" icon="pi pi-camera" class="p-button-outlined" (click)="tomarFoto()"></button>
+                    </div>
+
+                </div>
+
+            </ng-template>
+
+        </main>
+    </div>
+
+    <div class="chat-wrapper" [class.closed]="!chatVisible">
+
+        <p-drawer
+            [(visible)]="chatVisible"
+            [closable]="false"
+            [modal]="isMobile"
+            position="right"
+            styleClass="custom-drawer-chat"
+        >
+            <!-- HEADER -->
+            <ng-template pTemplate="header">
+
+                <div class="drawer-header-chat">
+                    <div class="logo-container-chat">
+                        <div class="logo-text-chat">
+                            <h2>IA Especializada en esta Planta</h2>
+                            <span>Conversación basada únicamente en la imagen analizada</span>
+                        </div>
+                        <div class="logo-icon-chat">
+                            <img src="/logo_hoja.jpg" alt="logo">
                         </div>
 
-                        <!-- Loader -->
-                        <div *ngIf="isAnalyzing" class="loader">
-                            <p-progressSpinner styleClass="w-3rem h-3rem"></p-progressSpinner>
-                            <p>IA analizando tejidos vegetales...</p>
+                    </div>
+
+                    <div *ngIf="diagnosticoSeleccionado" class="container-chat" style="margin: auto;">
+                        
+                        <div class="content-chat-card">
+                            <img
+                                *ngIf="diagnosticoSeleccionado?.imagen"
+                                [src]="diagnosticoSeleccionado?.imagen"
+                                alt="Imagen planta"
+                                class="plant-image"
+                            />
                         </div>
+                        
                     </div>
                 </div>
             </ng-template>
-        </main>
 
+            <!-- CONTENIDO -->
+            <ng-template pTemplate="content">
+
+                <div #scrollContainer class="mensajes-container">
+
+                    <div
+                        *ngFor="let mensaje of mensajes"
+                        [ngClass]="{
+                            'mensaje-usuario': mensaje.tipo === 'usuario',
+                            'mensaje-ia': mensaje.tipo === 'ia'
+                        }"
+                    >
+
+                        {{ mensaje.texto }}
+
+                    </div>
+
+                </div>
+
+            </ng-template>
+
+            <!-- FOOTER -->
+            <ng-template pTemplate="footer">
+
+                <div class="chat-footer">
+
+                    <input
+                        pInputText
+                        type="text"
+                        placeholder="Escribe un mensaje..."
+                        class="chat-input"
+                        [(ngModel)]="nuevoMensaje"
+                        (keydown.enter)="enviarMensaje()"
+                    />
+
+                    <button
+                        pButton
+                        type="button"
+                        icon="pi pi-send"
+                        class="p-button-rounded p-button-primary"
+                        (click)="enviarMensaje()"
+                    ></button>
+
+                </div>
+
+            </ng-template>
+
+
+
+
+        </p-drawer>
     </div>
+    
+    
+    
     
 </div>
 

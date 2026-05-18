@@ -56,8 +56,12 @@ class PlantaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Planta
         fields = ['id', 'nombre', 'descripcion', 'imagen']
+        
 
 class DiagnosticoIASerializer(serializers.ModelSerializer):
+
+    planta = PlantaSerializer(read_only=True)
+    
     class Meta:
         model = models.DiagnosticoIA
         fields = [
@@ -75,12 +79,27 @@ class DiagnosticoIASerializer(serializers.ModelSerializer):
         ]
 
 class ChatSerializer(serializers.ModelSerializer):
+
+    diagnostico = DiagnosticoIASerializer(read_only=True)
+    
     class Meta:
         model = models.Chat
         fields = ['id', 'usuario', 'titulo', 'diagnostico', 'creado_en']
 
+    def delete(self, *args, **kwargs):
+        # 1. borrar diagnóstico
+        if self.diagnostico:
+            # 2. borrar planta del diagnóstico
+            if self.diagnostico.planta:
+                self.diagnostico.planta.delete()
+
+            self.diagnostico.delete()
+
+        # 3. borrar chat
+        super().delete(*args, **kwargs)
+
 class MensajeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Mensaje
-        fields = ['id', 'chat', 'tipo', 'contenido', 'creado_en']
+        fields = ['id', 'chat', 'tipo', 'texto', 'creado_en']
     

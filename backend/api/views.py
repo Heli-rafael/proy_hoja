@@ -18,11 +18,17 @@ from django.contrib.auth import authenticate, login
 from rest_framework import viewsets
 from rest_framework import status
 
+from .service.openai_service import analizar_planta_con_openai
+from .service.image_processing import dibujar_zonas_afectadas
+import json
+
+
 # ===== USUARIO =====
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = models.Usuario.objects.all()
     serializer_class = serializers.UsuarioSerializer
     permission_classes = [AllowAny]
+
 
 class PlantaViewSet(viewsets.ModelViewSet):
     queryset = models.Planta.objects.all()
@@ -32,37 +38,61 @@ class PlantaViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
-        # 1. Guardamos la planta (esto guarda la imagen)
+
+        # 1. guardar planta base
         planta = serializer.save()
 
-        # 2. Lógica de "IA" (Aquí iría tu modelo real, ahora usamos datos ficticios)
-        # En el futuro, aquí llamas a tu función de detección
+        usuario = request.user if request.user.is_authenticated else models.Usuario.objects.first()
+
+        # 2. OpenAI
+        try:
+            file = request.FILES['imagen']
+            file.seek(0)
+
+            resultado_json = analizar_planta_con_openai(file)
+            data = json.loads(resultado_json)
+
+        except Exception as e:
+            return Response(
+                {"error": "Error IA", "detalle": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        # 3. generar imagen anotada
+        file.seek(0)
+        zonas = data.get("zonas_afectadas", [])
+
+        imagen_anotada = dibujar_zonas_afectadas(file, zonas)
+
+        # 4. actualizar nombre y descripcion planta
+        planta.nombre = data.get("nombre_planta", planta.nombre)
+        planta.descripcion = data.get("descripcion_planta", "")
+        planta.save()
+
+        # 5. guardar diagnostico con imagen marcada
         diagnostico = models.DiagnosticoIA.objects.create(
-            usuario=request.user if request.user.is_authenticated else models.Usuario.objects.first(),
+            usuario=usuario,
             planta=planta,
-            imagen=planta.imagen, # Usamos la misma imagen
-            enfermedad_detectada="Roya del Café",
-            severidad="grave",
-            porcentaje_salud=45.0,
-            confianza_ia=98.5,
-            tratamiento="Aplicar fungicida sistémico...",
-            como_prevenir="Controlar la sombra y humedad..."
+            imagen=imagen_anotada,
+            enfermedad_detectada=data["enfermedad_detectada"],
+            severidad=data["severidad"],
+            porcentaje_salud=data["porcentaje_salud"],
+            confianza_ia=data["confianza_ia"],
+            tratamiento=data["tratamiento"],
+            como_prevenir=data["como_prevenir"]
         )
 
-        # 3. Creamos el Chat automáticamente
+        # 6. chat
         chat = models.Chat.objects.create(
-            usuario=diagnostico.usuario,
+            usuario=usuario,
             diagnostico=diagnostico,
             titulo=f"Análisis: {diagnostico.enfermedad_detectada}"
         )
 
-        # 4. Respondemos a Angular con el Chat (para que se ilumine en el sidebar)
-        # Necesitarás un ChatSerializer para devolverlo limpio
-        from .serializers import ChatSerializer
-        chat_data = ChatSerializer(chat).data
-        
-        return Response(chat_data, status=status.HTTP_201_CREATED)
+        serializer = serializers.ChatSerializer(chat)
+        return Response({
+            "chat": serializer.data
+        })
 
 class DiagnosticoIAViewSet(viewsets.ModelViewSet):
     queryset = models.DiagnosticoIA.objects.all()
@@ -74,6 +104,9 @@ class ChatViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ChatSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        return models.Chat.objects.filter(usuario=self.request.user)
+
 class MensajeViewSet(viewsets.ModelViewSet):
     queryset = models.Mensaje.objects.all()
     serializer_class = serializers.MensajeSerializer
@@ -81,6 +114,74 @@ class MensajeViewSet(viewsets.ModelViewSet):
 
 
 
+@api_view(['POST'])
+def enviar_mensaje(request):
+
+    chat_id = request.data.get("chat")
+    texto = request.data.get("texto")
+
+    try:
+        chat = models.Chat.objects.get(id=chat_id)
+    except models.Chat.DoesNotExist:
+        return Response(
+            {"error": "Chat no encontrado"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    # =========================
+    # GUARDAR MENSAJE USUARIO
+    # =========================
+    mensaje_usuario = models.Mensaje.objects.create(
+        chat=chat,
+        tipo="usuario",
+        texto=texto
+    )
+
+    # =========================
+    # RESPUESTA IA (FAKE)
+    # =========================
+
+    respuesta_ia = generar_respuesta_predeterminada(texto)
+
+    mensaje_ia = models.Mensaje.objects.create(
+        chat=chat,
+        tipo="ia",
+        texto=respuesta_ia
+    )
+
+    return Response({
+        "usuario": serializers.MensajeSerializer(mensaje_usuario).data,
+        "ia": serializers.MensajeSerializer(mensaje_ia).data
+    })
+
+
+def generar_respuesta_predeterminada(texto):
+
+    texto = texto.lower()
+
+    if "hojas" in texto:
+        return "Las hojas presentan posibles signos de estrés hídrico."
+
+    elif "amarillo" in texto:
+        return "La coloración amarilla puede indicar falta de nitrógeno."
+
+    elif "hongos" in texto:
+        return "Se detectan posibles hongos. Recomendamos fungicida preventivo."
+
+    else:
+        return "La planta necesita una revisión más detallada."
+
+
+@api_view(['GET'])
+def obtener_mensajes(request, chat_id):
+
+    mensajes = models.Mensaje.objects.filter(
+        chat_id=chat_id
+    ).order_by('creado_en')
+
+    serializer = serializers.MensajeSerializer(mensajes, many=True)
+
+    return Response(serializer.data)
 
 
 

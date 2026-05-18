@@ -18,12 +18,26 @@ export class MensajeService {
   }
 
   // Enviar un nuevo mensaje (normalmente de tipo 'usuario')
-  enviarMensaje(chatId: number, texto: string): Observable<MensajeModel> {
+  enviarMensaje1(chatId: number, texto: string): Observable<MensajeModel> {
     const payload = {
       chat: chatId,
       texto: texto,
       tipo: 'usuario'
     };
     return this.http.post<MensajeModel>(this.apiUrl, payload);
+    
+  }
+
+  obtenerMensajes(chatId: number) {
+    return this.http.get<any[]>(
+      `${this.apiUrl}chats/${chatId}/mensajes/`
+    );
+  }
+
+  enviarMensaje(data: any) {
+    return this.http.post(
+      `${this.apiUrl}enviar/`,
+      data
+    );
   }
 }

@@ -24,7 +24,7 @@ class DiagnosticoIA(models.Model):
     ]
 
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="diagnosticos")
-    planta = models.ForeignKey(Planta, on_delete=models.SET_NULL, null=True)
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
 
     imagen = models.ImageField(upload_to="diagnosticos/")
 

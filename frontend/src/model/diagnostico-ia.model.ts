@@ -1,15 +1,15 @@
-export type Severidad = 'leve' | 'moderada' | 'grave';
+import { PlantaModel } from "./planta.model";
 
 export interface DiagnosticoIAModel {
   id?: number;
-  usuario: number; // Generalmente se envía el ID del usuario
-  planta: number | null;
+  usuario: number;
+  planta: PlantaModel;
   imagen: string;
   enfermedad_detectada: string;
-  severidad: Severidad;
+  severidad: string;
   porcentaje_salud: number;
   confianza_ia: number;
   tratamiento: string;
   como_prevenir: string;
-  creado_en?: Date;
+  creado_en?: string | Date;
 }

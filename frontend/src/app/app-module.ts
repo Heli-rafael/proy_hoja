@@ -63,7 +63,8 @@ import { BlockUIModule } from 'primeng/blockui';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MenuModule } from 'primeng/menu';
-
+import { KnobModule } from 'primeng/knob';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     App,
@@ -120,6 +121,8 @@ import { MenuModule } from 'primeng/menu';
     MenuModule,
 
     ProgressSpinnerModule,
+    KnobModule,
+    FormsModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

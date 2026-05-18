@@ -28,4 +28,8 @@ export class DiagnosticoIAService {
   eliminarDiagnostico(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
+
+  getDiagnosticoById(id: number) {
+    return this.http.get<any>(`${this.apiUrl}${id}/`);
+  }
 }
