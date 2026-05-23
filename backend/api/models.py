@@ -4,10 +4,36 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Usuario(AbstractUser):
     estado = models.BooleanField(default=True)
+    picture = models.URLField(blank=True, null=True)
 
+    plan = models.ForeignKey(
+        "Plan",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="usuarios"
+    )
+    
     def __str__(self):
         return f"{self.username}"
+    
+class Plan(models.Model):
+    nombre = models.CharField(max_length=50)
+    creditos_diarios = models.IntegerField(default=3)
+    descripcion = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.nombre
+
+class CreditoDiario(models.Model):
+    usuario = models.ForeignKey("Usuario", on_delete=models.CASCADE)
+    fecha = models.DateField(auto_now_add=True)
+    creditos_usados = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ("usuario", "fecha")
+
+# Plantas
 class Planta(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
@@ -15,18 +41,29 @@ class Planta(models.Model):
 
     def __str__(self):
         return self.nombre
-    
+
+class EstadoImagen(models.TextChoices):
+    PENDIENTE = "Pendiente", "Pendiente"
+    PROCESANDO = "Procesando", "Procesando"
+    COMPLETADO = "Completado", "Completado"
+    ERROR = "Error", "Error"
+
 class DiagnosticoIA(models.Model):
     SEVERIDAD_CHOICES = [
-        ("leve", "Leve"),
-        ("moderada", "Moderada"),
-        ("grave", "Grave"),
+        ("Leve", "Leve"),
+        ("Moderada", "Moderada"),
+        ("Grave", "Grave"),
     ]
 
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="diagnosticos")
-    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE, related_name="diagnosticos")
 
     imagen = models.ImageField(upload_to="diagnosticos/")
+    estado_imagen = models.CharField(
+        max_length=30,
+        choices=EstadoImagen.choices,
+        default=EstadoImagen.PENDIENTE
+    )
 
     enfermedad_detectada = models.CharField(max_length=200)
 

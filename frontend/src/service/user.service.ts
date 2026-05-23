@@ -13,6 +13,7 @@ export class UserService {
 
     private apiUrl = `${ApiConfig.apiUrl}api/usuario/`; // para CRUD general
     private profileUrl = `${ApiConfig.apiUrl}api/me/`;
+    private creditsUrl = `${ApiConfig.apiUrl}api/me/creditos/`;
 
     constructor(
         private http: HttpClient,
@@ -21,6 +22,10 @@ export class UserService {
 
     getProfile(): Observable<any> {
         return this.http.get(this.profileUrl);
+    }
+
+    getCreditos(): Observable<any> {
+        return this.http.get(this.creditsUrl);
     }
 
     // Obtener todos los usuarios

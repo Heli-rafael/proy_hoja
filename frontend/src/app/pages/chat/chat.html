@@ -70,7 +70,7 @@
                             <div class="chat-info">
 
                                 <div class="chat-title">
-                                    {{ chat.titulo }}
+                                    {{ chat.titulo.replace("Análisis:", "") }}
                                 </div>
 
                                 <div class="chat-subtitle">
@@ -141,13 +141,13 @@
 
                         <!-- DERECHA: MENU -->
                         <button
-                            pButton
-                            type="button"
-                            icon="pi pi-ellipsis-v"
-                            class="ellipsis-button p-button-text p-button-plain"
-                            (click)="opUser.toggle($event)"
-                        >
-                    </button>
+                                pButton
+                                type="button"
+                                icon="pi pi-ellipsis-v"
+                                class="ellipsis-button p-button-text p-button-plain"
+                                (click)="opUser.toggle($event)"
+                            >
+                        </button>
 
                     </button>
                     
@@ -159,10 +159,37 @@
                     <div class="popover-content">
 
                         <div class="user-card">
-                            <h4>Hola, {{ user?.username }}</h4>
-                            <small><strong>Email:</strong> {{ user?.email }}</small>
-                            <small><strong>Nombre:</strong> {{ user?.first_name }}</small>
-                            <small><strong>Apellido:</strong> {{ user?.last_name }}</small>
+                            <div class="user-header">
+                                <h4>Hola, {{ user?.username | titlecase }}</h4>
+                            </div>
+
+                            <div class="user-info">
+                                <p><strong>Email:</strong> {{ user?.email }}</p>
+                                <p><strong>Nombre:</strong> {{ user?.first_name }}</p>
+                                <p><strong>Apellido:</strong> {{ user?.last_name }}</p>
+                            </div>
+
+                            <div class="plan-badge">
+                                {{ user?.plan?.nombre }}
+                            </div>
+
+                            <div class="credits">
+                                <div class="credit-box">
+                                <span class="label">Créditos diarios</span>
+                                <span class="value">
+                                    {{ user?.plan?.creditos_diarios }}
+                                </span>
+                                <small>Actualiza 24h</small>
+                                </div>
+
+                                <div class="credit-box highlight">
+                                <span class="label">Créditos restantes</span>
+                                <span class="value">
+                                    {{ user?.creditos?.restantes }}
+                                </span>
+                                <small>Disponibles</small>
+                                </div>
+                            </div>
                         </div>
 
                         <hr />
@@ -223,6 +250,7 @@
                 <button
                     pButton
                     type="button"
+                    class="p-button-text"
                     (click)="logout()">
 
                     <i class="pi pi-sign-out"></i>
@@ -284,12 +312,54 @@
                         </div>
 
                         <div class="main-card" style="margin: auto;">
-                            <img
-                                *ngIf="diagnosticoSeleccionado?.planta.imagen"
-                                [src]="diagnosticoSeleccionado?.planta.imagen"
-                                alt="Imagen planta"
-                                class="plant-image"
-                            />
+                            <!-- LOADING -->
+                            <div
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
+                                class="flex justify-center align-items-center"
+                                style="display: flex; align-items: center; justify-content: center;"
+                            >
+                                <p-progressSpinner></p-progressSpinner>
+                            </div>
+
+                            <!-- ERROR -->
+                            <div
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'error'"
+                                class="flex flex-column justify-center align-items-center"
+                                style="height: 300px; text-align: center;"
+                            >
+                                <i class="pi pi-times-circle" style="font-size: 2rem; color: red;"></i>
+                                <p style="margin-top: 10px; color: red;">
+                                Error al procesar la imagen
+                                </p>
+                            </div>
+
+                            <!-- IMAGE COMPARE -->
+                            <p-imagecompare
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen !== 'pendiente'
+                                    && diagnosticoSeleccionado?.estado_imagen !== 'procesando'
+                                    && diagnosticoSeleccionado?.estado_imagen !== 'error'
+                                    && diagnosticoSeleccionado?.planta?.imagen
+                                    && diagnosticoSeleccionado?.imagen"
+                                class="shadow-lg rounded-2xl"
+                                style="width: 300px; height: 300px; display: flex;"
+                            >
+                                <ng-template #left>
+                                <img
+                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
+                                    alt="Planta sana"
+                                    style="width: 100%; height: 100%; object-fit: cover;"
+                                />
+                                </ng-template>
+
+                                <ng-template #right>
+                                <img
+                                    [src]="diagnosticoSeleccionado?.imagen"
+                                    alt="Planta escaneada"
+                                    style="width: 100%; height: 100%; object-fit: cover;"
+                                />
+                                </ng-template>
+                            </p-imagecompare>
+
                         </div>
 
                     </div>
@@ -313,7 +383,7 @@
 
                         <div class="main-card">
                             <div class="info-row">
-                                <span class="label">Nombre :</span>
+                                <span class="label">Hoja :</span>
                                 <span class="value">{{ diagnosticoSeleccionado?.planta.nombre }}</span>
                             </div>
 
@@ -376,6 +446,7 @@
                     <div class="welcome-card">
 
                         <div class="card-principle">
+                    
                             <!-- ICON -->
                             <div class="hero-icon">
                                 <i class="pi pi-bolt"></i>
@@ -510,7 +581,7 @@
                     <div class="logo-container-chat">
                         <div class="logo-text-chat">
                             <h2>IA Especializada en esta Planta</h2>
-                            <span>Conversación basada únicamente en la imagen analizada</span>
+                            <span>Conversación basada en la imagen analizada</span>
                         </div>
                         <div class="logo-icon-chat">
                             <img src="/logo_hoja.jpg" alt="logo">
@@ -521,6 +592,16 @@
                     <div *ngIf="diagnosticoSeleccionado" class="container-chat" style="margin: auto;">
                         
                         <div class="content-chat-card">
+                            <!-- LOADING -->
+                            <div
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
+                                class="flex justify-center align-items-center"
+                                style="display: flex; align-items: center; justify-content: center;"
+                            >
+                                <p-progressSpinner></p-progressSpinner>
+                            </div>
+                            
+                            <!-- IMAGEN-->
                             <img
                                 *ngIf="diagnosticoSeleccionado?.imagen"
                                 [src]="diagnosticoSeleccionado?.imagen"
@@ -546,7 +627,18 @@
                         }"
                     >
 
-                        {{ mensaje.texto }}
+                        <span *ngIf="mensaje.texto !== 'Analizando planta...'">
+                            {{ mensaje.texto }}
+                        </span>
+
+                        <div
+                            *ngIf="mensaje.texto === 'Analizando planta...'"
+                            class="typing-loader"
+                        >
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
 
                     </div>
 
@@ -565,6 +657,7 @@
                         placeholder="Escribe un mensaje..."
                         class="chat-input"
                         [(ngModel)]="nuevoMensaje"
+                        [disabled]="isSendingMessage"
                         (keydown.enter)="enviarMensaje()"
                     />
 
@@ -573,21 +666,15 @@
                         type="button"
                         icon="pi pi-send"
                         class="p-button-rounded p-button-primary"
+                        [disabled]="isSendingMessage"
                         (click)="enviarMensaje()"
                     ></button>
 
                 </div>
 
             </ng-template>
-
-
-
-
         </p-drawer>
     </div>
-    
-    
-    
     
 </div>
 

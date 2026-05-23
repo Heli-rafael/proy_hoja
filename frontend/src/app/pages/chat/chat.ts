@@ -1,6 +1,7 @@
 import { Component, HostListener, ViewChild, ElementRef  } from '@angular/core';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../../../service/auth/auth.service';
+import { MessageService } from 'primeng/api';
 
 import { ChatModel } from '../../../model/chat.model';
 import { ChatService } from '../../../service/chat.service';
@@ -10,7 +11,7 @@ import { MenuItem } from 'primeng/api';
 import { DiagnosticoIAService } from '../../../service/diagnostico-ia.service';
 import { PlantaService } from '../../../service/planta.service';
 import { UserService } from '../../../service/user.service';
-import { User } from '../../../model/user.model';
+import { Plan, User } from '../../../model/user.model';
 
 @Component({
   selector: 'app-chat',
@@ -23,17 +24,31 @@ export class Chat {
   // =========================
   // STATE
   // =========================
+
+  // Drawer Menu
   sidebarVisible: boolean = true;
+
+  // Drawer Chat
   chatVisible: boolean = true;
+
+  // Enviando mensaje
+  isSendingMessage: boolean = false;
+
+  // Intervalo de imagen
+  intervaloImagen: any;
     
   user: User | null = null;
 
   chats: ChatModel[] = [];
+  plan: Plan[] = [];
   chatSeleccionado: ChatModel | null = null;
 
+  // Obtener mensajes
   mensajes: MensajeModel[] = [];
-  nuevoMensaje: string = '';
 
+  // Nuevo mensaje
+  nuevoMensaje: string = '';
+  
   diagnosticoSeleccionado: any = null;
 
   imagePreview: string | null = null;
@@ -49,6 +64,8 @@ export class Chat {
   // =========================
   constructor(
     private authService: AuthService,
+    private messageService: MessageService,
+
     private chatService: ChatService,
     private diagnosticoService: DiagnosticoIAService,
     private plantaService: PlantaService,
@@ -138,6 +155,15 @@ export class Chat {
         this.chatSeleccionado = chatCompleto;
         this.diagnosticoSeleccionado = chatCompleto.diagnostico;
 
+        const estado =
+          chatCompleto.diagnostico?.estado_imagen;
+
+        if (
+          estado === 'Pendiente' ||
+          estado === 'Procesando'
+        ) {
+          this.iniciarPollingImagen(chatCompleto.id!);
+        }
         this.cargarChats();
       }),
 
@@ -147,9 +173,84 @@ export class Chat {
 
     ).subscribe({
       error: (err) => {
-        console.error(err);
+
+        console.log(err);
+        
+        const backendError =
+          err?.error?.detalle ||
+          err?.error?.error ||
+          'Error inesperado al analizar la imagen';
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Imagen rechazada',
+          detail: backendError
+        });
+
+        this.isAnalyzing = false;
       }
     });
+  }
+
+  iniciarPollingImagen(chatId: number): void {
+
+    let intentos = 0;
+    const MAX_INTENTOS = 40;
+    
+    this.intervaloImagen = setInterval(() => {
+
+      intentos++;
+
+      if (intentos >= MAX_INTENTOS) {
+        clearInterval(this.intervaloImagen);
+
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Tiempo agotado',
+          detail: 'La generación de imagen tardó demasiado.'
+        });
+
+        return;
+      }
+
+      this.chatService.getChatPorId(chatId)
+        .subscribe({
+
+          next: (chatActualizado) => {
+
+            this.chatSeleccionado = chatActualizado;
+            this.diagnosticoSeleccionado = chatActualizado.diagnostico;
+
+            const estado = chatActualizado.diagnostico?.estado_imagen;
+
+            if (estado === 'Completado') {
+              clearInterval(this.intervaloImagen);
+
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Imagen lista',
+                detail: 'La imagen ya fue generada.'
+              });
+            }
+
+            if (estado === 'Error') {
+              clearInterval(this.intervaloImagen);
+
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No se pudo generar la imagen.'
+              });
+            }
+          },
+
+          error: () => {
+            console.log("Error en polling");
+          }
+
+        });
+
+    }, 8000);
   }
 
   enviarMensaje(): void {
@@ -158,33 +259,83 @@ export class Chat {
 
     if (!this.chatSeleccionado?.id) return;
 
+    if (this.isSendingMessage) return;
+
+    const textoUsuario = this.nuevoMensaje;
+    
+    // =========================
+    // MENSAJE OPTIMISTA USUARIO
+    // =========================
+    
+    const mensajeTemporalUsuario: MensajeModel = {
+      chat: this.chatSeleccionado.id,
+      texto: textoUsuario,
+      tipo: 'usuario',
+      creado_en: new Date()
+    };
+
+    this.mensajes.push(mensajeTemporalUsuario);
+    
+    // =========================
+    // MENSAJE TEMPORAL IA
+    // =========================
+
+    const mensajeTemporalIA: MensajeModel = {
+      chat: this.chatSeleccionado.id,
+      texto: 'Analizando planta...',
+      tipo: 'ia',
+      creado_en: new Date()
+    };
+
+    this.mensajes.push(mensajeTemporalIA);
+
+    // limpiar input
+    this.nuevoMensaje = '';
+
+    // Bloquemos la interaccion
+    this.isSendingMessage = true;
+
+    // scroll inmediato
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 50);
+
+
     const payload = {
       chat: this.chatSeleccionado.id,
-      texto: this.nuevoMensaje
+      texto: textoUsuario
     };
 
     this.mensajeService.enviarMensaje(payload)
-      .subscribe({
-        next: (res: any) => {
+    .subscribe({
 
-          // agregar mensaje usuario
-          this.mensajes.push(res.usuario);
+      next: (res: any) => {
 
-          // agregar respuesta IA
-          this.mensajes.push(res.ia);
+        // reemplazar mensaje IA temporal
+        const index = this.mensajes.indexOf(mensajeTemporalIA);
 
-          // limpiar input
-          this.nuevoMensaje = '';
-
-          // hacer scroll al final
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 150);
-        },
-        error: (err) => {
-          console.error(err);
+        if (index !== -1) {
+          this.mensajes[index] = res.ia;
         }
-      });
+
+        this.isSendingMessage = false;
+
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 50);
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        // mostrar error amigable
+        mensajeTemporalIA.texto =
+          'Error obteniendo respuesta IA';
+
+        this.isSendingMessage = false;
+      }
+    });
   }
 
   // =========================
@@ -221,6 +372,7 @@ export class Chat {
     if (plantaId) {
       this.plantaService.eliminarPlanta(plantaId).subscribe({
         next: () => {
+          this.cargarChats();
           console.log('Planta eliminada:', plantaId);
         },
         error: (err) => {

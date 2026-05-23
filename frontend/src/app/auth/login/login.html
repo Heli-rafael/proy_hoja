@@ -1,103 +1,89 @@
-<!-- CONTENEDOR GENERAL -->
-<div pFocusTrap
-     style="display: flex; justify-content: center; align-items: center; height: 95dvh; width: 100%; overflow: hidden;">
+<div class="body">
 
-  <!-- CONTENEDOR FLEX PARA LOGIN + IMAGEN -->
-  <div style="display: flex; align-items: stretch; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); overflow: hidden;">
+    <div class="bg"></div>
 
-    <!-- CUADRO DE LOGIN -->
-    <div style="width: 400px; background-color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem;">
+    <div class="login-box">
 
-        <!-- ENCABEZADO -->
-        <div style="text-align: center; margin-bottom: 1rem;">
-            <h1 style="font-size: 2rem; font-weight: 400; margin: 0;">
-                Bienvenido a
-            </h1>
-            <h2 style="font-size: 2.5rem; font-weight: 700; margin: 0;">
-                Calzados Liams
-            </h2>
+        <div class="logo">
+            PlantCare AI
         </div>
+
+        <p>Inicia sesión para acceder al asistente inteligente de enfermedades vegetales.</p>
         
-
-        <!-- TÍTULO LOGIN -->
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem;">
-            <h3>Iniciar Sesión</h3>
-        </div>
-
         <!-- FORMULARIO -->
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
-                style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 300px; align-items: center;">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
             <!-- Email -->
-            <p-iconfield style="width: 100%;">
-            <p-inputicon>
-                <i class="pi pi-envelope"></i>
-            </p-inputicon>
-            <input
-                pInputText
-                type="email"
-                formControlName="email"
-                placeholder="Correo electrónico"
-                style="width: 100%;"
-                (blur)="onFieldBlur('email')"
-            />
-            </p-iconfield>
+            <div class="input-group">
+                <input 
+                    pInputText 
+                    type="email"
+                    formControlName="email" 
+                    (blur)="onFieldBlur('email')" 
+                    placeholder="Correo electrónico">
+            </div>
 
             <!-- Contraseña -->
-            <p-iconfield style="width: 100%; position: relative;">
-                <p-inputicon>
-                    <i class="pi pi-lock"></i>
-                </p-inputicon>
-
-                <input
-                    pInputText
-                    [type]="showPassword ? 'text' : 'password'"
+            <div class="input-group" style="display: flex; align-items: center; justify-content: center;">
+                <p-password
                     formControlName="password"
+                    [feedback]="false"
+                    [toggleMask]="true"
                     placeholder="Contraseña"
-                    style="width: 100%; padding-right: 2.5rem;" 
-                    (blur)="onFieldBlur('password')"
-                />
-
-                <!-- Botón para mostrar/ocultar -->
-                <button 
-                    type="button" 
-                    (click)="togglePassword()" 
-                    style="
-                        position: absolute; 
-                        right: 0.5rem; 
-                        top: 50%; 
-                        transform: translateY(-50%);
-                        border: none; 
-                        background: none; 
-                        cursor: pointer;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: #9e9e9e; /* Gris similar al email icon */
-                    ">
-                    <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
-                </button>
-            </p-iconfield>
+                    inputStyl eClass="input-password"
+                    (onBlur)="onFieldBlur('password')">
+                </p-password>
+            </div>
 
             <!-- Botón -->
-            <p-button
+            <button
+                pButton
                 type="submit"
                 label="{{ processing.value ? 'Ingresando...' : 'Ingresar' }}"
                 icon="{{ processing.value ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in' }}"
                 [disabled]="loginForm.invalid || processing.value"
-                [style]="{'width':'100%'}"
+                [style]="{'width':'100%', 'background-color': 'trasparent'}"
             >
-            </p-button>
-            
+            </button>             
 
         </form>
+
+        
+        <div class="divider">
+            o continuar con
+        </div>
+
+        <div class="social">
+            <!--
+            <button
+                pButton
+                class="button-google"
+                type="button"
+                icon="pi pi-google"
+                label="Google"
+                (click)="loginWithGoogle()">
+            </button>
+            <button
+                pButton
+                class="button-google"
+                type="button"
+                icon="pi pi-facebook"
+                label="Facebook"
+                >
+            </button> 
+            -->
+            <div id="googleButton">
+                Facebook
+            </div>  
+
+        </div>
+
+        <div class="extra">
+            <a href="#">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </div>
+
     </div>
 
-    <!-- CONTENEDOR DE IMAGEN -->
-    <div style="width: 400px; display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
-      <img src="imagenprueba.jpg" alt="Imagen decorativa"
-           style="width: 100%; height: 100%; object-fit: cover;">
-    </div>
-
-  </div>
 </div>

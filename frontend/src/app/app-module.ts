@@ -65,11 +65,27 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { KnobModule } from 'primeng/knob';
 import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+import { PasswordModule } from 'primeng/password';
+
+// Importacion de Google
+import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+
+// Comparar imagenes
+import { ImageCompareModule } from 'primeng/imagecompare';
+import { Inicio } from './pages/inicio/inicio';
+
+// Menu
+import { MenubarModule } from 'primeng/menubar';
+
+
 @NgModule({
   declarations: [
     App,
     Login,
-    Chat
+    Chat,
+    Inicio
   ],
   imports: [
     BrowserModule,
@@ -123,6 +139,14 @@ import { FormsModule } from '@angular/forms';
     ProgressSpinnerModule,
     KnobModule,
     FormsModule,
+    ToastModule,
+    PasswordModule,
+
+    // Comparar imagenes
+    ImageCompareModule,
+
+    // Menu
+    MenubarModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -140,6 +164,25 @@ import { FormsModule } from '@angular/forms';
       multi: true
     },
     { provide: LOCALE_ID, useValue: 'es-ES' },
+
+    // Configuracion de Google
+    {
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: false,
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider(
+            'TU_CLIENT_ID'
+          )
+        }
+      ],
+      onError: (err: any) => console.error(err)
+    }
+  },
+
+    // Confirmacion y Mensajes
     ConfirmationService,
     MessageService,
   ],

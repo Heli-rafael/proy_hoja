@@ -1,7 +1,21 @@
+export interface Plan {
+  nombre: string;
+  creditos_diarios: number;
+  descripcion: string;
+}
+
+export interface Creditos {
+  creditos_diarios: number;
+  usados: number;
+  restantes: number;
+}
+
 export interface User {
   id: number;
   username: string;
   email: string;
+  plan: Plan;
+  creditos: Creditos;
   password?: string;
   first_name?: string;
   last_name?: string;

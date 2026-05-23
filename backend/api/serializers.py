@@ -1,7 +1,16 @@
 from rest_framework import serializers
+from datetime import date
 from . import models
 
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Plan
+        fields = ['id', 'nombre', 'creditos_diarios', 'descripcion']
+
+
 class UsuarioSerializer(serializers.ModelSerializer):
+
+    plan = PlanSerializer(read_only=True)
 
     # Campos para usar las validaciones personalizadas
     username = serializers.CharField(required=False, allow_blank=True)
@@ -18,6 +27,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'last_name', 
             'email', 
             'estado', 
+            'picture',
+            'plan',
 
             'last_login', 
             'is_superuser', 
@@ -51,7 +62,45 @@ class UsuarioSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         instance.delete()
         return instance
-    
+
+class MeSerializer(serializers.ModelSerializer):
+    plan = PlanSerializer()
+    creditos = serializers.SerializerMethodField()
+
+    def get_creditos(self, obj):
+        plan = obj.plan
+
+        if not plan:
+            return {
+                "creditos_diarios": 0,
+                "usados": 0,
+                "restantes": 0
+            }
+
+        credito, _ = models.CreditoDiario.objects.get_or_create(
+            usuario=obj,
+            fecha=date.today()
+        )
+
+        usados = credito.creditos_usados
+
+        return {
+            "creditos_diarios": plan.creditos_diarios,
+            "usados": usados,
+            "restantes": max(plan.creditos_diarios - usados, 0)
+        }
+
+    class Meta:
+        model = models.Usuario
+        fields = '__all__'
+
+class CreditoDiarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CreditoDiario
+        fields = ['id', 'usuario', 'fecha', 'creditos_usados']
+
+# Planta
+
 class PlantaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Planta
@@ -69,6 +118,7 @@ class DiagnosticoIASerializer(serializers.ModelSerializer):
             'usuario', 
             'planta', 
             'imagen', 
+            'estado_imagen',
             'enfermedad_detectada', 
             'severidad', 
             'porcentaje_salud', 

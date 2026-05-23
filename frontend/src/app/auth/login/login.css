@@ -1,0 +1,280 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body{
+    height: 100vh;
+    background:  var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.bg{
+    position: absolute;
+    width: 700px;
+    height: 100vh;
+    background: rgba(255,255,255,.05);
+    border-radius: 50%;
+    filter: blur(80px);
+}
+
+.login-box{
+    width: 430px;
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.15);
+    padding: 45px;
+    border-radius: 35px;
+    color:  var(--white-letter);
+    position: relative;
+    z-index: 1;
+}
+
+.logo{
+    text-align:  center;
+    font-size: 35px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color:  var(--white-letter);
+}
+
+.login-box p{
+    text-align:  center;
+    opacity: .85;
+    margin-bottom: 35px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: rgba(255,255,255,.12);
+    color: var(--white-letter);
+    outline: none;
+}
+
+::ng-deep .p-password {
+    width: 100%;
+}
+
+::ng-deep .p-password input {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: rgba(255,255,255,.12);
+    color: var(--white-letter);
+    outline: none;
+}
+
+.input-group input::placeholder,
+::ng-deep .p-password input::placeholder {
+    color: var(--white-letter);
+}
+
+
+.input-group input::placeholder{
+    color:  var(--white-letter);
+}
+
+::ng-deep .p-password .p-icon {
+    cursor: pointer;
+    color: white !important;
+    fill: white !important;
+    width: 1.4rem;
+    height: 1.2rem;
+}
+
+
+button {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: white;
+    color: var(--primary);
+    font-weight: 700;
+    margin-top: 10px;
+
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 20px var(--primary-shadow) !important;
+    cursor: pointer;
+}
+
+button:hover{
+    border: none !important;
+}
+
+.divider{
+    text-align: center;
+    margin: 25px 0;
+    color: var(--white-letter);
+}
+
+.social{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social button{
+    background: rgba(255,255,255,.12);
+    color: white;
+    border: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+/* HOVER DEL BOTÓN */
+.social button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(52, 211, 153, 0.35);
+    background: rgba(255,255,255,.18);
+}
+
+
+.extra{
+    margin-top: 25px;
+    text-align: center;
+}
+
+.extra a{
+    color: white;
+}
+
+@media (max-width: 1024px) {
+
+    .login-box {
+        width: 380px;
+        padding: 35px;
+        border-radius: 30px;
+    }
+
+    .logo {
+        font-size: 30px;
+    }
+
+    .bg {
+        width: 500px;
+        filter: blur(70px);
+    }
+}
+
+/* =========================
+   MOBILE LARGE (<= 768px)
+========================= */
+@media (max-width: 768px) {
+
+    .body {
+        padding: 20px;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 360px;
+        padding: 30px;
+        border-radius: 25px;
+    }
+
+    .logo {
+        font-size: 26px;
+    }
+
+    .login-box p {
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    .input-group input,
+    ::ng-deep .p-password input {
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    button {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .social {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .divider {
+        margin: 20px 0;
+        font-size: 14px;
+    }
+
+    .bg {
+        width: 400px;
+        filter: blur(60px);
+    }
+}
+
+/* =========================
+   MOBILE SMALL (<= 480px)
+========================= */
+@media (max-width: 480px) {
+
+    .body {
+        padding: 15px;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 320px;
+        padding: 25px;
+        border-radius: 22px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .login-box p {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .input-group input,
+    ::ng-deep .p-password input {
+        padding: 13px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .social button {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .extra {
+        font-size: 13px;
+    }
+
+    .bg {
+        width: 300px;
+        filter: blur(50px);
+    }
+}

@@ -5,6 +5,7 @@ export interface DiagnosticoIAModel {
   usuario: number;
   planta: PlantaModel;
   imagen: string;
+  estado_imagen: string;
   enfermedad_detectada: string;
   severidad: string;
   porcentaje_salud: number;

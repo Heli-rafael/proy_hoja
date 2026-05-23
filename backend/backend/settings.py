@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from dotenv import load_dotenv
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,6 +32,7 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -99,11 +103,15 @@ CSRF_COOKIE_PATH = '/'
 SESSION_COOKIE_DOMAIN = None
 CSRF_COOKIE_DOMAIN = None
 
-# Imagenes
-import os
+# Google
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
+# Imagenes
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Variables de entorno .env
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # CORS
 
