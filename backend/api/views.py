@@ -37,7 +37,7 @@ from .service.services import obtener_estado_creditos
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = models.Usuario.objects.all()
     serializer_class = serializers.UsuarioSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 class PlanViewSet(viewsets.ModelViewSet):
     queryset = models.Plan.objects.all()
