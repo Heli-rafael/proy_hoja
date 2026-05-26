@@ -2,8 +2,16 @@
 
     <div class="bg"></div>
 
+    
+    
     <div class="login-box">
-
+        <button
+            pButton
+            type="button"
+            icon="pi pi-arrow-left"
+            class="p-button-rounded p-button-primary"
+            (click)="regresarAtras()"
+        ></button>
         <div class="logo">
             PlantCare AI
         </div>
@@ -38,6 +46,7 @@
             <!-- Botón -->
             <button
                 pButton
+                class="button-into"
                 type="submit"
                 label="{{ processing.value ? 'Ingresando...' : 'Ingresar' }}"
                 icon="{{ processing.value ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in' }}"

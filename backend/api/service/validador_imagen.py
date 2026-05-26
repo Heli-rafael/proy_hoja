@@ -28,17 +28,24 @@ Analiza la imagen.
 Responde SOLO JSON válido.
 
 {
-  "es_planta": true,
+  "es_planta_papa": true,
   "es_apta_para_analisis": true,
   "motivo": ""
 }
 
-REGLAS:
-- es_planta = true SOLO si hay planta real.
-- es_apta_para_analisis = true SOLO si hay hojas visibles.
-- Si la imagen no contiene plantas o no permite analizar hojas:
-  devuelve false.
-- NO expliques.
+REGLAS ESTRICTAS:
+- es_planta_papa = true SOLO si la imagen contiene hojas de planta de PAPA (Solanum tuberosum).
+- Si es cualquier otra planta (maíz, tomate, maleza, ornamentales, etc.), es_planta_papa = false.
+- es_apta_para_analisis = true SOLO si:
+  - Se observan claramente hojas de papa.
+  - Las hojas permiten un análisis visual (no borrosas, no ocultas, no demasiado pequeñas).
+- Si NO es planta de papa o no hay hojas visibles de papa:
+  - es_planta_papa = false
+  - es_apta_para_analisis = false
+- NO inventes.
+- NO asumas.
+- Si tienes duda, responde false.
+- NO expliques nada fuera del JSON.
 - SOLO JSON.
 """
                 },

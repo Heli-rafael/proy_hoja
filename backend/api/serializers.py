@@ -2,6 +2,21 @@ from rest_framework import serializers
 from datetime import date
 from . import models
 
+import threading
+
+from .service.validador_imagen import validar_imagen_planta
+
+from .service.openai_service import (
+    analizar_planta_con_openai
+)
+
+from .service.generador_imagen import generar_imagen_anotada
+
+from .service.services import (
+    puede_usar_credito,
+    consumir_credito
+)
+
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Plan
@@ -106,7 +121,6 @@ class PlantaSerializer(serializers.ModelSerializer):
         model = models.Planta
         fields = ['id', 'nombre', 'descripcion', 'imagen']
         
-
 class DiagnosticoIASerializer(serializers.ModelSerializer):
 
     planta = PlantaSerializer(read_only=True)
@@ -123,8 +137,9 @@ class DiagnosticoIASerializer(serializers.ModelSerializer):
             'severidad', 
             'porcentaje_salud', 
             'confianza_ia', 
-            'tratamiento', 
-            'como_prevenir', 
+            'tratamiento_natural', 
+            'tratamiento_quimico', 
+            'prevencion', 
             'creado_en'
         ]
 
@@ -136,20 +151,219 @@ class ChatSerializer(serializers.ModelSerializer):
         model = models.Chat
         fields = ['id', 'usuario', 'titulo', 'diagnostico', 'creado_en']
 
-    def delete(self, *args, **kwargs):
-        # 1. borrar diagnóstico
-        if self.diagnostico:
-            # 2. borrar planta del diagnóstico
-            if self.diagnostico.planta:
-                self.diagnostico.planta.delete()
-
-            self.diagnostico.delete()
-
-        # 3. borrar chat
-        super().delete(*args, **kwargs)
-
 class MensajeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Mensaje
         fields = ['id', 'chat', 'tipo', 'texto', 'creado_en']
+
+# ==============================
+# CREAR PLANTA Y DIAGNOSTICOS
+# ==============================
+class PlantaCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Planta
+        fields = ['id', 'nombre', 'descripcion', 'imagen']
     
+    def create(self, validated_data):
+
+        request = self.context.get("request")
+
+        usuario = request.user
+
+        # VALIDAR CRÉDITOS
+
+        if not puede_usar_credito(usuario):
+
+            raise serializers.ValidationError({
+                "error": "No tienes créditos disponibles."
+            })
+
+        imagen = validated_data.get("imagen")
+
+        # CREAR PLANTA
+
+        planta = models.Planta.objects.create(
+            **validated_data
+        )
+
+        # CONSUMIR CRÉDITO
+
+        consumir_credito(usuario)
+
+        # ANALIZAR IA
+
+        imagen.seek(0)
+
+        data = analizar_planta_con_openai(imagen)
+
+        # ACTUALIZAR PLANTA
+
+        planta.nombre = data.get(
+            "nombre_planta",
+            planta.nombre
+        )
+
+        planta.descripcion = data.get(
+            "descripcion_planta",
+            ""
+        )
+
+        planta.save()
+
+        # CREAR DIAGNÓSTICO
+
+        diagnostico = models.DiagnosticoIA.objects.create(
+
+            usuario=usuario,
+
+            planta=planta,
+
+            estado_imagen=models.EstadoImagen.PENDIENTE,
+
+            enfermedad_detectada=data.get(
+                "enfermedad_detectada",
+                "Sin detección"
+            ),
+
+            severidad=data.get(
+                "severidad",
+                "leve"
+            ),
+
+            porcentaje_salud=data.get(
+                "porcentaje_salud",
+                0
+            ),
+
+            confianza_ia=data.get(
+                "confianza_ia",
+                0
+            ),
+
+            tratamiento_natural=data.get(
+                "tratamiento_natural",
+                ""
+            ),
+
+            tratamiento_quimico=data.get(
+                "tratamiento_quimico",
+                ""
+            ),
+
+            prevencion=data.get(
+                "prevencion",
+                ""
+            )
+        )
+
+        # CREAR CHAT
+
+        chat = models.Chat.objects.create(
+
+            usuario=usuario,
+            diagnostico=diagnostico,
+            titulo=f"Análisis: {diagnostico.enfermedad_detectada}"
+        )
+
+        # GENERAR IMAGEN EN BACKGROUND
+
+        imagen.seek(0)
+
+        image_bytes = imagen.read()
+
+        threading.Thread(
+            target=self.procesar_imagen_background,
+            args=(
+                diagnostico.id,
+                image_bytes,
+                data
+            ),
+            daemon=True
+        ).start()
+
+        return chat
+    
+    # VALIDAR LA IMAGEM
+    def validate_imagen(self, value):
+
+        # VALIDAR TAMAÑO
+        if value.size > 10 * 1024 * 1024:
+            raise serializers.ValidationError(
+                "La imagen supera el límite permitido de 10MB."
+            )
+
+        # VALIDAR IA
+        try:
+
+            value.seek(0)
+
+            validacion = validar_imagen_planta(value)
+
+        except Exception as e:
+            raise serializers.ValidationError(
+                f"Error validando imagen: {str(e)}"
+            )
+
+        if (
+            not validacion.get("es_planta_papa")
+            or not validacion.get("es_apta_para_analisis")
+        ):
+
+            raise serializers.ValidationError(
+                validacion.get(
+                    "motivo",
+                    "La imagen no contiene hojas de papa válidas."
+                )
+            )
+
+        return value
+    
+    # PROCESAR LA IMAGEN
+    def procesar_imagen_background(self, diagnostico_id, image_bytes, data):
+
+        try:
+
+            diagnostico = models.DiagnosticoIA.objects.get(
+                id=diagnostico_id
+            )
+
+            diagnostico.estado_imagen = (
+                models.EstadoImagen.PROCESANDO
+            )
+
+            diagnostico.save()
+
+            from io import BytesIO
+
+            image_buffer = BytesIO(image_bytes)
+
+            image_buffer.name = "plant.jpg"
+
+            imagen_anotada = generar_imagen_anotada(
+                image_buffer,
+                data
+            )
+
+            diagnostico.imagen = imagen_anotada
+
+            diagnostico.estado_imagen = (
+                models.EstadoImagen.COMPLETADO
+            )
+
+            diagnostico.save()
+
+        except Exception as e:
+
+            try:
+
+                diagnostico.estado_imagen = (
+                    models.EstadoImagen.ERROR
+                )
+
+                diagnostico.save()
+
+            except:
+                pass
+
+            print(e)

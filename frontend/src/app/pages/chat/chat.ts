@@ -59,6 +59,8 @@ export class Chat {
 
   isMobile: boolean = false;
 
+  mostrarDialogImagen: boolean = false;
+
   // =========================
   // CONSTRUCTOR
   // =========================
@@ -81,6 +83,18 @@ export class Chat {
     this.cargarChats();
     this.checkScreen();
     this.cargarPerfil();
+  }
+
+  // =========================
+  // FORMATEAR \n
+  // =========================
+  formatearLista(texto: string | undefined): string[] {
+    if (!texto) return [];
+
+    return texto
+      .split('\n')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
   }
 
   // =========================
@@ -179,6 +193,7 @@ export class Chat {
         const backendError =
           err?.error?.detalle ||
           err?.error?.error ||
+          err?.error?.imagen?.[0] ||
           'Error inesperado al analizar la imagen';
 
         this.messageService.add({

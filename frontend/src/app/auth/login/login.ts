@@ -37,12 +37,15 @@ export class Login {
 
     // Verificacion
     this.authService.checkAuth().subscribe((isAuth) => {
-    if (isAuth) {
-      this.router.navigate(['/page/chat']);
-    }
-  });
+      if (isAuth) {
+        this.router.navigate(['/page/chat']);
+      }
+    });
   }
 
+  regresarAtras(){
+    this.router.navigate(['/page/inicio']);
+  }
   onSubmit(): void {
     if (!this.loginForm.valid) {
       this.messageService.add({
@@ -65,9 +68,9 @@ export class Login {
         console.log(res);
         this.messageService.add({
           severity: 'success',
-          summary: 'Sesión con Google',
+          summary: 'Bienvenido',
           detail: `Hola, ${res.first_name}`,
-          icon: 'pi pi-google',
+          icon: 'pi pi-check-circle',
           // Para el tiempo: life: 500000
         });
 

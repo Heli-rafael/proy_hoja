@@ -72,8 +72,9 @@ class DiagnosticoIA(models.Model):
     porcentaje_salud = models.FloatField()     # 0–100
     confianza_ia = models.FloatField()         # 0–100
 
-    tratamiento = models.TextField()
-    como_prevenir = models.TextField()
+    tratamiento_natural = models.TextField()
+    tratamiento_quimico = models.TextField()
+    prevencion = models.TextField()
 
     creado_en = models.DateTimeField(auto_now_add=True)
 

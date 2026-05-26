@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ApiConfig } from './api.config';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   // ========================
@@ -55,6 +57,12 @@ export class AuthService {
     ).pipe(
       
       tap(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Hasta pronto',
+          detail: 'La sesión se cerró correctamente.',
+          icon: 'pi pi-sign-out',
+        });
         this.router.navigate(['/auth/login']);
       }),
 

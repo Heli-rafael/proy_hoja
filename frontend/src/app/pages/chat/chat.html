@@ -18,11 +18,11 @@
                     <div class="logo-container">
 
                         <div class="logo-icon">
-                            <img src="/logo_hoja.jpg" alt="logo">
+                            <img src="/AgroVisionAI.png" alt="logo">
                         </div>
 
                         <div class="logo-text">
-                            <h2>PlantCare AI</h2>
+                            <h2>AgoVision AI</h2>
                             <span>IA Especializada</span>
                         </div>
 
@@ -315,15 +315,34 @@
                             <!-- LOADING -->
                             <div
                                 *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
-                                class="flex justify-center align-items-center"
-                                style="display: flex; align-items: center; justify-content: center;"
+                                class="loading-container-p"
                             >
-                                <p-progressSpinner></p-progressSpinner>
+
+                                <!-- Imagen de fondo -->
+                                <img
+                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
+                                    alt="Planta base"
+                                    class="loading-image"
+                                />
+
+                                <!-- Overlay oscuro -->
+                                <div class="loading-overlay">
+                                    
+                                    <!-- Spinner -->
+                                    <p-progressSpinner></p-progressSpinner>
+
+                                    <!-- Texto -->
+                                    <p class="loading-text">
+                                        Generando imagen con detección de daños en la hoja...
+                                    </p>
+
+                                </div>
+
                             </div>
 
                             <!-- ERROR -->
                             <div
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'error'"
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Error'"
                                 class="flex flex-column justify-center align-items-center"
                                 style="height: 300px; text-align: center;"
                             >
@@ -361,6 +380,74 @@
                             </p-imagecompare>
 
                         </div>
+
+                        <button
+                            *ngIf="diagnosticoSeleccionado?.imagen"
+                            pButton
+                            icon="pi pi-external-link"
+                            label="Ver en grande"
+                            (click)="mostrarDialogImagen = true">
+                        </button>
+
+                        <p-dialog
+    [(visible)]="mostrarDialogImagen"
+    [modal]="true"
+    [style]="{ width: '95vw', height: '95vh' }"
+    [contentStyle]="{
+        height: '100%',
+        padding: '0',
+        display: 'flex'
+    }"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <ng-template pTemplate="header">
+        <span>Comparación de imagen</span>
+    </ng-template>
+
+    <div
+        style="
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        "
+    >
+        <p-imagecompare
+            *ngIf="diagnosticoSeleccionado?.planta?.imagen && diagnosticoSeleccionado?.imagen"
+            style="
+                width: 100%;
+                height: 100%;
+                flex: 1;
+            "
+        >
+            <ng-template #left>
+                <img
+                    [src]="diagnosticoSeleccionado?.planta?.imagen"
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                        display: block;
+                    "
+                />
+            </ng-template>
+
+            <ng-template #right>
+                <img
+                    [src]="diagnosticoSeleccionado?.imagen"
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                        display: block;
+                    "
+                />
+            </ng-template>
+        </p-imagecompare>
+    </div>
+</p-dialog>
+                        
 
                     </div>
 
@@ -409,29 +496,45 @@
                 <!-- Prevención -->
                 <div class="main-container">
                     <div class="diagnostic-card">
-                    <div class="main-card">
-                        <h3>Cómo prevenir</h3>
+                        <div class="main-card">
+                            <h3>Cómo prevenir</h3>
+                        </div>
+
+                        <div class="main-card">
+
+                            <ul class="lista-bullets">
+                                <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.prevencion)">
+                                    {{ item }}
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
 
-                    <div class="main-card">
+                    <!-- Tratamiento natural-->
+                    <div class="diagnostic-card">
 
-                        <p>
-                            {{ diagnosticoSeleccionado?.como_prevenir }}
-                        </p>
+                        <h3>Tratamiento natural</h3>
+
+                        <ul class="lista-bullets">
+                            <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.tratamiento_natural)">
+                                {{ item }}
+                            </li>
+                        </ul>
                     </div>
 
-                </div>
+                    <!-- Tratamiento quimico-->
+                    <div class="diagnostic-card">
 
-                <!-- Tratamiento -->
-                <div class="diagnostic-card">
+                        <h3>Tratamiento quimico</h3>
 
-                    <h3>Tratamiento</h3>
+                        <ul class="lista-bullets">
+                            <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.tratamiento_quimico)">
+                                {{ item }}
+                            </li>
+                        </ul>
 
-                    <p>
-                        {{ diagnosticoSeleccionado?.tratamiento }}
-                    </p>
-
-                </div>
+                    </div>
                 </div>
 
                 
@@ -571,6 +674,7 @@
             [(visible)]="chatVisible"
             [closable]="false"
             [modal]="isMobile"
+            [dismissible]="false"
             position="right"
             styleClass="custom-drawer-chat"
         >
@@ -578,13 +682,26 @@
             <ng-template pTemplate="header">
 
                 <div class="drawer-header-chat">
+                    
                     <div class="logo-container-chat">
                         <div class="logo-text-chat">
-                            <h2>IA Especializada en esta Planta</h2>
+                            <h2>IA Especializada</h2>
                             <span>Conversación basada en la imagen analizada</span>
                         </div>
+
                         <div class="logo-icon-chat">
-                            <img src="/logo_hoja.jpg" alt="logo">
+                            <img src="/AgroVisionAI.png">
+                        </div>
+
+                        <div *ngIf="isMobile">
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-times"
+                                class="p-button-text close-btn-chat"
+                                (click)="chatVisible = false"
+                                aria-label="Cerrar"
+                            ></button>
                         </div>
 
                     </div>
@@ -592,13 +709,29 @@
                     <div *ngIf="diagnosticoSeleccionado" class="container-chat" style="margin: auto;">
                         
                         <div class="content-chat-card">
-                            <!-- LOADING -->
+                            
+                            <!-- LOADING class="flex justify-center align-items-center"-->
                             <div
                                 *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
-                                class="flex justify-center align-items-center"
-                                style="display: flex; align-items: center; justify-content: center;"
+                                class="loading-container-s"
+
                             >
-                                <p-progressSpinner></p-progressSpinner>
+
+                                <!-- Imagen de fondo -->
+                                <img
+                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
+                                    alt="Planta base"
+                                    class="loading-image"
+                                />
+
+                                <!-- Overlay oscuro -->
+                                <div class="loading-overlay">
+
+                                    <!-- Spinner -->
+                                    <p-progressSpinner></p-progressSpinner>
+
+                                </div>
+
                             </div>
                             
                             <!-- IMAGEN-->

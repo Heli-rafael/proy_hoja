@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+# ==============================
+# CARGAR VARIABLES DE ENTORNO
+# ==============================
 from dotenv import load_dotenv
 import os
 
@@ -17,7 +19,10 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
+#CARGAMOS GOOGLE ID
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -53,9 +58,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    #Bloquear
-    #'backend.common.middleware.APIKeyMiddleware',
-    #
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,9 +68,6 @@ MIDDLEWARE = [
 
 #
 AUTH_USER_MODEL = 'api.Usuario'
-
-#
-API_KEY = 'clave'
 
 #
 REST_FRAMEWORK = {
@@ -110,11 +109,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Variables de entorno .env
-load_dotenv(os.path.join(BASE_DIR, '.env'))
-
 # CORS
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
 ]

@@ -37,14 +37,24 @@ Devuelve SOLO JSON válido:
   "severidad": "Leve" | "Moderada" | "Grave",
   "porcentaje_salud": number,
   "confianza_ia": number,
-  "tratamiento": string,
-  "como_prevenir": string
+  "tratamiento_natural": string,
+  "tratamiento_quimico": string,
+  "prevencion": string
 }
 
 REGLAS:
 - no agregues markdown
 - no agregues texto extra
 - devuelve solo JSON
+- los campos "tratamiento_natural", "tratamiento_quimico" y "prevencion" deben ser STRINGS
+- cada punto debe estar separado por el carácter literal "\n" (backslash + n)
+- NO uses saltos de línea reales dentro del texto
+- NO uses líneas nuevas reales en la respuesta
+- NO agregues espacios después de "\n"
+- NO termines con "\n"
+- el último punto debe terminar con "."
+- ejemplo exacto de formato:
+  "Aplicar ajo.\nRetirar hojas.\nEvitar humedad."
 """
                 },
                 {
@@ -88,8 +98,9 @@ DIAGNOSTICO:
 Enfermedad: {diagnostico.enfermedad_detectada}
 Severidad: {diagnostico.severidad}
 Salud: {diagnostico.porcentaje_salud}%
-Tratamiento: {diagnostico.tratamiento}
-Prevención: {diagnostico.como_prevenir}
+Tratamiento natural: {diagnostico.tratamiento_natural}
+Tratamiento quimico: {diagnostico.tratamiento_quimico}
+Prevención: {diagnostico.prevencion}
 
 PREGUNTA: {pregunta_usuario}
 

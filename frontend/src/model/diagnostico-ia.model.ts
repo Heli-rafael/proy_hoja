@@ -10,7 +10,8 @@ export interface DiagnosticoIAModel {
   severidad: string;
   porcentaje_salud: number;
   confianza_ia: number;
-  tratamiento: string;
-  como_prevenir: string;
+  tratamiento_natural: string;
+  tratamiento_quimico: string;
+  prevencion: string;
   creado_en?: string | Date;
 }

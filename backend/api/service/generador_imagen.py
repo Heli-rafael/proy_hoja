@@ -1,78 +1,145 @@
 import base64
+import json
+import re
+from io import BytesIO
 
 from openai import OpenAI
 from django.conf import settings
 from django.core.files.base import ContentFile
-
+from PIL import Image, ImageDraw
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
-def generar_imagen_anotada(
-    image_file,
-    diagnostico
-):
+def to_data_url(image_bytes: bytes) -> str:
+    b64 = base64.b64encode(image_bytes).decode("utf-8")
+    return f"data:image/jpeg;base64,{b64}"
 
+
+def generar_imagen_anotada(image_file, diagnostico=None):
     image_file.seek(0)
+    image_bytes = image_file.read()
 
-    result = client.images.edit(
+    # abrir imagen
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
+    width, height = image.size
 
-        model="gpt-image-1",
+    image_url = to_data_url(image_bytes)
 
-        image=image_file,
+    # ----------------------------
+    # 1. VISIÓN IA (SIN response_format para compatibilidad)
+    # ----------------------------
+    response = client.responses.create(
+        model="gpt-4o",
+        temperature=0,
+        input=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": f"""
+Eres un sistema experto en visión agrícola de alta precisión.
 
-        size="auto",
+La imagen tiene dimensiones exactas:
+width = {width}
+height = {height}
 
-        prompt=f"""
+OBJETIVO:
+Detectar TODAS las lesiones visibles en hojas.
 
-CRÍTICO: NO RECONSTRUIR NI MEJORAR LA IMAGEN.
-USA LA IMAGEN ORIGINAL SIN MODIFICAR PIXELES.
-SOLO ANOTACIÓN VISUAL (círculos rojos).
+RESPONDE SOLO JSON VÁLIDO:
 
-TAREA:
-Detecta SOLO daño vegetal REAL visible con alta certeza.
+{{
+  "damages": [
+    {{
+      "type": "necrosis|mancha|clorosis|hongo|otro",
+      "confidence": 0.0,
+      "bbox": {{
+        "x1": 0.0,
+        "y1": 0.0,
+        "x2": 0.0,
+        "y2": 0.0
+      }}
+    }}
+  ]
+}}
 
-SÍNTOMAS VÁLIDOS:
-- necrosis (tejido negro/marrón seco)
-- manchas marrones definidas
-- clorosis evidente (amarilleo localizado)
-- hongos o mildiu visibles
-- agujeros en hoja
-- bordes secos o quemados
-- lesiones claramente diferenciadas del tejido sano
-
-REGLAS DE DETECCIÓN (MUY IMPORTANTE):
-- Ignora variaciones leves de color o textura.
-- Ignora sombras, luz, reflejos o ruido de cámara.
-- NO marcar zonas dudosas.
-- Si no estás seguro, NO marques.
-
-REGLAS DE ANOTACIÓN:
-- Solo dibuja círculos rojos.
-- Tamaño del círculo proporcional al área dañada (pequeño/medio/grande).
-- Máximo 1 círculo por lesión continua.
-- No solapar círculos innecesariamente.
-- Solo marcar daño confirmado.
-
-PROHIBIDO:
-- NO mejorar calidad de imagen
-- NO enfocar ni suavizar
-- NO cambiar colores
-- NO reinterpretar la imagen
-- NO agregar texto, flechas o etiquetas
-- NO modificar fondo ni estructura
-
-RESULTADO:
-Imagen idéntica + círculos rojos únicamente en daño confirmado.
-
+REGLAS CRÍTICAS:
+- Coordenadas NORMALIZADAS (0 a 1)
+- bbox debe ajustarse EXACTAMENTE al daño visible
+- NO incluir sombras, fondo o ruido
+- cada daño es independiente
+- máxima precisión espacial
+- NO texto adicional
 """
+                    },
+                    {
+                        "type": "input_image",
+                        "image_url": image_url
+                    }
+                ]
+            }
+        ]
     )
 
-    image_base64 = result.data[0].b64_json
+    # ----------------------------
+    # 2. PARSEO ROBUSTO (ANTI-ERRORES)
+    # ----------------------------
+    try:
+        raw = response.output_text.strip()
 
-    image_bytes = base64.b64decode(image_base64)
+        match = re.search(r"\{.*\}", raw, re.S)
+        if match:
+            data = json.loads(match.group())
+            damages = data.get("damages", [])
+        else:
+            damages = []
 
-    return ContentFile(
-        image_bytes,
-        name="diagnostico_ai.png"
-    )
+    except Exception:
+        damages = []
+
+    # ----------------------------
+    # 3. DIBUJO EN IMAGEN (CORRECTO Y ESTABLE)
+    # ----------------------------
+    draw = ImageDraw.Draw(image)
+
+    for d in damages:
+        try:
+            bbox = d.get("bbox", {})
+
+            x1 = float(bbox["x1"]) * width
+            y1 = float(bbox["y1"]) * height
+            x2 = float(bbox["x2"]) * width
+            y2 = float(bbox["y2"]) * height
+
+            # validación básica anti-errores del modelo
+            if x2 <= x1 or y2 <= y1:
+                continue
+
+            draw.rectangle(
+                (x1, y1, x2, y2),
+                outline=(255, 0, 0),
+                width=3
+            )
+
+            label = d.get("type", "damage")
+            confidence = d.get("confidence", 0)
+
+            draw.text(
+                (x1, max(0, y1 - 12)),
+                f"{label} {confidence:.2f}",
+                fill=(255, 0, 0)
+            )
+
+        except Exception:
+            continue
+
+    # ----------------------------
+    # 4. EXPORTAR IMAGEN FINAL
+    # ----------------------------
+    output = BytesIO()
+    image.save(output, format="PNG")
+    output.seek(0)
+
+    return ContentFile(output.read(), name="diagnostico_ai.png")
