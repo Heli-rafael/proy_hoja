@@ -88,25 +88,23 @@ ESTILOS PARA EL DRAWER IZQUIERDO
   gap: 14px;
 }
 
-.logo-icon {
-  width: 52px;
-  height: 52px;
+.logo-principle {
+  width: 80px;
+  height: 80px;
   border-radius: 16px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--secondary);
-
-  font-size: 24px;
+  background: var(--background-grey);
 
   box-shadow: var(--secondary-dark-shadow);
 }
 
-.logo-icon img{
-  width: 70px;
-  height: 70px;
+.logo-principle img{
+  width: 80px;
+  height: 80px;
   border-radius: 16px;
 
   object-fit: cover;
@@ -892,29 +890,16 @@ MAIN CONTENT | BIENVENIDA
   box-shadow: 0 10px 25px rgba(0,0,0,0.35);
 }
 
-
-.hero-icon {
-  width: 90px;
-  height: 90px;
-
-  margin: 0 auto 1.5rem;
-
-  border-radius: 24px;
-
+.logo-card {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  background: var(--primary);
-
-  font-size: 2.5rem;
-
-  box-shadow: 0 10px 25px var(--primary-shadow);
 }
 
-.hero-icon i {
-  color: white;
-  font-size: 32px;
+.logo-card img{
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }
 
 /* TITLE */
@@ -1052,6 +1037,40 @@ MAIN CONTENT | BIENVENIDA
   height: 60px !important;
 }
 
+/* =======================================
+   COMPARACION IMAGEN DIALOG
+======================================= */
+.compare-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.image-compare {
+    width: auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.compare-image {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.image-compare img {
+    height:80vh;
+    width: 80%;
+    max-width: none;
+    object-fit: contain;
+    display: block;
+}
 
 /* =======================================
    MOBILE (<= 768px)

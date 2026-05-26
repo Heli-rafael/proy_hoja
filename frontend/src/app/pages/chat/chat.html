@@ -17,7 +17,7 @@
 
                     <div class="logo-container">
 
-                        <div class="logo-icon">
+                        <div class="logo-principle">
                             <img src="/AgroVisionAI.png" alt="logo">
                         </div>
 
@@ -354,9 +354,9 @@
 
                             <!-- IMAGE COMPARE -->
                             <p-imagecompare
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen !== 'pendiente'
-                                    && diagnosticoSeleccionado?.estado_imagen !== 'procesando'
-                                    && diagnosticoSeleccionado?.estado_imagen !== 'error'
+                                *ngIf="diagnosticoSeleccionado?.estado_imagen !== 'Pendiente'
+                                    && diagnosticoSeleccionado?.estado_imagen !== 'Procesando'
+                                    && diagnosticoSeleccionado?.estado_imagen !== 'Error'
                                     && diagnosticoSeleccionado?.planta?.imagen
                                     && diagnosticoSeleccionado?.imagen"
                                 class="shadow-lg rounded-2xl"
@@ -379,76 +379,123 @@
                                 </ng-template>
                             </p-imagecompare>
 
+                            <div
+                                *ngIf="diagnosticoSeleccionado?.imagen"
+                                style="display:flex; justify-content:center; margin-top:15px;"
+                            >
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-eye"
+                                    label="Ver imagen completa"
+                                    class="p-button-outlined p-button-success"
+                                    (click)="mostrarDialogImagen = true"
+                                >
+                                </button>
+
+                            </div>
+                            
+                            <p-dialog
+                                header="Imagen Analizada"
+                                [(visible)]="mostrarDialogImagen"
+                                [modal]="true"
+                                [closable]="true"
+                                [draggable]="false"
+                                [resizable]="false"
+                                [style]="{ width: '70vw' }"
+                                [breakpoints]="{
+                                    '960px': '90vw',
+                                    '640px': '95vw'
+                                }"
+                            >
+
+                                <!-- CONTENIDO -->
+                                <div
+                                    style="
+                                        width:100%;
+                                        height:70vh;
+                                        display:flex;
+                                        justify-content:flex-start;
+                                        align-items:flex-start;
+                                        background:#f5f5f5;
+                                        border-radius:12px;
+                                    "
+                                >
+                                    <div
+                                        style="
+                                            display:inline-block;
+                                        "
+                                        [style.transform]="'scale(' + zoomImagen + ')'"
+                                        style="
+                                            transform-origin: top left;
+                                            transition: transform .25s ease;
+                                        "
+                                    >
+                                        <img
+                                            [src]="diagnosticoSeleccionado?.imagen"
+                                            alt="Imagen analizada"
+                                            style="
+                                                display:block;
+                                                max-width:none;
+                                                border-radius:12px;
+                                            "
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- FOOTER -->
+                                <ng-template pTemplate="footer">
+
+                                    <div
+                                        style="
+                                            display:flex;
+                                            justify-content:center;
+                                            gap:12px;
+                                            width:100%;
+                                        "
+                                    >
+
+                                        <!-- Zoom Out -->
+                                        <button
+                                            pButton
+                                            type="button"
+                                            icon="pi pi-search-minus"
+                                            label="Alejar"
+                                            class="p-button-outlined p-button-secondary"
+                                            (click)="zoomOut()"
+                                        >
+                                        </button>
+
+                                        <!-- Reset -->
+                                        <button
+                                            pButton
+                                            type="button"
+                                            icon="pi pi-refresh"
+                                            label="Reset"
+                                            class="p-button-outlined"
+                                            (click)="resetZoom()"
+                                        >
+                                        </button>
+
+                                        <!-- Zoom In -->
+                                        <button
+                                            pButton
+                                            type="button"
+                                            icon="pi pi-search-plus"
+                                            label="Acercar"
+                                            class="p-button-success"
+                                            (click)="zoomIn()"
+                                        >
+                                        </button>
+
+                                    </div>
+
+                                </ng-template>
+
+                            </p-dialog>
+
                         </div>
-
-                        <button
-                            *ngIf="diagnosticoSeleccionado?.imagen"
-                            pButton
-                            icon="pi pi-external-link"
-                            label="Ver en grande"
-                            (click)="mostrarDialogImagen = true">
-                        </button>
-
-                        <p-dialog
-    [(visible)]="mostrarDialogImagen"
-    [modal]="true"
-    [style]="{ width: '95vw', height: '95vh' }"
-    [contentStyle]="{
-        height: '100%',
-        padding: '0',
-        display: 'flex'
-    }"
-    [draggable]="false"
-    [resizable]="false"
->
-    <ng-template pTemplate="header">
-        <span>Comparación de imagen</span>
-    </ng-template>
-
-    <div
-        style="
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            display: flex;
-        "
-    >
-        <p-imagecompare
-            *ngIf="diagnosticoSeleccionado?.planta?.imagen && diagnosticoSeleccionado?.imagen"
-            style="
-                width: 100%;
-                height: 100%;
-                flex: 1;
-            "
-        >
-            <ng-template #left>
-                <img
-                    [src]="diagnosticoSeleccionado?.planta?.imagen"
-                    style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        display: block;
-                    "
-                />
-            </ng-template>
-
-            <ng-template #right>
-                <img
-                    [src]="diagnosticoSeleccionado?.imagen"
-                    style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        display: block;
-                    "
-                />
-            </ng-template>
-        </p-imagecompare>
-    </div>
-</p-dialog>
-                        
-
                     </div>
 
                     <!-- Salud -->
@@ -550,13 +597,13 @@
 
                         <div class="card-principle">
                     
-                            <!-- ICON -->
-                            <div class="hero-icon">
-                                <i class="pi pi-bolt"></i>
+                            <!-- IMAGEN -->
+                            <div class="logo-card">
+                                <img src="/AgroVisionAI.png" alt="AgroVision AI">
                             </div>
 
                             <!-- TITLE -->
-                            <h1>PlantCare AI</h1>
+                            <h1>AgoVision AI</h1>
 
                             <p class="welcome-description">
                                 Detecta enfermedades en cultivos usando inteligencia artificial avanzada.

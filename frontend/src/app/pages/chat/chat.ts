@@ -60,6 +60,7 @@ export class Chat {
   isMobile: boolean = false;
 
   mostrarDialogImagen: boolean = false;
+  zoomImagen: number = 1;
 
   // =========================
   // CONSTRUCTOR
@@ -85,6 +86,20 @@ export class Chat {
     this.cargarPerfil();
   }
 
+  zoomIn(): void {
+    this.zoomImagen += 0.2;
+  }
+
+  zoomOut(): void {
+
+    if (this.zoomImagen > 0.4) {
+      this.zoomImagen -= 0.2;
+    }
+  }
+
+  resetZoom(): void {
+    this.zoomImagen = 1;
+  }
   // =========================
   // FORMATEAR \n
   // =========================

@@ -31,6 +31,7 @@
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
     "@primeuix/themes": "^2.0.3",
+    "axios": "^1.16.1",
     "chart.js": "^4.5.1",
     "primeicons": "^7.0.0",
     "primeng": "^20.4.0",

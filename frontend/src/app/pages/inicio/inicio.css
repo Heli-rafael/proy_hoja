@@ -81,8 +81,8 @@ body{
 }
 
 .logo img{
-  width:34px;
-  height:34px;
+  min-width:50px;
+  min-height:50px;
   border-radius:8px;
 }
 
