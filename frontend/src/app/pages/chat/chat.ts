@@ -62,6 +62,15 @@ export class Chat {
   mostrarDialogImagen: boolean = false;
   zoomImagen: number = 1;
 
+  // Mensajes predeterminados
+  quickMessages: string[] = [
+    '¿Qué tratamiento tiene?',
+    '¿Cómo aplico el tratamiento?',
+    'Dosis del tratamiento',
+    'Frecuencia del tratamiento',
+    'Duración del tratamiento'
+  ];
+
   // =========================
   // CONSTRUCTOR
   // =========================
@@ -143,11 +152,19 @@ export class Chat {
     });
   }
 
+  private closeDrawersOnMobile(): void {
+    if (this.isMobile) {
+      this.sidebarVisible = false;
+      this.chatVisible = false;
+    }
+  }
   seleccionarChat(chat: ChatModel): void {
 
     this.chatSeleccionado = chat;
 
     this.diagnosticoSeleccionado = chat.diagnostico;
+
+    this.closeDrawersOnMobile();
 
     this.mensajeService.obtenerMensajes(chat.id!)
       .subscribe({
@@ -283,6 +300,16 @@ export class Chat {
     }, 8000);
   }
 
+  // =========================
+  // MENSAJE INTERACCION
+  // =========================
+  enviarQuickMessage(texto: string): void {
+    if (this.isSendingMessage) return;
+
+    this.nuevoMensaje = texto;
+    this.enviarMensaje();
+  }
+
   enviarMensaje(): void {
 
     if (!this.nuevoMensaje.trim()) return;
@@ -293,9 +320,7 @@ export class Chat {
 
     const textoUsuario = this.nuevoMensaje;
     
-    // =========================
-    // MENSAJE OPTIMISTA USUARIO
-    // =========================
+    // MENSAJE USUARIO
     
     const mensajeTemporalUsuario: MensajeModel = {
       chat: this.chatSeleccionado.id,
@@ -306,9 +331,7 @@ export class Chat {
 
     this.mensajes.push(mensajeTemporalUsuario);
     
-    // =========================
-    // MENSAJE TEMPORAL IA
-    // =========================
+    // MENSAJE IA
 
     const mensajeTemporalIA: MensajeModel = {
       chat: this.chatSeleccionado.id,
@@ -382,6 +405,7 @@ export class Chat {
     this.chatSeleccionado = null;
     this.diagnosticoSeleccionado = null;
     this.mensajes = [];
+    this.closeDrawersOnMobile();
     this.cancelarImagen();
     this.isAnalyzing = false;
   }
@@ -449,16 +473,20 @@ export class Chat {
   // =========================
   // RESPONSIVE
   // =========================
+  private lastIsMobile = false;
+
   @HostListener('window:resize')
   checkScreen(): void {
     const mobile = window.innerWidth <= 768;
-
     this.isMobile = mobile;
 
-    if (mobile) {
+    // solo ejecuta cuando cambia de desktop → mobile
+    if (mobile && !this.lastIsMobile) {
       this.sidebarVisible = false;
       this.chatVisible = false;
     }
+
+    this.lastIsMobile = mobile;
   }
 
   @ViewChild('scrollContainer', { static: false })
@@ -476,6 +504,7 @@ export class Chat {
       console.log('scroll error', e);
     }
   }
+  
   
   
 }

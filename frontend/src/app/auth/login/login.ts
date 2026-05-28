@@ -65,7 +65,6 @@ export class Login {
       finalize(() => this.processing.stop())
     ).subscribe({
       next: (res) => {
-        console.log(res);
         this.messageService.add({
           severity: 'success',
           summary: 'Bienvenido',

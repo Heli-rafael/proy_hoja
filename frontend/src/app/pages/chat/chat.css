@@ -33,19 +33,39 @@
   min-width: 0;
 }
 
-/* DRAWER NORMAL */
+/* DRAWER IZQUIERDO */
 ::ng-deep .custom-drawer {
   width: 280px !important;
   background: var(--background-sidebar) !important;
   border-color: var(--background-sidebar) !important;
   color: #f5f5f5 !important;
 }
+::ng-deep .custom-drawer .p-drawer-header {
+  padding-bottom: 0 !important;
+}
+::ng-deep .custom-drawer .p-drawer-footer {
+  padding-top: 5px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
 
+/* DRAWER DERECHO */
 ::ng-deep .custom-drawer-chat {
   width: 320px !important;
   background: white !important;
   border-color: white !important;
   color: var(--grey--letter) !important;
+}
+
+::ng-deep .custom-drawer-chat .p-drawer-header {
+  padding-bottom: 10px !important;
+}
+::ng-deep .custom-drawer-chat .p-drawer-footer {
+  padding-top: 5px !important;
+}
+
+.drawer-header-chat {
+  flex-shrink: 0;
 }
 
 /* CONTENIDO */
@@ -538,32 +558,72 @@ ESTILOS PARA EL DRAWER DERECHO
 /* FOOTER */
 
 /* CHAT */
+
 .chat-footer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
 }
 
 .chat-input {
-    flex: 1;
+  flex: 1;
+}
+
+/* RESPUESTAS PREDERMINADAS */
+
+.quick-carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 4px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.quick-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-btn {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+}
+
+.quick-btn:hover{
+  transform: translateY(-2px);
+}
+
+.quick-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* MENSAJES */
+::ng-deep .custom-drawer-chat .p-drawer-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}
+
+.chat-footer {
+  flex-shrink: 0;
+  background: white;
+}
+
 .mensajes-container{
-    height: 100%;
-    max-height: 65vh;
+  flex: 1;
+  overflow-y: auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding: 0 20px;
 
-    overflow-y: auto;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:10px;
-
-    padding:20px;
-
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 .mensaje-usuario{
@@ -1178,4 +1238,17 @@ MAIN CONTENT | BIENVENIDA
     text-align: center;
   }
 
+  /* DRAWER IZQUIERDO */
+  .chat-input {
+    width: 100%;
+  }
+
+  /* CONTENIDO PRINCIPAL */
+  .main-content {
+    padding: 1rem;
+  }
+
+  .main-container {
+    flex-direction: column;
+  }
 }

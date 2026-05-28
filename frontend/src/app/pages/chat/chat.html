@@ -128,6 +128,7 @@
                         pButton
                         type="button"
                         class="user-button p-button-text p-button-plain"
+                        style="width: 100%;"
                     >
 
                         <!-- IZQUIERDA: ICON + USER -->
@@ -721,7 +722,6 @@
             [(visible)]="chatVisible"
             [closable]="false"
             [modal]="isMobile"
-            [dismissible]="false"
             position="right"
             styleClass="custom-drawer-chat"
         >
@@ -739,18 +739,6 @@
                         <div class="logo-icon-chat">
                             <img src="/AgroVisionAI.png">
                         </div>
-
-                        <div *ngIf="isMobile">
-                            <button
-                                pButton
-                                type="button"
-                                icon="pi pi-times"
-                                class="p-button-text close-btn-chat"
-                                (click)="chatVisible = false"
-                                aria-label="Cerrar"
-                            ></button>
-                        </div>
-
                     </div>
 
                     <div *ngIf="diagnosticoSeleccionado" class="container-chat" style="margin: auto;">
@@ -792,13 +780,13 @@
                         
                     </div>
                 </div>
+                
             </ng-template>
 
             <!-- CONTENIDO -->
             <ng-template pTemplate="content">
-
+                
                 <div #scrollContainer class="mensajes-container">
-
                     <div
                         *ngFor="let mensaje of mensajes"
                         [ngClass]="{
@@ -828,7 +816,20 @@
 
             <!-- FOOTER -->
             <ng-template pTemplate="footer">
+                <div class="quick-carousel" *ngIf="!isSendingMessage">
 
+                    <button
+                        pButton
+                        [raised]="true"
+                        *ngFor="let msg of quickMessages"
+                        class="quick-btn p-button-text"
+                        (click)="enviarQuickMessage(msg)"
+                        [disabled]="isSendingMessage"
+                    >
+                        {{ msg }}
+                    </button>
+
+                </div>
                 <div class="chat-footer">
 
                     <input
@@ -845,7 +846,7 @@
                         pButton
                         type="button"
                         icon="pi pi-send"
-                        class="p-button-rounded p-button-primary"
+                        class="chat-button p-button-rounded p-button-primary"
                         [disabled]="isSendingMessage"
                         (click)="enviarMensaje()"
                     ></button>
