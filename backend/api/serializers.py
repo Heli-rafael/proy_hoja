@@ -187,15 +187,15 @@ class PlantaCreateSerializer(serializers.ModelSerializer):
             **validated_data
         )
 
-        # CONSUMIR CRÉDITO
-
-        consumir_credito(usuario)
-
         # ANALIZAR IA
 
         imagen.seek(0)
 
         data = analizar_planta_con_openai(imagen)
+
+        # CONSUMIR CRÉDITO
+
+        consumir_credito(usuario)
 
         # ACTUALIZAR PLANTA
 

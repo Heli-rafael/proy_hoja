@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-!xqg$2q$rl-o=c+!+4g@58tm=d^_cgc!qhu^!++4rg+9na^s*n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -86,40 +86,47 @@ REST_FRAMEWORK = {
 # -------------------
 # Cookies y sesiones
 # -------------------
-SESSION_COOKIE_SECURE = False        # No HTTPS en desarrollo
-CSRF_COOKIE_SECURE = False           # No HTTPS
-#SESSION_COOKIE_AGE = 1209600         # 2 semanas
-SESSION_COOKIE_AGE = 1209600         # 20 segundos para pruebas
+SESSION_COOKIE_SECURE = False       # No HTTPS en desarrollo
+CSRF_COOKIE_SECURE = False          # No HTTPS
+#SESSION_COOKIE_AGE = 1209600       # 2 semanas
+SESSION_COOKIE_AGE = 21600          # 6horas
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_SAMESITE = 'Lax'      # Importante para Angular + CORS
 CSRF_COOKIE_SAMESITE = 'Lax'
-
-# Desarrollo local
-SESSION_COOKIE_SECURE = False          # HTTPS no requerido
-CSRF_COOKIE_SECURE = False
 
 SESSION_COOKIE_PATH = '/'
 CSRF_COOKIE_PATH = '/'
 SESSION_COOKIE_DOMAIN = None
 CSRF_COOKIE_DOMAIN = None
 
+SESSION_COOKIE_HTTPONLY = True
+
+SESSION_SAVE_EVERY_REQUEST = True
+
+CORS_ALLOW_CREDENTIALS = True
+
 # Google
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 # Imagenes
-MEDIA_URL = '/media/'
+# Produccion
+MEDIA_URL = '/backend-media/'
+# Local
+#MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
+    "http://10.84.207.214:4200",
+    "https://proy-hoja.duckdns.org",
     "http://localhost:4200",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://10.84.207.214:4200",
+    "https://proy-hoja.duckdns.org",
     "http://localhost:4200",
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend.urls'
 

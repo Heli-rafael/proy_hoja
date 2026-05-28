@@ -6,6 +6,10 @@ from django.conf import settings
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
+def normalizar_lista(texto):
+    frases = [f.strip() for f in texto.split(".") if f.strip()]
+
+    return "\\n".join(f"{f}." for f in frases)
 
 def analizar_planta_con_openai(image_file):
 
@@ -44,17 +48,10 @@ REGLAS DE TEXTO:
 - "enfermedad_detectada" DEBE ser SOLO el nombre común exacto.
 - PROHIBIDO incluir nombres científicos.
 - PROHIBIDO usar paréntesis, comas o explicaciones.
-- los campos "tratamiento_natural", "tratamiento_quimico" y "prevencion" deben ser STRINGS
-- cada punto debe estar separado por el carácter literal "\n" (backslash + n)
-- NO uses saltos de línea reales dentro del texto
-- NO uses líneas nuevas reales en la respuesta
-- NO agregues espacios después de "\n"
-- NO termines con "\n"
-- el último punto debe terminar con "."
-- ejemplo exacto de formato:
-  "Aplicar ajo.\nRetirar hojas.\nEvitar humedad."
-- Para "tratamiento_natural", "tratamiento_quimico" y "prevencion" 
-- tienes que darme 4 frases.
+- los campos "tratamiento_natural", "tratamiento_quimico" y "prevencion"
+deben contener exactamente 4 frases cortas.
+- cada frase debe terminar en punto.
+- NO uses listas numeradas.
 """
 
     response = client.responses.create(
@@ -84,7 +81,43 @@ REGLAS DE TEXTO:
                 "type": "json_object"
             }
         }
+
     )
+
+    resultado = json.loads(
+        response.output_text
+    )
+
+    # NORMALIZAR CAMPOS
+
+    resultado["tratamiento_natural"] = (
+        normalizar_lista(
+            resultado.get(
+                "tratamiento_natural",
+                ""
+            )
+        )
+    )
+
+    resultado["tratamiento_quimico"] = (
+        normalizar_lista(
+            resultado.get(
+                "tratamiento_quimico",
+                ""
+            )
+        )
+    )
+
+    resultado["prevencion"] = (
+        normalizar_lista(
+            resultado.get(
+                "prevencion",
+                ""
+            )
+        )
+    )
+
+    return resultado
 
     return json.loads(response.output_text)
 
@@ -95,26 +128,33 @@ def generar_respuesta_chat(
     diagnostico
 ):
     system_prompt = """
-Eres un fitopatólogo experto en enfermedades de plantas.
+Eres un asistente experto en fitopatología enfocado en enfermedades de plantas (especialmente papa).
 
-REGLAS ESTRICTAS:
-- Solo usas la información del DIAGNOSTICO.
-- NO inventes dosis, tiempos, cantidades ni productos.
-- Si algo no está en el diagnóstico, di:
-  "El diagnóstico no contiene esa información."
+## FUENTES DE INFORMACIÓN
+1. DIAGNÓSTICO (fuente principal)
+2. CONOCIMIENTO AGRONÓMICO GENERAL (solo cuando el diagnóstico no tenga la información)
 
-- Si la pregunta no está relacionada con enfermedades de plantas, responde EXACTO:
-"Esa pregunta no está relacionada con el diagnóstico de la planta."
+## REGLA DE PRIORIDAD
+- Primero usa siempre el diagnóstico.
+- Si el diagnóstico NO incluye la información solicitada (especialmente tratamiento, dosis, frecuencia o aplicación), entonces DEBES usar conocimiento agronómico general confiable sobre esa enfermedad.
 
-- Si el usuario pregunta por:
-  dosis, frecuencia, duración, aplicación o tiempos:
-  solo responde si está explícitamente en el diagnóstico.
+## PROHIBICIÓN IMPORTANTE
+- No digas “El diagnóstico no contiene esa información” si existe conocimiento agronómico general aplicable.
+- Solo usa esa frase si la pregunta es imposible de responder incluso con conocimiento general.
 
-ESTILO:
-- Máximo 35 palabras
-- Respuesta muy corta
-- Lenguaje simple, sin tecnicismos
-- Sin listas largas
+## TRATAMIENTOS (CRÍTICO)
+Si el usuario pregunta por tratamiento:
+- Responde SIEMPRE con una recomendación agronómica general adecuada a la enfermedad detectada.
+- Incluye dosis, frecuencia y aplicación si es estándar agrícola conocido.
+
+## FUERA DE CONTEXTO
+Si la pregunta no está relacionada con enfermedades de plantas o hojas:
+"Esa consulta no está relacionada con diagnósticos de enfermedades de hojas."
+
+## ESTILO
+- Máximo 30 palabras (excepto tratamientos)
+- Respuestas directas
+- Sin explicaciones largas
 """
 
     user_prompt = f"""
