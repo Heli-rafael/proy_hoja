@@ -1,11 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+import os
+from django.utils.text import slugify
+
+def nombre_imagen_usuario(instance, filename):
+    extension = os.path.splitext(filename)[1]
+    return f"usuarios/{slugify(instance.username)}{extension}"
+
 # Create your models here.
 class Usuario(AbstractUser):
-    estado = models.BooleanField(default=True)
-    picture = models.URLField(blank=True, null=True)
 
+    class TipoAutenticacion(models.TextChoices):
+        LOCAL = "LOCAL", "Local"
+        GOOGLE = "GOOGLE", "Google"
+
+    autenticacion = models.CharField(
+        max_length=10,
+        choices=TipoAutenticacion.choices,
+        default=TipoAutenticacion.LOCAL
+    )
+
+    email = models.EmailField(unique=True)
+    picture = models.ImageField(
+        upload_to=nombre_imagen_usuario,
+        blank=True,
+        null=True
+    )
     plan = models.ForeignKey(
         "Plan",
         on_delete=models.SET_NULL,
@@ -14,13 +35,30 @@ class Usuario(AbstractUser):
         related_name="usuarios"
     )
     
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    state = models.BooleanField(default=True)
+
+   
     def __str__(self):
         return f"{self.username}"
     
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
+    
 class Plan(models.Model):
+    
+    orden = models.PositiveIntegerField(unique=True, default=1)
     nombre = models.CharField(max_length=50)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
     creditos_diarios = models.IntegerField(default=3)
-    descripcion = models.TextField(blank=True, null=True)
+
+    beneficios = models.JSONField(default=list, blank=True)
+
+    estado = models.BooleanField(default=True)
+
+    destacado = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.nombre
@@ -72,15 +110,40 @@ class DiagnosticoIA(models.Model):
     porcentaje_salud = models.FloatField()     # 0–100
     confianza_ia = models.FloatField()         # 0–100
 
-    tratamiento_natural = models.TextField()
-    tratamiento_quimico = models.TextField()
-    prevencion = models.TextField()
+    tratamiento_natural = models.JSONField(default=list, blank=True)
+    tratamiento_quimico = models.JSONField(default=list, blank=True)
+    prevencion = models.JSONField(default=list, blank=True)
+
+    sintomas_detectados = models.JSONField(default=list, blank=True)
+    prediccion_evolucion = models.JSONField(default=list, blank=True)
+    plagas_relacionadas = models.JSONField(default=list, blank=True)
+    factores_climaticos_favorables = models.JSONField(default=dict, blank=True)
+    
+    urgencia = models.CharField(max_length=20, blank=True)
+    contagio = models.CharField(max_length=20, blank=True)
+    recuperacion = models.CharField(max_length=20, blank=True)
+    etapa = models.CharField(max_length=50, blank=True)
 
     creado_en = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.planta} - {self.enfermedad_detectada}"
-    
+
+class ActividadTratamiento(models.Model):
+    diagnostico = models.ForeignKey(
+        DiagnosticoIA,
+        on_delete=models.CASCADE,
+        related_name="actividades"
+    )
+
+    actividad = models.CharField(max_length=200)
+    tipo = models.CharField(max_length=20)
+    semana = models.IntegerField()
+    completada = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.diagnostico} - {self.tipo}"
+
 class Chat(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="chats")
     titulo = models.CharField(max_length=200, default="Nuevo chat")
@@ -90,6 +153,8 @@ class Chat(models.Model):
         on_delete=models.CASCADE,
         related_name="chat"
     )
+    
+    is_pinned = models.BooleanField(default=False)
 
     creado_en = models.DateTimeField(auto_now_add=True)
 

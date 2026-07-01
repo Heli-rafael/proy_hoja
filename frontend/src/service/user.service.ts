@@ -11,8 +11,9 @@ import { AuthService } from './auth/auth.service';
 })
 export class UserService {
 
-    private apiUrl = `${ApiConfig.apiUrl}api/usuario/`; // para CRUD general
     private profileUrl = `${ApiConfig.apiUrl}api/me/`;
+    private apiUrl = `${ApiConfig.apiUrl}api/usuario/`;
+    private planUrl = `${ApiConfig.apiUrl}api/plan/`;
     private creditsUrl = `${ApiConfig.apiUrl}api/me/creditos/`;
 
     constructor(
@@ -22,6 +23,10 @@ export class UserService {
 
     getProfile(): Observable<any> {
         return this.http.get(this.profileUrl);
+    }
+
+    getPlan(): Observable<any> {
+        return this.http.get(this.planUrl);
     }
 
     getCreditos(): Observable<any> {
@@ -44,8 +49,15 @@ export class UserService {
     }
 
     // Actualizar un usuario existente
-    editarUsuario(id: number, usuario: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}${id}/`, usuario);
+    editarUsuario(id: number, datos: FormData) {
+        return this.http.patch<User>(
+            `${this.apiUrl}${id}/`,
+            datos
+        );
+    }
+
+    cambiarPassword(data: any): Observable<any> {
+        return this.http.post(`${ApiConfig.apiUrl}api/me/password/`, data);
     }
 
     // Eliminar un usuario

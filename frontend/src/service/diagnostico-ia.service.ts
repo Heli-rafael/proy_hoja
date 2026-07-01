@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfig } from './auth/api.config';
 import { Observable } from 'rxjs';
 import { DiagnosticoIAModel } from '../model/diagnostico-ia.model';
+import { ActividadTratamientoModel } from '../model/actividad-tratamiento';
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +13,35 @@ export class DiagnosticoIAService {
 
   constructor(private http: HttpClient) {}
 
-  getMisDiagnosticos(): Observable<DiagnosticoIAModel[]> {
-    return this.http.get<DiagnosticoIAModel[]>(this.apiUrl);
+  // Actualizar calendario
+  actualizarActividad(id: number, data: Partial<ActividadTratamientoModel>) {
+    return this.http.patch(
+      `${ApiConfig.apiUrl}api/actividad-tratamiento/${id}/`,
+      data
+    );
   }
 
-  getDiagnosticoPorId(id: number): Observable<DiagnosticoIAModel> {
-    return this.http.get<DiagnosticoIAModel>(`${this.apiUrl}${id}/`);
+  // Exportar formatos
+  exportDiagnosticosExcel() {
+    return this.http.get(
+      `${this.apiUrl}export/excel/`,
+      { responseType: 'blob' }
+    );
   }
 
-  // Se usa FormData para poder enviar el archivo de imagen capturado
-  crearDiagnostico(datos: FormData): Observable<DiagnosticoIAModel> {
-    return this.http.post<DiagnosticoIAModel>(this.apiUrl, datos);
+  // Exportar todos los diagnosticos en PDF
+  exportDiagnosticosPDF() {
+    return this.http.get(
+      `${this.apiUrl}export/pdf/`,
+      { responseType: 'blob' }
+    );
   }
 
-  eliminarDiagnostico(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}${id}/`);
-  }
-
-  getDiagnosticoById(id: number) {
-    return this.http.get<any>(`${this.apiUrl}${id}/`);
-  }
+  // Exportar un diagnostico en PDF
+  exportDiagnosticoPDF(id: number) {
+  return this.http.get(
+    `${this.apiUrl}export/pdfindividual/${id}/`,
+    { responseType: 'blob' }
+  );
+}
 }

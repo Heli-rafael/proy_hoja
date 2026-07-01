@@ -13,7 +13,7 @@ html, body {
 
 /* TOAST MENSAJE */
 .p-toast {
-  z-index: 1200 !important;
+  z-index: 9999 !important;
 }
 
 .p-toast-message {
@@ -35,6 +35,7 @@ html, body {
   height: 40px !important;
 }
 
+/* ESTILOS GENERALES */
 :root {
     --primary: #10B981;
     --primary-light: #D1FAE5;
@@ -55,6 +56,144 @@ html, body {
     --green-letter: #047857;
 }
 
+:root {
+
+    /* =========================
+      BRAND (PRIMARY GREEN)
+    ========================= */
+    --color-primary: #10B981;
+    --color-primary-light: #D1FAE5;
+
+    --color-primary-dark: #059669;
+    --color-primary-active: #047857;
+    --color-primary-soft: #D1FAE5;
+    --color-primary-border: #6EE7B7;
+    --color-primary-shadow: rgba(16, 185, 129, 0.25);
+
+    --color-primary-white: #FFFFFF;
+    --color-primary-grey: #f5f6f8;
+
+    /* GRIS */
+    --color-grey : #6b7280;
+    --color-grey-light: #e5e7eb;
+
+    /* ROJO */
+    --color-red: #ef4444;
+    --color-red-light: #fee2e2;
+
+    /* MORADO */
+    --color-purple: #a855f7;
+    --color-purple-light: #ede9fe;
+    
+    /* AZUL */
+    --color-blue : #3b82f6;
+    --color-blue-light: #dbeafe;
+
+    /* AMARILLO */
+    --color-yellow: #fbbf24;
+    --color-yellow-light: #fef3c7;
+    
+    /* =========================
+        TEXT COLORS
+    ========================= */
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-inverse: #ffffff;
+    --text-success: #065F46;
+
+        /* =========================
+        NEUTRALS (GRAYSCALE)
+    ========================= */
+    --color-surface: #ffffff;
+    --color-background: #f5f6f8;
+    --color-border: #e5e7eb;
+
+    /* NUEVO*/
+
+    --primary-light: #D1FAE5;
+    --primary-shadow: rgba(28, 107, 78, 0.25);
+
+    --primary-grey: #f5f6f8;
+
+    --background-sidebar: #FFFFFF;
+    --background-grey: #f5f6f8;;
+
+    --secondary: #059669;
+    --secondary-dark: #065F46;
+    --secondary-light: #34D399;
+    --secondary-dark-shadow: rgba(4, 120, 87, 0.30);
+
+    --white-letter: white;
+    --dark-letter: #333;
+    --grey--letter: #6b7280;
+    --green-letter: #047857;
+}
+
+/* INPUT TEXT */
+.p-inputtext {
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 2px solid var(--color-border) !important;
+}
+
+.p-inputtext:focus {
+  border: 2px solid var(--color-primary) !important;
+}
+
+/* INPUT TEXT CON ICON */
+.p-iconfield .p-inputtext {
+  padding-left: 2.75rem !important;
+}
+
+.p-iconfield:focus-within .p-inputicon {
+  color: var(--color-primary);
+}
+
+/* PASSWORD */
+.p-password input {
+  width: 100% !important;
+  padding-right: 2.2rem !important; /* espacio para el icono */
+  padding-left: 14px !important;
+  border-radius: 12px !important;
+  border: 2px solid var(--color-grey-light) !important;
+}
+
+.p-password .p-password-toggle-mask {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+/* BUTTON */
+.p-button {
+  border-radius: 20px !important;
+}
+
+/* SELECT */
+.p-select {
+    border-radius: 12px !important;
+    border: 2px solid var(--color-grey-light) !important;
+    min-height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.p-select.p-focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: none !important;
+}
+
+/* POPOVER */
+.p-popover {
+  border-radius: 20px !important;
+  overflow: hidden;
+}
+.p-popover .p-popover-content {
+  border-radius: 20px !important;
+  overflow: hidden;
+}
 
 /* QUITAR SCROLL DE CONTENT */
 .custom-drawer .p-drawer-content {

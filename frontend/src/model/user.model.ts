@@ -1,7 +1,12 @@
 export interface Plan {
+  id: number;
+  orden: number;
   nombre: string;
+  precio: number;
   creditos_diarios: number;
-  descripcion: string;
+  beneficios: string[];
+  estado: boolean;
+  destacado: boolean;
 }
 
 export interface Creditos {
@@ -12,18 +17,24 @@ export interface Creditos {
 
 export interface User {
   id: number;
+  autenticacion: string;
   username: string;
-  email: string;
-  plan: Plan;
-  creditos: Creditos;
-  password?: string;
   first_name?: string;
   last_name?: string;
+
+  email: string;
+  password?: string;
+
+  state?: boolean;
+  phone?: string;
+  picture?: string;
+
+  plan: Plan;
+  creditos: Creditos;
+
   is_active?: boolean;
-  estado?: boolean;
   is_staff?: boolean;
   is_superuser?: boolean;
   date_joined?: string;
-  rol: string;
   last_login?: Date;
 }

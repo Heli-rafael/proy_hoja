@@ -4,15 +4,15 @@ from . import models
 
 import threading
 
-from .service.validador_imagen import validar_imagen_planta
+from .services.validador_imagen import validar_imagen_planta
 
-from .service.openai_service import (
+from .services.openai_service import (
     analizar_planta_con_openai
 )
 
-from .service.generador_imagen import generar_imagen_anotada
+from .services.gemini_service import generar_imagen_anotada
 
-from .service.services import (
+from .services.creditos_service import (
     puede_usar_credito,
     consumir_credito
 )
@@ -20,8 +20,18 @@ from .service.services import (
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Plan
-        fields = ['id', 'nombre', 'creditos_diarios', 'descripcion']
+        fields = [
+            'id',
+            'orden',
+            'nombre',
+            'precio',
+            'creditos_diarios',
+            'beneficios',
+            'estado',
+            'destacado',
+        ]
 
+from django.core.files.storage import default_storage
 
 class UsuarioSerializer(serializers.ModelSerializer):
 
@@ -36,12 +46,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = models.Usuario
         fields = [
             'id', 
+            'autenticacion',
             'username', 
             'password',
             'first_name', 
-            'last_name', 
+            'last_name',
+
             'email', 
-            'estado', 
+            'phone',
+            'state', 
             'picture',
             'plan',
 
@@ -64,12 +77,20 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
+        nueva_imagen = validated_data.pop('picture', None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
         if password:
             instance.set_password(password)
+
+        if nueva_imagen:
+            if instance.picture:
+                if default_storage.exists(instance.picture.name):
+                    default_storage.delete(instance.picture.name)
+
+            instance.picture = nueva_imagen
 
         instance.save()
         return instance
@@ -120,10 +141,16 @@ class PlantaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Planta
         fields = ['id', 'nombre', 'descripcion', 'imagen']
-        
+
+class ActividadTratamientoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ActividadTratamiento
+        fields = ["id", "diagnostico", "actividad", "tipo", "semana", "completada"]
+
 class DiagnosticoIASerializer(serializers.ModelSerializer):
 
     planta = PlantaSerializer(read_only=True)
+    actividades = ActividadTratamientoSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.DiagnosticoIA
@@ -140,6 +167,15 @@ class DiagnosticoIASerializer(serializers.ModelSerializer):
             'tratamiento_natural', 
             'tratamiento_quimico', 
             'prevencion', 
+            'sintomas_detectados',
+            'prediccion_evolucion',
+            'plagas_relacionadas',
+            'factores_climaticos_favorables',
+            'urgencia',
+            'contagio',
+            'recuperacion',
+            'etapa',
+            'actividades',
             'creado_en'
         ]
 
@@ -149,7 +185,7 @@ class ChatSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Chat
-        fields = ['id', 'usuario', 'titulo', 'diagnostico', 'creado_en']
+        fields = ['id', 'usuario', 'titulo', 'diagnostico', 'is_pinned', 'creado_en']
 
 class MensajeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -213,6 +249,18 @@ class PlantaCreateSerializer(serializers.ModelSerializer):
 
         # CREAR DIAGNÓSTICO
 
+        semana_max = max(
+            [a.get("semana", 1) for a in data.get("calendario_tratamiento", [])],
+            default=1
+        )
+
+        if semana_max <= 2:
+            recuperacion = "1-2 semanas"
+        elif semana_max <= 4:
+            recuperacion = "1-4 semanas"
+        else:
+            recuperacion = "2-6 semanas"
+            
         diagnostico = models.DiagnosticoIA.objects.create(
 
             usuario=usuario,
@@ -241,21 +289,72 @@ class PlantaCreateSerializer(serializers.ModelSerializer):
                 0
             ),
 
+            urgencia=data.get("urgencia", ""),
+            contagio=data.get("contagio", ""),
+            recuperacion=recuperacion,
+            etapa=data.get("etapa", ""),
+
+            sintomas_detectados=data.get(
+                "sintomas_detectados",
+                []
+            ),
+
+            prediccion_evolucion=data.get(
+                "prediccion_evolucion",
+                []
+            ),
+
+            plagas_relacionadas=data.get(
+                "plagas_relacionadas",
+                []
+            ),
+
+            factores_climaticos_favorables=data.get(
+                "factores_climaticos_favorables",
+                {}
+            ),
+
             tratamiento_natural=data.get(
                 "tratamiento_natural",
-                ""
+                []
             ),
 
             tratamiento_quimico=data.get(
                 "tratamiento_quimico",
-                ""
+                []
             ),
 
             prevencion=data.get(
                 "prevencion",
-                ""
+                []
             )
+            
         )
+
+        for actividad in data.get(
+            "calendario_tratamiento",
+            []
+        ):
+
+            models.ActividadTratamiento.objects.create(
+
+                diagnostico=diagnostico,
+
+                actividad=actividad.get(
+                    "actividad",
+                    ""
+                ),
+
+                tipo=actividad.get(
+                    "tipo",
+                    ""
+                ),
+
+                semana=actividad.get(
+                    "semana",
+                    1
+                )
+            )
 
         # CREAR CHAT
 
@@ -306,14 +405,13 @@ class PlantaCreateSerializer(serializers.ModelSerializer):
             )
 
         if (
-            not validacion.get("es_planta_papa")
+            not validacion.get("es_hoja_planta")
             or not validacion.get("es_apta_para_analisis")
         ):
-
             raise serializers.ValidationError(
                 validacion.get(
                     "motivo",
-                    "La imagen no contiene hojas de papa válidas."
+                    "La imagen no contiene hojas de planta válidas."
                 )
             )
 

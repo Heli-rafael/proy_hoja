@@ -110,20 +110,22 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 # Imagenes
 # Produccion
-MEDIA_URL = '/backend-media/'
+#MEDIA_URL = '/backend-media/'
 # Local
-#MEDIA_URL = '/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://10.84.207.214:4200",
+    "http://10.58.187.214:4200",
     "https://proy-hoja.duckdns.org",
     "http://localhost:4200",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://10.84.207.214:4200",
+    "http://10.58.187.214:4200",
     "https://proy-hoja.duckdns.org",
     "http://localhost:4200",
 ]

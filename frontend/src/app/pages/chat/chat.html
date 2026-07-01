@@ -1,4 +1,4 @@
-<!-- CONTENEDOR PRINCIPAL: Ahora tiene una clase para manejar Flexbox -->
+<!-- CONTENEDOR PRINCIPAL-->
 <div class="layout-container">
 
     <!-- SIDEBAR WRAPPER -->
@@ -31,7 +31,7 @@
                     <button
                         pButton
                         type="button"
-                        class="new-scan-btn"
+                        class="scan-btn"
                         (click)="crearNuevoEscaneo()"
                         style="width: 100%;">
 
@@ -41,10 +41,165 @@
 
                     </button>
                     
-                    <!-- TÍTULO -->
-                    <div class="section-title">
-                        Mis Diagnósticos
+                    <div class="search-filter-container">
+
+                        <!-- BUSCADOR -->
+                        
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search" />
+                            <input 
+                                pInputText
+                                type="text" 
+                                placeholder="Buscar diagnóstico..."
+                                [(ngModel)]="textoBusqueda"
+                                (input)="aplicarFiltros()"
+                            />
+                        </p-iconfield>
+
+                        <!-- FILTRO -->
+                        <button
+                            pButton
+                            type="button"
+                            icon="pi pi-sliders-h"
+                            class="p-button-rounded"
+                            [class.active]="filtroActivo !== 'recientes'"
+                            (click)="opFiltro.toggle($event)">
+                        </button>
+
+                        <!-- POPOVER FILTRO -->
+                        <p-popover 
+                            #opFiltro
+                            appendTo="body"
+                            [dismissable]="true"
+                        >
+
+                            <div class="filter-options">
+
+                                <div class="filter-header">
+                                    <p class="filter-title">Ordenar por</p>
+
+                                    <button
+                                        pButton
+                                        type="button"
+                                        icon="pi pi-filter-slash"
+                                        label="Limpiar"
+                                        class="p-button-text clear-filters-btn"
+                                        (click)="limpiarFiltros()">
+                                    </button>
+                                </div>
+
+                                <ng-container *ngFor="let f of filtros">
+
+                                    <!-- BOTÓN PRINCIPAL -->
+                                    <button
+                                        pButton
+                                        type="button"
+                                        class="p-button-text button-filter"
+                                        (click)="seleccionarFiltro(f.key, opFiltro)"
+                                        [class.active]="filtroActivo === f.key">
+
+                                        <span>{{ f.label }}</span>
+
+                                        <i class="pi"
+                                            [ngClass]="filtroActivo === f.key ? 'pi-check-circle' : 'pi-circle'">
+                                        </i>
+
+                                    </button>
+
+                                    <!-- FECHA -->
+                                    <div class="subfiltro-group"
+                                        *ngIf="f.key === 'fecha' && filtroActivo === 'fecha'">
+
+                                        <p class="filter-subtitle">Orden temporal</p>
+
+                                        <div class="subfiltro-options">
+
+                                            <button class="subfiltro-chip info"
+                                                [class.active]="ordenFechaActivo === 'recientes'"
+                                                (click)="toggleOrdenFecha('recientes')">
+
+                                                Recientes
+                                            </button>
+
+                                            <button class="subfiltro-chip info"
+                                                [class.active]="ordenFechaActivo === 'antiguos'"
+                                                (click)="toggleOrdenFecha('antiguos')">
+
+                                                Antiguos
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- SEVERIDAD -->
+                                    <div class="subfiltro-group"
+                                        *ngIf="f.key === 'severidad' && filtroActivo === 'severidad'">
+
+                                        <p class="filter-subtitle">Nivel de severidad</p>
+
+                                        <div class="subfiltro-options">
+
+                                            <button class="subfiltro-chip info"
+                                                [class.active]="severidadActivo === 'Leve'"
+                                                (click)="toggleSeveridad('Leve')">
+                                                Leve
+                                            </button>
+
+                                            <button class="subfiltro-chip warn"
+                                                [class.active]="severidadActivo === 'Moderada'"
+                                                (click)="toggleSeveridad('Moderada')">
+                                                Medio
+                                            </button>
+
+                                            <button class="subfiltro-chip danger"
+                                                [class.active]="severidadActivo === 'Grave'"
+                                                (click)="toggleSeveridad('Grave')">
+                                                Grave
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- URGENCIA -->
+                                    <div class="subfiltro-group"
+                                        *ngIf="f.key === 'urgencia' && filtroActivo === 'urgencia'">
+
+                                        <p class="filter-subtitle">Nivel de urgencia</p>
+
+                                        <div class="subfiltro-options">
+
+                                            <button class="subfiltro-chip info"
+                                                [class.active]="urgenciaActivo === 'Baja'"
+                                                (click)="toggleUrgencia('Baja')">
+                                                Baja
+                                            </button>
+
+                                            <button class="subfiltro-chip warn"
+                                                [class.active]="urgenciaActivo === 'Media'"
+                                                (click)="toggleUrgencia('Media')">
+                                                Media
+                                            </button>
+
+                                            <button class="subfiltro-chip danger"
+                                                [class.active]="urgenciaActivo === 'Alta'"
+                                                (click)="toggleUrgencia('Alta')">
+                                                Alta
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+                        </p-popover>
+
                     </div>
+                    
                 </div>
                 
 
@@ -55,65 +210,238 @@
 
                 <div class="chat-list">
 
-                    <div
-                        *ngFor="let chat of chats"
-                        class="chat-item"
-                        [class.active]="chatSeleccionado?.id === chat.id"
-                        (click)="seleccionarChat(chat)">
+                    <div class="chat-section" *ngIf="chatsFijados.length">
 
-                        <div class="chat-left">
+                        <div class="section-title">
+                            <lucide-icon name="bookmark" class="section-icon"></lucide-icon>
+                            Fijados
+                        </div>
 
-                            <div class="chat-icon">
-                                <img src="/logo_hoja.jpg" alt="logo">
-                            </div>
+                        <div
+                            *ngFor="let chat of chatsFijados"
+                            class="chat-item"
+                            [class.active]="chatSeleccionado?.id === chat.id"
+                            (click)="seleccionarChat(chat)">
 
-                            <div class="chat-info">
+                            <!-- tu contenido igual -->
+                            <div class="chat-left">
 
-                                <div class="chat-title">
-                                    {{ chat.titulo.replace("Análisis:", "") }}
+                                <div class="chat-icon">
+                                    <lucide-icon name="sprout"></lucide-icon>
                                 </div>
 
-                                <div class="chat-subtitle">
-                                    Diagnóstico agrícola
-                                </div>
+                                <div class="chat-info">
 
+                                    <div class="chat-title">
+                                        {{ chat.titulo.replace("Análisis:", "") | titlecase }}
+                                    </div>
+
+                                    <div class="chat-details">
+                                        <small>{{ chat.creado_en | date:'short' }}</small>
+                                        <small>{{ chat.diagnostico.confianza_ia }}%</small>
+                                    </div>
+
+                                </div>
                             </div>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-ellipsis-v"
+                                class="p-button-text p-button-sm chat-menu-btn"
+                                (click)="chatSeleccionado = chat; op.toggle($event)">
+                            </button>
 
                         </div>
 
-                        <button
-                            pButton
-                            type="button"
-                            icon="pi pi-ellipsis-v"
-                            class="p-button-text p-button-sm chat-menu-btn"
-                            (click)="chatSeleccionado = chat; op.toggle($event)">
-                        </button>
-                        
-                        <p-popover #op>
-                            <div style="display: flex; flex-direction: column; gap:10px;">
+                    </div>
 
-                                <button
-                                    pButton
-                                    type="button"
-                                    icon="pi pi-pencil"
-                                    label="Editar"
-                                    class="p-button-text"
-                                    (click)="editarChat(chatSeleccionado); op.hide()">
-                                </button>
+                    <div class="chat-section">
 
-                                <button
-                                    pButton
-                                    type="button"
-                                    icon="pi pi-trash"
-                                    label="Eliminar"
-                                    class="p-button-text p-button-danger"
-                                    (click)="eliminarChat(chatSeleccionado); op.hide()">
-                                </button>
+                        <div class="section-title">
+                            <lucide-icon
+                                [name]="filtroActivo === 'fecha' ? 'clock' :
+                                        filtroActivo === 'severidad' ? 'triangle-alert' :
+                                        'siren'"
+                                class="section-icon">
+                            </lucide-icon>
+
+                            {{ tituloSeccionChats }}
+                        </div>
+
+                        <div
+                            *ngFor="let chat of chatsRecientes"
+                            class="chat-item"
+                            [class.active]="chatSeleccionado?.id === chat.id"
+                            (click)="seleccionarChat(chat)">
+
+                            <!-- mismo contenido -->
+                            <div class="chat-left">
+
+                                <div class="chat-icon">
+                                    <lucide-icon name="sprout"></lucide-icon>
+                                </div>
+
+                                <div class="chat-info">
+
+                                    <div class="chat-title">
+                                        {{ chat.titulo.replace("Análisis:", "") | titlecase }}
+                                    </div>
+
+                                    <div class="chat-details">
+                                        <small>{{ chat.creado_en | date:'short' }}</small>
+                                        <small>{{ chat.diagnostico.confianza_ia }}%</small>
+                                    </div>
+
+                                </div>
 
                             </div>
-                        </p-popover>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-ellipsis-v"
+                                class="p-button-text p-button-sm chat-menu-btn"
+                                (click)="chatSeleccionado = chat; op.toggle($event)">
+                            </button>
+
+                        </div>
 
                     </div>
+
+                    <p-popover #op>
+                        <div class="popover-chat">
+
+                            <button
+                                pButton
+                                type="button"
+                                [icon]="chatSeleccionado?.is_pinned ? 'pi pi-bookmark-fill' : 'pi pi-bookmark'"
+                                [label]="chatSeleccionado?.is_pinned ? 'Desfijar chat' : 'Fijar chat'"
+                                class="p-button-text btn-popover-menu"
+                                (click)="toggleFijar(chatSeleccionado); op.hide()">
+                            </button>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-download"
+                                label="Exportar"
+                                class="p-button-text btn-popover-menu"
+                                (click)="exportarDiagnosticoPDF(diagnosticoSeleccionado); op.hide()">
+                            </button>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-pencil"
+                                label="Cambiar el nombre"
+                                class="p-button-text btn-popover-menu"
+                                (click)="editarChat(chatSeleccionado); op.hide()">
+                            </button>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-trash"
+                                label="Eliminar"
+                                class="p-button-text p-button-danger btn-popover-menu"
+                                (click)="eliminarChat(chatSeleccionado); op.hide()">
+                            </button>
+
+                        </div>
+                    </p-popover>
+
+                    <!-- MODAL EDITAR CHAT -->
+                    <p-dialog
+                        header="Editar nombre del chat"
+                        [(visible)]="mostrarModalEditar"
+                        [modal]="true"
+                        [style]="{ width: '400px' }"
+                        [closable]="true"
+                        (onHide)="cerrarModalEditar()"
+                        appendTo="body"
+                    >
+                        <div class="setting-form">
+
+                            <div class="form-group">
+                                <label>Nuevo nombre</label>
+                                <input
+                                id="titulo"
+                                type="text"
+                                pInputText
+                                [(ngModel)]="nuevoTitulo"
+                                placeholder="Escribe el nuevo nombre"
+                                (keyup.enter)="guardarTituloChat()">
+                            </div>
+                        </div>
+
+                        <ng-template pTemplate="footer">
+
+                            <button
+                                pButton
+                                label="Cancelar"
+                                class="p-button-text"
+                                (click)="cerrarModalEditar()">
+                            </button>
+
+                            <button
+                                pButton
+                                label="Guardar"
+                                class="p-button-primary"
+                                (click)="guardarTituloChat()">
+                            </button>
+
+                        </ng-template>
+
+                    </p-dialog>
+
+                    <!-- MODAL ELIMINAR CHAT -->
+                     <p-dialog
+                            header="Eliminar chat"
+                            [(visible)]="mostrarDialogEliminar"
+                            [modal]="true"
+                            [closable]="true"
+                            [dismissableMask]="true"
+                            [style]="{ width: '420px' }"
+                            (onHide)="cerrarDialogEliminar()"
+                            appendTo="body"
+                        >
+
+                            <div class="delete-dialog-content">
+
+                                <p class="delete-dialog-message">
+                                    ¿Seguro que deseas eliminar este chat?
+                                </p>
+
+                                <small class="delete-dialog-hint">
+                                    Esta acción no se puede deshacer.
+                                </small>
+
+                            </div>
+
+                            <ng-template pTemplate="footer">
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    label="Cancelar"
+                                    class="p-button-text p-button-secondary"
+                                    (click)="cerrarDialogEliminar()">
+                                </button>
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    label="Eliminar"
+                                    icon="pi pi-trash"
+                                    class="p-button-danger"
+                                    (click)="confirmarEliminarChat()">
+                                </button>
+
+                            </ng-template>
+
+                        </p-dialog>
+                     
 
                 </div>
 
@@ -128,72 +456,132 @@
                         pButton
                         type="button"
                         class="user-button p-button-text p-button-plain"
-                        style="width: 100%;"
-                    >
+                        style="width: 100%;">
 
-                        <!-- IZQUIERDA: ICON + USER -->
-                        <div class="left">
-                            <i class="pi pi-user avatar-icon"></i>
+                        <!-- Avatar -->
+                        <div class="footer-avatar">
 
-                            <span class="username">
-                            {{ user?.username || 'Usuario' }}
-                            </span>
+                            <img
+                                *ngIf="user.picture; else avatarDefault"
+                                [src]="user.picture"
+                                [alt]="user.username"
+                                class="footer-avatar-image">
+
+                            <ng-template #avatarDefault>
+                                <i class="pi pi-user footer-avatar-icon"></i>
+                            </ng-template>
+
                         </div>
 
-                        <!-- DERECHA: MENU -->
+                        <!-- Información -->
+                        <div class="user-left">
+
+                            <span class="username">
+                                {{ user.username || 'Usuario' }}
+                            </span>
+
+                            <p-tag
+                                [value]="user.plan.nombre"
+                                severity="secondary"
+                                class="tag-small">
+                            </p-tag>
+
+                        </div>
+
+                        <!-- Menú -->
                         <button
-                                pButton
-                                type="button"
-                                icon="pi pi-ellipsis-v"
-                                class="ellipsis-button p-button-text p-button-plain"
-                                (click)="opUser.toggle($event)"
-                            >
+                            pButton
+                            type="button"
+                            icon="pi pi-ellipsis-v"
+                            class="p-button-text"
+                            (click)="opUser.toggle($event)">
                         </button>
 
                     </button>
-                    
+
                 </div>
 
                 <!-- POPOVER -->
-                <p-popover #opUser>
+                <p-popover #opUser appendTo="body">
 
-                    <div class="popover-content">
+                    <div class="popover-user">
 
                         <div class="user-card">
                             <div class="user-header">
-                                <h4>Hola, {{ user?.username | titlecase }}</h4>
-                            </div>
-
-                            <div class="user-info">
-                                <p><strong>Email:</strong> {{ user?.email }}</p>
-                                <p><strong>Nombre:</strong> {{ user?.first_name }}</p>
-                                <p><strong>Apellido:</strong> {{ user?.last_name }}</p>
-                            </div>
-
-                            <div class="plan-badge">
-                                {{ user?.plan?.nombre }}
+                                <h4 class="username">Hola, {{ user.username | titlecase }}</h4>
+                                <p-tag 
+                                    [value]="user.plan.nombre"
+                                    severity="secondary"
+                                    class="tag-header"
+                                ></p-tag>
                             </div>
 
                             <div class="credits">
                                 <div class="credit-box">
-                                <span class="label">Créditos diarios</span>
-                                <span class="value">
-                                    {{ user?.plan?.creditos_diarios }}
+                                <span class="label-box">Créditos diarios</span>
+                                <span class="value-box">
+                                    {{ user.plan.creditos_diarios }}
                                 </span>
                                 <small>Actualiza 24h</small>
                                 </div>
 
                                 <div class="credit-box highlight">
-                                <span class="label">Créditos restantes</span>
-                                <span class="value">
-                                    {{ user?.creditos?.restantes }}
+                                <span class="label-box">Créditos restantes</span>
+                                <span class="value-box">
+                                    {{ user.creditos.restantes }}
                                 </span>
                                 <small>Disponibles</small>
                                 </div>
                             </div>
                         </div>
 
-                        <hr />
+                        <hr/>
+
+                        <div class="user-option">
+
+                            <button 
+                                pButton
+                                class="p-button-text p-button-secondary user-btn"
+                                (click)="upgradePlan()"
+                                style="width: 100%">
+
+                                <lucide-icon name="crown" [size]="20" class="icon"></lucide-icon>
+                                Mejorar plan
+                            </button>
+
+                            <button 
+                                pButton
+                                class="p-button-text p-button-secondary user-btn"
+                                (click)="openPersonalizacion()"
+                                style="width: 100%">
+
+                                <lucide-icon name="Paintbrush" [size]="20" class="icon"></lucide-icon>
+                                Personalización
+                            </button>
+
+                            <button 
+                                pButton
+                                class="p-button-text p-button-secondary user-btn"
+                                (click)="openPerfil()"
+                                style="width: 100%">
+
+                                <lucide-icon name="circle-user" [size]="20" class="icon"></lucide-icon>
+                                Perfil
+                            </button>
+
+                            <button 
+                                pButton
+                                class="p-button-text p-button-secondary user-btn"
+                                (click)="openConfiguracion()"
+                                style="width: 100%">
+
+                                <lucide-icon name="settings" [size]="20" class="icon"></lucide-icon>
+                                Configuración
+                            </button>
+
+                        </div>
+
+                        <hr/>
 
                         <button 
                             pButton
@@ -213,599 +601,727 @@
 
         </p-drawer>
 
-
-
-    </div>
-
-    <!-- CONTENEDOR PRINCIPAL -->
-    <div class="content-container">
-
-        <!-- TOPBAR -->
-        <div class="topbar">
-
-            <!-- IZQUIERDA -->
-            <div class="topbar-left">
-
-                <button
-                    pButton
-                    type="button"
-                    class="p-button-text"
-                    (click)="sidebarVisible = !sidebarVisible">
-
-                    <i 
-                        class="pi"
-                        [ngClass]="sidebarVisible ? 'pi-angle-left' : 'pi-angle-right'">
-                    </i>
-
-                    <span>
-                        {{ sidebarVisible ? 'Ocultar' : 'Menu' }}
-                    </span>
-
-                </button>
-
-            </div>
-
-            <!-- DERECHA -->
-            <div class="topbar-right">
-
-                <button
-                    pButton
-                    type="button"
-                    class="p-button-text"
-                    (click)="logout()">
-
-                    <i class="pi pi-sign-out"></i>
-
-                    <span>Cerrar sesión</span>
-
-                </button>
-
-            </div>
-
-            <!-- DERECHA -->
-            <div class="topbar-left" *ngIf="isMobile">
-
-                <button
-                    pButton
-                    type="button"
-                    class="p-button-text"
-                    (click)="chatVisible = !chatVisible">
-
-                    <i 
-                        class="pi"
-                        [ngClass]="chatVisible ? 'pi-angle-left' : 'pi-angle-right'">
-                    </i>
-
-                    <span>
-                        {{ chatVisible ? 'Ocultar' : 'Chat' }}
-                    </span>
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- MAIN -->
-        <main class="main-content">
-
-            <!-- CHAT -->
-            
-            <div *ngIf="chatSeleccionado?.id; else bienvenida">
-
-                <div class="main-card-header">
-                    <h1>Centro Inteligente de Diagnóstico Vegetal</h1>
-
-                    <p>
-                        Escanea plantas, conversa con IA especializada,
-                        analiza patrones globales y recibe recomendaciones
-                        profesionales en tiempo real.
-                    </p>
-                </div>
-
-                <div class="main-container">
-
-                    <!-- Imagen -->
-                    <div class="main-container-card">
-
-                        <div class="main-card">
-                            <h3>Imagen Escaneada</h3>
-                        </div>
-
-                        <div class="main-card" style="margin: auto;">
-                            <!-- LOADING -->
-                            <div
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
-                                class="loading-container-p"
-                            >
-
-                                <!-- Imagen de fondo -->
-                                <img
-                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
-                                    alt="Planta base"
-                                    class="loading-image"
-                                />
-
-                                <!-- Overlay oscuro -->
-                                <div class="loading-overlay">
-                                    
-                                    <!-- Spinner -->
-                                    <p-progressSpinner></p-progressSpinner>
-
-                                    <!-- Texto -->
-                                    <p class="loading-text">
-                                        Generando imagen con detección de daños en la hoja...
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                            <!-- ERROR -->
-                            <div
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Error'"
-                                class="flex flex-column justify-center align-items-center"
-                                style="height: 300px; text-align: center;"
-                            >
-                                <i class="pi pi-times-circle" style="font-size: 2rem; color: red;"></i>
-                                <p style="margin-top: 10px; color: red;">
-                                Error al procesar la imagen
-                                </p>
-                            </div>
-
-                            <!-- IMAGE COMPARE -->
-                            <p-imagecompare
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen !== 'Pendiente'
-                                    && diagnosticoSeleccionado?.estado_imagen !== 'Procesando'
-                                    && diagnosticoSeleccionado?.estado_imagen !== 'Error'
-                                    && diagnosticoSeleccionado?.planta?.imagen
-                                    && diagnosticoSeleccionado?.imagen"
-                                class="shadow-lg rounded-2xl"
-                                style="width: 300px; height: 300px; display: flex;"
-                            >
-                                <ng-template #left>
-                                <img
-                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
-                                    alt="Planta sana"
-                                    style="width: 100%; height: 100%; object-fit: cover;"
-                                />
-                                </ng-template>
-
-                                <ng-template #right>
-                                <img
-                                    [src]="diagnosticoSeleccionado?.imagen"
-                                    alt="Planta escaneada"
-                                    style="width: 100%; height: 100%; object-fit: cover;"
-                                />
-                                </ng-template>
-                            </p-imagecompare>
-
-                            <div
-                                *ngIf="diagnosticoSeleccionado?.imagen"
-                                style="display:flex; justify-content:center; margin-top:15px;"
-                            >
-
-                                <button
-                                    pButton
-                                    type="button"
-                                    icon="pi pi-eye"
-                                    label="Ver imagen completa"
-                                    class="p-button-outlined p-button-success"
-                                    (click)="mostrarDialogImagen = true"
-                                >
-                                </button>
-
-                            </div>
-                            
-                            <p-dialog
-                                header="Imagen Analizada"
-                                [(visible)]="mostrarDialogImagen"
-                                [modal]="true"
-                                [closable]="true"
-                                [draggable]="false"
-                                [resizable]="false"
-                                [style]="{ width: '70vw' }"
-                                [breakpoints]="{
-                                    '960px': '90vw',
-                                    '640px': '95vw'
-                                }"
-                            >
-
-                                <!-- CONTENIDO -->
-                                <div
-                                    style="
-                                        width:100%;
-                                        height:70vh;
-                                        display:flex;
-                                        justify-content:flex-start;
-                                        align-items:flex-start;
-                                        background:#f5f5f5;
-                                        border-radius:12px;
-                                    "
-                                >
-                                    <div
-                                        style="
-                                            display:inline-block;
-                                        "
-                                        [style.transform]="'scale(' + zoomImagen + ')'"
-                                        style="
-                                            transform-origin: top left;
-                                            transition: transform .25s ease;
-                                        "
-                                    >
-                                        <img
-                                            [src]="diagnosticoSeleccionado?.imagen"
-                                            alt="Imagen analizada"
-                                            style="
-                                                display:block;
-                                                max-width:none;
-                                                border-radius:12px;
-                                            "
-                                        />
-                                    </div>
-                                </div>
-
-                                <!-- FOOTER -->
-                                <ng-template pTemplate="footer">
-
-                                    <div
-                                        style="
-                                            display:flex;
-                                            justify-content:center;
-                                            gap:12px;
-                                            width:100%;
-                                        "
-                                    >
-
-                                        <!-- Zoom Out -->
-                                        <button
-                                            pButton
-                                            type="button"
-                                            icon="pi pi-search-minus"
-                                            label="Alejar"
-                                            class="p-button-outlined p-button-secondary"
-                                            (click)="zoomOut()"
-                                        >
-                                        </button>
-
-                                        <!-- Reset -->
-                                        <button
-                                            pButton
-                                            type="button"
-                                            icon="pi pi-refresh"
-                                            label="Reset"
-                                            class="p-button-outlined"
-                                            (click)="resetZoom()"
-                                        >
-                                        </button>
-
-                                        <!-- Zoom In -->
-                                        <button
-                                            pButton
-                                            type="button"
-                                            icon="pi pi-search-plus"
-                                            label="Acercar"
-                                            class="p-button-success"
-                                            (click)="zoomIn()"
-                                        >
-                                        </button>
-
-                                    </div>
-
-                                </ng-template>
-
-                            </p-dialog>
-
-                        </div>
-                    </div>
-
-                    <!-- Salud -->
-                    <div class="main-container-card">
-                        <div class="main-card">
-                            <h3>Salud de planta</h3>
-                        </div>
-
-                        <div class="main-card" style="margin: auto;">
-
-                            <p-knob
-                                [(ngModel)]="diagnosticoSeleccionado.porcentaje_salud"
-                                [readonly]="true"
-                                [size]="150"
-                                [strokeWidth]="20"
-                                style="line-height: 0; display: block;">
-                            </p-knob>
-                        </div>
-
-                        <div class="main-card">
-                            <div class="info-row">
-                                <span class="label">Hoja :</span>
-                                <span class="value">{{ diagnosticoSeleccionado?.planta.nombre }}</span>
-                            </div>
-
-                            <div class="info-row">
-                                <span class="label">Enfermedad :</span>
-                                <span class="value">{{ diagnosticoSeleccionado?.enfermedad_detectada }}</span>
-                            </div>
-
-                            <div class="info-row">
-                                <span class="label">Severidad :</span>
-                                <span class="value">{{ diagnosticoSeleccionado?.severidad }}</span>
-                            </div>
-
-                            <div class="info-row">
-                                <span class="label">Confianza IA :</span>
-                                <span class="value">{{ diagnosticoSeleccionado?.confianza_ia }}%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Prevención -->
-                <div class="main-container">
-                    <div class="diagnostic-card">
-                        <div class="main-card">
-                            <h3>Cómo prevenir</h3>
-                        </div>
-
-                        <div class="main-card">
-
-                            <ul class="lista-bullets">
-                                <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.prevencion)">
-                                    {{ item }}
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-
-                    <!-- Tratamiento natural-->
-                    <div class="diagnostic-card">
-
-                        <h3>Tratamiento natural</h3>
-
-                        <ul class="lista-bullets">
-                            <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.tratamiento_natural)">
-                                {{ item }}
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Tratamiento quimico-->
-                    <div class="diagnostic-card">
-
-                        <h3>Tratamiento quimico</h3>
-
-                        <ul class="lista-bullets">
-                            <li *ngFor="let item of formatearLista(diagnosticoSeleccionado?.tratamiento_quimico)">
-                                {{ item }}
-                            </li>
-                        </ul>
-
-                    </div>
-                </div>
-
+        <!-- MODALES DE LAS OPCIONES DEL USUARIO -->
+        <!-- PLANES -->
+        <p-dialog
+            [(visible)]="showPlansModal"
+            [modal]="true"
+            [closable]="true"
+            [draggable]="false"
+            [resizable]="false"
+            [style]="{ width: '950px' }"
+            appendTo="body"
+            [focusOnShow]="false"
+            header="Actualizar plan"
+            styleClass="plans-dialog"
+        >
+            <ng-template pTemplate="header">
                 
+                <div class="plans-header">
 
-            </div>
+                    <div class="plans-header-title">
+                        <h2>Actualizar plan</h2>
+                        <p class="subtitle">Elige el plan que mejor se adapta a tus necesidades</p>
+                    </div>
 
-            <!-- BIENVENIDA -->
-            <ng-template #bienvenida>
+                    <div class="toggle-billing">
+                        <button
+                            pButton
+                            type="button"
+                            class="toggle-btn p-button-text"
+                            [class.active]="billing === 'mensual'"
+                            (click)="billing = 'mensual'"
+                        >
+                            Mensual
+                        </button>
 
-                <div class="welcome-container">
+                        <button
+                            pButton
+                            type="button"
+                            class="toggle-btn p-button-text"
+                            [class.active]="billing === 'anual'"
+                            (click)="billing = 'anual'"
+                        >
+                            Anual <span class="discount">prox.</span>
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
 
-                    <div class="welcome-card">
+            <ng-template pTemplate="content">
 
-                        <div class="card-principle">
-                    
-                            <!-- IMAGEN -->
-                            <div class="logo-card">
-                                <img src="/AgroVisionAI.png" alt="AgroVision AI">
-                            </div>
+                <div class="plans-grid">
 
-                            <!-- TITLE -->
-                            <h1>AgoVision AI</h1>
+                    <div
+                        class="plan-card"
+                        *ngFor="let plan of planes"
+                        [class.featured]="plan.destacado"
+                    >
 
-                            <p class="welcome-description">
-                                Detecta enfermedades en cultivos usando inteligencia artificial avanzada.
-                            </p>
-
-                            <!-- ACTIONS -->
-                            <div class="action-buttons">
-
-                                <!-- Estado: sin imagen -->
-                                <ng-container *ngIf="!hasImage && !isAnalyzing">
-
-                                    <input
-                                        type="file"
-                                        #fileInput
-                                        accept="image/*"
-                                        hidden
-                                        (change)="onFileSelected($event)">
-
-                                    <button
-                                        pButton
-                                        type="button"
-                                        class="upload-btn"
-                                        (click)="fileInput.click()"
-                                    >
-                                        <i class="pi pi-upload"></i>
-                                        <span>Subir Imagen</span>
-                                    </button>
-
-                                    <button
-                                        pButton
-                                        type="button"
-                                        class="camera-btn"
-                                        (click)="tomarFoto()"
-                                    >
-                                        <i class="pi pi-camera"></i>
-                                        <span>Tomar Foto</span>
-                                    </button>
-
-                                </ng-container>
-
-                                <!-- Estado: imagen lista -->
-                                <ng-container *ngIf="hasImage && !isAnalyzing">
-                                    
-                                    <button
-                                        pButton
-                                        type="button"
-                                        class="analyze-btn"
-                                        (click)="enviarAnalisis()"
-                                    >
-                                        <i class="pi pi-search"></i>
-                                        <span>Analizar planta</span>
-                                    </button>
-
-                                </ng-container>
-
-                                <!-- Estado: analizando -->
-                                <ng-container *ngIf="isAnalyzing">
-                                    <p>Analizando planta...</p>
-                                </ng-container>
-
-                            </div>
-                        </div>
-
-                        <div class="card-secondary">
-                            <!-- PREVIEW -->
-                            <div *ngIf="imagePreview && !isAnalyzing" class="preview-container">
-
-                                <img
-                                    [src]="imagePreview"
-                                    alt="Preview">
-
-                                <button
-                                    pButton
-                                    type="button"
-                                    icon="pi pi-times"
-                                    class="remove-image-btn p-button-rounded"
-                                    (click)="cancelarImagen()">
-                                </button>
-
-                            </div>
-                        </div>
-                        
-                        <!-- LOADER -->
                         <div
-                            *ngIf="isAnalyzing"
-                            class="loader-container">
-
-                            <p-progressSpinner
-                                strokeWidth="4"
-                                styleClass="custom-spinner">
-                            </p-progressSpinner>
-
-                            <h3>
-                                Analizando cultivo...
-                            </h3>
-
-                            <p>
-                                La IA está evaluando tejidos vegetales y posibles enfermedades.
-                            </p>
-
+                            class="badge"
+                            *ngIf="plan.destacado"
+                        >
+                            Más popular
                         </div>
 
+                        <div class="plan-title">
+                            <lucide-icon
+                                [name]="obtenerIconoConfig(plan.nombre).icon"
+                                [size]="25"
+                                [style.color]="obtenerIconoConfig(plan.nombre).color">
+                            </lucide-icon>
+                            <h3>{{ plan.nombre }}</h3>
+                        </div>
+
+                        <div class="price">
+                            <ng-container *ngIf="plan.precio > 0; else gratis">
+                                S/{{ plan.precio }}
+                                <span>/mes</span>
+                            </ng-container>
+
+                            <ng-template #gratis>
+                                Gratis
+                            </ng-template>
+                        </div>
+
+                        <ul>
+                            <li *ngFor="let beneficio of plan.beneficios" class="beneficio-item">
+                                <lucide-icon
+                                    name="check"
+                                    [size]="16"
+                                    class="beneficio-icon">
+                                </lucide-icon>
+                                <span>{{ beneficio }}</span>
+                            </li>
+                        </ul>
+
+                        <button
+                            class="plan-btn"
+                            [class.primary]="plan.nombre === 'Pro'"
+                            [class.outline]="plan.nombre === 'Enterprise'"
+                            [class.disabled]="plan.nombre === 'Free'"
+                            (click)="seleccionarPlan(plan)"
+                        >
+
+                            {{ obtenerTextoBoton(plan.nombre) }}
+
+                        </button>
+
+                    </div>
+
+                </div>
+                <div class="plan-card-footer">
+
+                    <div class="payment-info">
+                        <h3>Métodos de pago aceptados</h3>
+                        <small>Visa, Transferencia bancaria, Yape y Plin</small>
+                    </div>
+
+                    <div class="payment-img">
+                        <img src="/payment/visa.png" alt="Visa">
+                        <img src="/payment/yape.png" alt="Yape">
+                        <img src="/payment/plin.png" alt="Yape">
                     </div>
 
                 </div>
 
             </ng-template>
+        </p-dialog>
 
-        </main>
-    </div>
-
-    <div class="chat-wrapper" [class.closed]="!chatVisible">
-
-        <p-drawer
-            [(visible)]="chatVisible"
-            [closable]="false"
-            [modal]="isMobile"
-            position="right"
-            styleClass="custom-drawer-chat"
+        <!-- CONFIGURACION -->
+        <p-dialog
+            [(visible)]="showSettingsModal"
+            [modal]="true"
+            appendTo="body"
+            [draggable]="false"
+            [resizable]="false"
+            [closable]="true"
+            [style]="{width:'800px', height:'600px'}"
+            styleClass="settings-dialog"
         >
+
+            <ng-template pTemplate="header">
+
+                <div class="settings-header">
+                    <lucide-icon
+                        name="settings"
+                        [size]="25">
+                    </lucide-icon>
+                    <h2>Configuración</h2>
+                    <lucide-icon
+                        name="chevron-right"
+                        [size]="25">
+                    </lucide-icon>
+                    <h2>{{ activeSectionTitle }}</h2>
+                </div>
+
+            </ng-template>
+
+            <ng-template pTemplate="content">
+                <div class="settings-container">
+
+                    <!-- SIDEBAR -->
+                    <aside class="setting-sidebar">
+                        <button
+                            pButton
+                            type="button"
+                            *ngFor="let item of menuItems"
+                            class="p-button-text menu-item"
+                            [class.active]="activeSection===item.id"
+                            (click)="activeSection=item.id"
+                        >
+                            <lucide-icon
+                                [name]="item.icon"
+                                [size]="18">
+                            </lucide-icon>
+                            <span class="menu-label">
+                                {{ item.label }}
+                            </span>
+                        </button>
+                        
+                        
+                    </aside>
+
+                    <!-- CONTENT -->
+                    <section class="setting-content">
+                        <ng-container [ngSwitch]="activeSection">
+                            <!-- GENERAL -->
+                            <div *ngSwitchCase="'general'">
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Tema de la interfaz</label>
+                                        <small>Elige cómo se verá la aplicación</small>
+                                    </div>
+                                    <div class="theme-selector">
+                                        <div class="theme-selector">
+                                            <button
+                                                type="button"
+                                                [class.active]="settings.theme === 'light'"
+                                                (click)="settings.theme = 'light'">
+
+                                                <lucide-icon
+                                                    name="sun"
+                                                    [size]="18">
+                                                </lucide-icon>
+
+                                                <span>Claro</span>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                [class.active]="settings.theme === 'dark'"
+                                                (click)="settings.theme = 'dark'">
+
+                                                <lucide-icon
+                                                    name="moon"
+                                                    [size]="18">
+                                                </lucide-icon>
+
+                                                <span>Oscuro</span>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                [class.active]="settings.theme === 'system'"
+                                                (click)="settings.theme = 'system'">
+
+                                                <lucide-icon
+                                                    name="monitor"
+                                                    [size]="18">
+                                                </lucide-icon>
+
+                                                <span>Sistema</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Idioma</label>
+                                    </div>
+                                    <p-select
+                                        [options]="languages"
+                                        [(ngModel)]="settings.language">
+                                    </p-select>
+                                </div>
+                                
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Zona horaria</label>
+                                    </div>
+                                    <p-select
+                                        [options]="timezones"
+                                        [(ngModel)]="settings.timezone">
+                                    </p-select>
+                                </div>
+
+                            </div>
+
+                            <!-- PERFIL -->
+                            <div *ngSwitchCase="'perfil'">
+
+                                <!-- FOTO -->
+                                <div class="perfil-avatar">
+
+                                    <div class="avatar-container">
+                                        <img
+                                            [src]="editableUser.picture"
+                                            class="avatar"
+                                            alt="Avatar">
+
+                                        <input
+                                            #fileInput
+                                            type="file"
+                                            hidden
+                                            accept="image/*"
+                                            (change)="onAvatarChange($event)">
+                                        
+                                        <!-- Cancelar -->
+                                        <button
+                                            *ngIf="selectedFile"
+                                            pButton
+                                            type="button"
+                                            icon="pi pi-times"
+                                            class="avatar-remove-btn p-button-rounded p-button-sm p-button-danger"
+                                            (click)="removeSelectedAvatar(fileInput)">
+                                        </button>
+
+                                        <button
+                                            pButton
+                                            type="button"
+                                            icon="pi pi-pencil"
+                                            class="avatar-edit-btn p-button-rounded p-button-sm p-button-secondary"
+                                            (click)="fileInput.click()">
+                                        </button>
+                                    </div>
+
+                                </div>
+                                
+                                <!-- FORMULARIO -->
+                                <div class="setting-form">
+
+                                    <div class="form-group">
+                                        <label>Nickname</label>
+                                        <input pInputText type="text" [(ngModel)]="editableUser.username" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input pInputText type="text" [(ngModel)]="editableUser.first_name" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Apellido</label>
+                                        <input pInputText type="text" [(ngModel)]="editableUser.last_name" />
+                                    </div>
+
+                                    <div class="form-group" *ngIf="editableUser.autenticacion === 'LOCAL'">
+                                        <label>Correo electrónico</label>
+                                        <input pInputText type="email" [(ngModel)]="editableUser.email" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Teléfono</label>
+                                        <input pInputText type="tel" [(ngModel)]="editableUser.phone" />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- NOTIFICACIONES -->
+                            <div *ngSwitchCase="'notifications'">
+                                <div class="setting-row" 
+                                    [style.pointer-events]="'none'"
+                                    [style.opacity]="0.5"
+                                >
+                                    <div>
+                                        <label>Notificaciones por email (proximamente)</label>
+                                        <small>Recibe alertas importantes en tu correo</small>
+                                    </div>
+                                    <div class="theme-selector">
+                                        <p-toggleswitch [(ngModel)]="editableUser.state"></p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row" 
+                                    [style.pointer-events]="'none'"
+                                    [style.opacity]="0.5"
+                                >
+                                    <div>
+                                        <label>Reporte semanal (proximamente)</label>
+                                        <small>Resumen de actividad cada domingo</small>
+                                    </div>
+                                    <div class="theme-selector">
+                                        <p-toggleswitch [(ngModel)]="editableUser.state"></p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row" 
+                                    [style.pointer-events]="'none'"
+                                    [style.opacity]="0.5"
+                                >
+                                    <div>
+                                        <label>Alertas de riesgo (proximamente)</label>
+                                        <small>Notificación cuando se detecta enfermedad crítica</small>
+                                    </div>
+                                    <div class="theme-selector">
+                                        <p-toggleswitch [(ngModel)]="editableUser.state"></p-toggleswitch>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEGURIDAD -->
+                            <div *ngSwitchCase="'security'">
+
+                                <div class="setting-row" 
+                                    [style.pointer-events]="'none'"
+                                    [style.opacity]="0.5"
+                                >
+                                    <div>
+                                        <label>Autenticación de dos factores (proximamente)</label>
+                                        <small>Añade una capa extra de seguridad</small>
+                                    </div>
+                                    <div class="theme-selector">
+                                        <p-toggleswitch [(ngModel)]="editableUser.state"></p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row" *ngIf="editableUser.autenticacion === 'LOCAL'">
+                                    <div>
+                                        <label>Cambiar contraseña</label>
+                                    </div>
+                                    <button
+                                        pButton
+                                        type="button"
+                                        label="Cambiar"
+                                        class="p-button-outlined"
+                                        (click)="abrirModalPassword()">
+                                    </button>
+                                </div>
+
+                                <!-- DIALOG - CAMBIAR CONTRASEÑA -->
+                                <p-dialog
+                                    header="Cambiar contraseña"
+                                    [(visible)]="passwordDialog"
+                                    [modal]="true"
+                                    appendTo="body"
+                                    [style]="{ width: '450px' }">
+
+                                    <div class="setting-form">
+                                        <div class="form-group">
+                                            <label>Contraseña actual</label>
+
+                                            <input
+                                                pPassword
+                                                [(ngModel)]="passwordForm.actualPassword"
+                                                [feedback]="false">
+                                        </div>
+                                    
+                                        
+                                        <div class="form-group">
+                                            <label>Nueva contraseña</label>
+
+                                            <p-password
+                                                [(ngModel)]="passwordForm.nuevoPassword"
+                                                [toggleMask]="true"
+                                                [feedback]="false">
+                                            </p-password>
+
+                                            <ul class="requirements">
+                                                <li *ngFor="let req of passwordRequirements"
+                                                    [ngClass]="req.test(passwordForm.nuevoPassword) ? 'ok' : 'fail'">
+
+                                                    <i
+                                                        class="pi"
+                                                        [ngClass]="req.test(passwordForm.nuevoPassword)
+                                                            ? 'pi-check-circle text-green-500'
+                                                            : 'pi-times-circle text-gray-400'">
+                                                    </i>
+
+                                                    <span>
+                                                        {{ req.label }}
+                                                    </span>
+
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Repetir contraseña</label>
+
+                                            <p-password
+                                                [(ngModel)]="passwordForm.repetirPassword"
+                                                [toggleMask]="true"
+                                                [feedback]="false">
+                                            </p-password>
+
+                                            <small
+                                                *ngIf="passwordForm.repetirPassword"
+                                                class="flex align-items-center gap-2 mt-2">
+
+                                                <i
+                                                class="pi text-lg"
+                                                [ngClass]="passwordForm.nuevoPassword === passwordForm.repetirPassword
+                                                    ? 'pi-check-circle'
+                                                    : 'pi-times-circle'"
+                                                [style.color]="passwordForm.nuevoPassword === passwordForm.repetirPassword
+                                                    ? 'var(--color-primary)'
+                                                    : 'var(--color-red)'">
+                                            </i>
+
+                                                <span
+                                                    [style.color]="passwordForm.nuevoPassword === passwordForm.repetirPassword
+                                                        ? 'var(--color-primary)'
+                                                        : 'var(--color-red)'">
+
+                                                    {{ passwordForm.nuevoPassword === passwordForm.repetirPassword
+                                                        ? 'Las contraseñas coinciden'
+                                                        : 'Las contraseñas no coinciden' }}
+
+                                                </span>
+
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <ng-template pTemplate="footer">
+
+                                        <div class="footer">
+                                            <button
+                                                pButton
+                                                label="Cancelar"
+                                                class="p-button-text"
+                                                (click)="passwordDialog=false">
+                                            </button>
+
+                                            <button
+                                                pButton
+                                                label="Guardar"
+                                                (click)="cambiarPassword()"
+                                                [disabled]="
+                                                    !passwordForm.actualPassword ||
+                                                    !passwordForm.nuevoPassword ||
+                                                    !passwordForm.repetirPassword ||
+                                                    passwordForm.nuevoPassword !== passwordForm.repetirPassword ||
+                                                    !isPasswordValid()">
+                                            </button>
+                                        </div>
+                                    
+                                    </ng-template>
+
+                                </p-dialog>
+                            </div>
+
+                            <!-- IA -->
+                            <div *ngSwitchCase="'ai'">
+                                <h3>Preferencias IA</h3>
+                            </div>
+
+                            <!-- INTEGRACIONES -->
+                            <div *ngSwitchCase="'integrations'">
+                                <h3>Integraciones</h3>
+                            </div>
+
+                            <!-- DATOS -->
+                            <div *ngSwitchCase="'data'">
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Exportar historial de escaneos</label>
+                                        <small>Todos los diagnósticos en formato Excel o PDF</small>
+                                    </div>
+                                    <div class="buttons">
+                                        <button
+                                            pButton
+                                            type="button"
+                                            label="Excel"
+                                            icon="pi pi-download"
+                                            class="p-button-outlined"
+                                            (click)="exportarChatsExcel()"
+                                            [disabled]="processing.value">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Exportar diagnósticos a Excel</label>
+                                        <small>Historial de diagnósticos (.xlsx).</small>
+                                    </div>
+                                    <div class="buttons">
+                                        <button
+                                            pButton
+                                            type="button"
+                                            label="Excel"
+                                            icon="pi pi-download"
+                                            class="p-button-outlined"
+                                            (click)="exportarDiagnosticoExcel()"
+                                            [disabled]="processing.value">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="setting-row">
+                                    <div>
+                                        <label>Exportar diagnósticos a PDF</label>
+                                        <small>Historial de diagnósticos (.pdf).</small>
+                                    </div>
+                                    <div class="buttons">
+                                        <button
+                                            pButton
+                                            type="button"
+                                            label="PDF"
+                                            icon="pi pi-download"
+                                            class="p-button-outlined"
+                                            (click)="exportarDiagnosticosPDF()"
+                                            [disabled]="processing.value">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </section>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+
+                <div class="footer-settings">
+                    <button
+                        pButton
+                        type="button"
+                        label="Cancelar"
+                        class="p-button-text"
+                        (click)="closeConfiguracion()">
+                    </button>
+
+                    <button
+                        *ngIf="activeSection === 'perfil'"
+                        pButton
+                        type="button"
+                        label="Guardar cambios"
+                        (click)="guardarPerfil()">
+                    </button>
+                </div>
+               
+            </ng-template>
+        </p-dialog>
+
+        <!-- PERFIL -->
+        <p-dialog
+            [(visible)]="showProfileDialog"
+            [modal]="true"
+            appendTo="body"
+            [draggable]="false"
+            [resizable]="false"
+            [closable]="true"
+            [style]="{ width:'500px', height:'600px' }"
+            styleClass="profile-dialog">
+
             <!-- HEADER -->
             <ng-template pTemplate="header">
 
-                <div class="drawer-header-chat">
-                    
-                    <div class="logo-container-chat">
-                        <div class="logo-text-chat">
-                            <h2>IA Especializada</h2>
-                            <span>Conversación basada en la imagen analizada</span>
-                        </div>
+                <div class="settings-header">
 
-                        <div class="logo-icon-chat">
-                            <img src="/AgroVisionAI.png">
-                        </div>
-                    </div>
+                    <lucide-icon
+                        name="user-round"
+                        [size]="24">
+                    </lucide-icon>
 
-                    <div *ngIf="diagnosticoSeleccionado" class="container-chat" style="margin: auto;">
-                        
-                        <div class="content-chat-card">
-                            
-                            <!-- LOADING class="flex justify-center align-items-center"-->
-                            <div
-                                *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' || diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
-                                class="loading-container-s"
+                    <h2>Editar perfil</h2>
 
-                            >
-
-                                <!-- Imagen de fondo -->
-                                <img
-                                    [src]="diagnosticoSeleccionado?.planta?.imagen"
-                                    alt="Planta base"
-                                    class="loading-image"
-                                />
-
-                                <!-- Overlay oscuro -->
-                                <div class="loading-overlay">
-
-                                    <!-- Spinner -->
-                                    <p-progressSpinner></p-progressSpinner>
-
-                                </div>
-
-                            </div>
-                            
-                            <!-- IMAGEN-->
-                            <img
-                                *ngIf="diagnosticoSeleccionado?.imagen"
-                                [src]="diagnosticoSeleccionado?.imagen"
-                                alt="Imagen planta"
-                                class="plant-image"
-                            />
-                        </div>
-                        
-                    </div>
                 </div>
-                
+
             </ng-template>
 
-            <!-- CONTENIDO -->
+            <!-- CONTENT -->
             <ng-template pTemplate="content">
-                
-                <div #scrollContainer class="mensajes-container">
-                    <div
-                        *ngFor="let mensaje of mensajes"
-                        [ngClass]="{
-                            'mensaje-usuario': mensaje.tipo === 'usuario',
-                            'mensaje-ia': mensaje.tipo === 'ia'
-                        }"
-                    >
 
-                        <span *ngIf="mensaje.texto !== 'Analizando planta...'">
-                            {{ mensaje.texto }}
-                        </span>
+                <div class="profile-container">
+
+                    <!-- FOTO -->
+                    <div class="perfil-avatar">
+
+                        <div class="avatar-container">
+                            <img
+                                [src]="editableUser.picture"
+                                class="avatar"
+                                alt="Avatar">
+
+                            <input
+                                #fileInput
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                (change)="onAvatarChange($event)">
+                            
+                            <!-- Cancelar -->
+                            <button
+                                *ngIf="selectedFile"
+                                pButton
+                                type="button"
+                                icon="pi pi-times"
+                                class="avatar-remove-btn p-button-rounded p-button-sm p-button-danger"
+                                (click)="removeSelectedAvatar(fileInput)">
+                            </button>
+
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-pencil"
+                                class="avatar-edit-btn p-button-rounded p-button-sm p-button-secondary"
+                                (click)="fileInput.click()">
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- FORMULARIO -->
+                    <div class="perfil-form">
+
+                        <div class="form-group">
+                            <label>Nickname</label>
+
+                            <input
+                                pInputText
+                                [(ngModel)]="editableUser.username">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+
+                            <input
+                                pInputText
+                                [(ngModel)]="editableUser.first_name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Apellido</label>
+
+                            <input
+                                pInputText
+                                [(ngModel)]="editableUser.last_name">
+                        </div>
 
                         <div
-                            *ngIf="mensaje.texto === 'Analizando planta...'"
-                            class="typing-loader"
-                        >
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                            class="form-group"
+                            *ngIf="editableUser.autenticacion === 'LOCAL'">
+
+                            <label>Correo electrónico</label>
+
+                            <input
+                                pInputText
+                                type="email"
+                                [(ngModel)]="editableUser.email">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+
+                            <input
+                                pInputText
+                                [(ngModel)]="editableUser.phone">
                         </div>
 
                     </div>
@@ -816,45 +1332,1126 @@
 
             <!-- FOOTER -->
             <ng-template pTemplate="footer">
-                <div class="quick-carousel" *ngIf="!isSendingMessage">
+                <div class="footer">
+                <button
+                    pButton
+                    type="button"
+                    label="Cancelar"
+                    class="p-button-text"
+                    (click)="showProfileDialog=false"
+                    (click)="closePerfil()">
+                </button>
 
+                <button
+                    pButton
+                    type="button"
+                    label="Guardar cambios"
+                    (click)="guardarPerfilModal()">
+                </button>
+                </div>
+            </ng-template>
+
+        </p-dialog>
+
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="content-container">
+
+        <!-- LAYOUT -->
+        <div class="app-layout">
+
+            <!-- TOPBAR PRINCIPAL -->
+            <div class="topbar">
+
+                <!-- IZQUIERDA -->
+                <div class="topbar-left">
+                    
                     <button
                         pButton
-                        [raised]="true"
-                        *ngFor="let msg of quickMessages"
-                        class="quick-btn p-button-text"
-                        (click)="enviarQuickMessage(msg)"
-                        [disabled]="isSendingMessage"
-                    >
-                        {{ msg }}
+                        type="button"
+                        class="p-button-text"
+                        (click)="sidebarVisible = !sidebarVisible">
+
+                        <lucide-icon
+                            name="menu"
+                            [size]="24">
+                        </lucide-icon>
+
                     </button>
 
-                </div>
-                <div class="chat-footer">
+                    <div class="topbar-header-content" *ngIf="diagnosticoSeleccionado">
+                        <div class="icon-stack">
+                            <lucide-icon 
+                                name="scan" 
+                                [size]="50" 
+                                color="var(--color-primary)"
+                            ></lucide-icon>
+                            <lucide-icon 
+                                name="leaf" 
+                                [size]="25" 
+                                class="leaf-overlay"
+                                color="var(--color-primary)"
+                            ></lucide-icon>
+                        </div>
 
-                    <input
-                        pInputText
-                        type="text"
-                        placeholder="Escribe un mensaje..."
-                        class="chat-input"
-                        [(ngModel)]="nuevoMensaje"
-                        [disabled]="isSendingMessage"
-                        (keydown.enter)="enviarMensaje()"
-                    />
+                        <div class="card-topbar">
+                            <div class="card-topbar-title">
+                                <h2>{{ chatSeleccionado?.titulo | titlecase }}</h2>
+                                <lucide-icon
+                                    name="chevron-right"
+                                    [size]="25"
+                                    color="var(--color-primary)"
+                                ></lucide-icon>
+                                
+                                <h2 class="title-topbar-2">{{ chatSeleccionado?.diagnostico?.enfermedad_detectada | titlecase }}</h2>
+                            </div>
+                            
+                            <div class="card-topbar-secondary">
+                                <p-tag
+                                    [value]="(chatSeleccionado?.creado_en | date:'short') ?? ''"
+                                    severity="secondary">
+                                </p-tag>
+
+                                <p-tag
+                                    [value]="diagnosticoSeleccionado?.confianza_ia + '% confianza IA'"
+                                    severity="success">
+                                </p-tag>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+                <!-- DERECHA -->
+                <div class="topbar-right">
 
                     <button
                         pButton
                         type="button"
-                        icon="pi pi-send"
-                        class="chat-button p-button-rounded p-button-primary"
-                        [disabled]="isSendingMessage"
-                        (click)="enviarMensaje()"
-                    ></button>
+                        class="p-button-text"
+                        (click)="exportarDiagnosticoPDF(diagnosticoSeleccionado)">
+
+                        <i class="pi pi-download"></i>
+
+                        <span class="btn-text">Exportar PDF</span>
+                    </button> 
 
                 </div>
 
-            </ng-template>
-        </p-drawer>
+            </div>
+
+            <!-- TOPBAR TABS -->
+            <div class="topbar-secondary" *ngIf="chatSeleccionado?.id">
+
+                <div
+                    class="toolbar-tab"
+                    [class.active]="opcionActiva === 'diagnostico'"
+                    (click)="opcionActiva = 'diagnostico'"
+                >
+                    <lucide-icon 
+                        name="scan-search"
+                    ></lucide-icon>
+                    Diagnóstico
+                </div>
+
+                <div
+                    class="toolbar-tab"
+                    [class.active]="opcionActiva === 'chat'"
+                    (click)="opcionActiva = 'chat'"
+                >
+                    <lucide-icon 
+                        name="bot"
+                    ></lucide-icon>
+                    IA Fitopatóloga
+                </div>
+
+            </div>
+
+            <!-- CONTENIDO -->
+            <main class="main-content">
+
+                <!-- CHAT -->
+                
+                <div *ngIf="chatSeleccionado?.id; else bienvenida">
+    
+                    <!-- DIAGNOSTICO -->
+                    <div *ngIf="opcionActiva === 'diagnostico'">
+
+                        <div class="content-option">
+
+                            <!-- HEADER IMAGEN DIAGNÓSTICO -->
+                            <div class="diagnostic-hero">
+
+                                <!-- LOADING / PLACEHOLDER -->
+                                <ng-container
+                                    *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente'
+                                    || diagnosticoSeleccionado?.estado_imagen === 'Procesando'
+                                    || !diagnosticoSeleccionado?.imagen"
+                                >
+
+                                    <!-- imagen base (fallback planta o placeholder) -->
+                                    <img
+                                        class="diagnostic-hero-img"
+                                        [src]="diagnosticoSeleccionado?.planta?.imagen || '/placeholder.jpg'"
+                                        alt="Cargando diagnóstico"
+                                        style="filter: blur(2px); opacity: 0.7;"
+                                    />
+
+                                    <!-- overlay -->
+                                    <div class="diagnostic-hero-overlay">
+                                        <div class="hero-loading">
+                                            <p-progressSpinner></p-progressSpinner>
+                                            <p style="color:white; margin-top:10px;">
+                                                Generando imagen...
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- spinner encima -->
+                                    
+
+                                </ng-container>
+
+
+                                <!-- ERROR -->
+                                <ng-container *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Error'">
+
+                                    <img
+                                        class="diagnostic-hero-img"
+                                        [src]="diagnosticoSeleccionado?.planta?.imagen"
+                                        alt="Error"
+                                        style="filter: grayscale(1); opacity: 0.6;"
+                                    />
+
+                                    <div class="diagnostic-hero-overlay"></div>
+
+                                    <div class="hero-loading">
+                                        <i class="pi pi-times-circle" style="font-size: 2rem; color: red;"></i>
+                                        <p style="color:white;">Error al procesar imagen</p>
+                                    </div>
+
+                                </ng-container>
+
+
+                                <!-- RESULTADO FINAL -->
+                                <ng-container
+                                    *ngIf="diagnosticoSeleccionado?.estado_imagen !== 'Pendiente'
+                                    && diagnosticoSeleccionado?.estado_imagen !== 'Procesando'
+                                    && diagnosticoSeleccionado?.imagen"
+                                >
+
+                                    <img
+                                        class="diagnostic-hero-img"
+                                        [src]="diagnosticoSeleccionado?.imagen"
+                                        alt="Imagen diagnóstico"
+                                    />
+
+                                    <div class="diagnostic-hero-overlay"></div>
+
+                                    <button
+                                        class="expand-btn"
+                                        pButton
+                                        icon="pi pi-search-plus"
+                                        (click)="mostrarDialogImagen = true"
+                                    ></button>
+
+                                </ng-container>
+
+
+                                <!-- TEXTO SIEMPRE -->
+                                <div class="diagnostic-hero-text">
+                                    <div class="text-item">
+                                        <h2>{{ diagnosticoSeleccionado?.planta?.nombre | titlecase }}</h2>
+                                        <span>Hoja</span>
+                                    </div>
+
+                                    <div class="text-item">
+                                        <h2>{{ diagnosticoSeleccionado?.enfermedad_detectada | titlecase }}</h2>
+                                        <span>Enfermedad</span>
+                                    </div>
+
+                                    <div class="text-item">
+                                        <h2>{{ diagnosticoSeleccionado?.severidad }}</h2>
+                                        <span>Severidad</span>
+                                    </div>
+
+                                    <div class="text-item">
+                                        <h2>{{ diagnosticoSeleccionado?.confianza_ia }}%</h2>
+                                        <span>Confianza IA</span>
+                                    </div>
+                                </div>
+
+                                <!-- DIALOG -->
+                                <p-dialog
+                                    header="Imagen Analizada"
+                                    [(visible)]="mostrarDialogImagen"
+                                    [modal]="true"
+                                    [closable]="true"
+                                    [draggable]="false"
+                                    [resizable]="false"
+                                    [style]="{ width: '70vw' }"
+                                    [breakpoints]="{
+                                        '960px': '90vw',
+                                        '640px': '95vw'
+                                    }"
+                                >
+
+                                    <!-- CONTENIDO -->
+                                    <div
+                                        style="
+                                            width:100%;
+                                            height:70vh;
+                                            display:flex;
+                                            justify-content:flex-start;
+                                            align-items:flex-start;
+                                            background:#f5f5f5;
+                                            border-radius:12px;
+                                        "
+                                    >
+                                        <div
+                                            style="
+                                                display:inline-block;
+                                            "
+                                            [style.transform]="'scale(' + zoomImagen + ')'"
+                                            style="
+                                                transform-origin: top left;
+                                                transition: transform .25s ease;
+                                            "
+                                        >
+                                            <img
+                                                [src]="diagnosticoSeleccionado?.imagen"
+                                                alt="Imagen analizada"
+                                                style="
+                                                    display:block;
+                                                    max-width:none;
+                                                    border-radius:12px;
+                                                "
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- FOOTER -->
+                                    <ng-template pTemplate="footer">
+
+                                        <div
+                                            style="
+                                                display:flex;
+                                                justify-content:center;
+                                                gap:12px;
+                                                width:100%;
+                                            "
+                                        >
+
+                                            <!-- Zoom Out -->
+                                            <button
+                                                pButton
+                                                type="button"
+                                                icon="pi pi-search-minus"
+                                                label="Alejar"
+                                                class="p-button-outlined p-button-secondary"
+                                                (click)="zoomOut()"
+                                            >
+                                            </button>
+
+                                            <!-- Reset -->
+                                            <button
+                                                pButton
+                                                type="button"
+                                                icon="pi pi-refresh"
+                                                label="Reset"
+                                                class="p-button-outlined"
+                                                (click)="resetZoom()"
+                                            >
+                                            </button>
+
+                                            <!-- Zoom In -->
+                                            <button
+                                                pButton
+                                                type="button"
+                                                icon="pi pi-search-plus"
+                                                label="Acercar"
+                                                class="p-button-success"
+                                                (click)="zoomIn()"
+                                            >
+                                            </button>
+
+                                        </div>
+
+                                    </ng-template>
+
+                                </p-dialog>
+
+                            </div>
+
+                            <!-- CONTENIDO DIAGNÓSTICO -->
+                            <div class="diagnostic-main">
+                                
+                                <div class="diagnostic-card-main">
+
+                                    <div class="diagnostic-header">
+                                        <div class="diagnostic-title">
+                                            <div class="diagnostic-icon">
+                                                <lucide-icon 
+                                                    name="scan-search"
+                                                    [size]="24">
+                                                </lucide-icon>
+                                            </div>
+
+                                            <div>
+                                                <span class="sub">
+                                                    Enfermedad detectada
+                                                </span>
+                                                <h2>
+                                                    {{ diagnosticoSeleccionado?.enfermedad_detectada | titlecase }}
+                                                </h2>
+                                            </div>
+                                        </div>
+
+                                        <div class="confidence-box">
+                                            <strong>
+                                                {{ diagnosticoSeleccionado?.confianza_ia }}%
+                                            </strong>
+                                            <span>
+                                                IA
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mid-info">
+                                        <p>
+                                            Precisión basada en análisis de imagen y modelo IA
+                                        </p>
+                                    </div>
+
+                                    <div class="progress-wrapper">
+                                        <div class="progress-header">
+                                            <span>
+                                                Confianza del diagnóstico
+                                            </span>
+                                            <b>
+                                                {{ diagnosticoSeleccionado?.confianza_ia }}%
+                                            </b>
+                                        </div>
+
+                                        <p-progressBar
+                                            [value]="diagnosticoSeleccionado?.confianza_ia || 0"
+                                            [showValue]="false">
+                                        </p-progressBar>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <!-- CARTAS DE ESPECIFICACIONES -->
+                                <div class="grid-cards">
+
+                                    <div class="card severidad">
+                                        <div class="card-icon">
+                                            <lucide-icon name="shield-alert"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Severidad</h4>
+                                            <p>{{ diagnosticoSeleccionado?.severidad }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card salud">
+                                        <div class="card-icon">
+                                            <lucide-icon name="heart-pulse"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Salud</h4>
+                                            <p>{{ diagnosticoSeleccionado?.porcentaje_salud }}%</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card urgencia">
+                                        <div class="card-icon">
+                                            <lucide-icon name="triangle-alert"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Urgencia</h4>
+                                            <p>{{ diagnosticoSeleccionado?.urgencia || 'Sin información' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card contagio">
+                                        <div class="card-icon">
+                                            <lucide-icon name="bug"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Contagio</h4>
+                                            <p>{{ diagnosticoSeleccionado?.contagio || 'Sin información' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card recuperacion">
+                                        <div class="card-icon">
+                                            <lucide-icon name="sprout"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Recuperación</h4>
+                                            <p>{{ diagnosticoSeleccionado?.recuperacion || 'Sin información' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card etapa">
+                                        <div class="card-icon">
+                                            <lucide-icon name="route"></lucide-icon>
+                                        </div>
+                                        <div>
+                                            <h4>Etapa</h4>
+                                            <p>{{ diagnosticoSeleccionado?.etapa || 'Sin información' }}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- OPCIONES DE CONTENIDO -->
+                                <div class="tabs">
+
+                                    <div class="tab" 
+                                        [class.active]="tabActivo === 'diagnostico'"
+                                        (click)="tabActivo = 'diagnostico'">
+                                        Diagnóstico
+                                    </div>
+
+                                    <div class="tab"
+                                        [class.active]="tabActivo === 'tratamiento'"
+                                        (click)="tabActivo = 'tratamiento'">
+                                        Tratamiento
+                                    </div>
+
+                                    <div class="tab"
+                                        [class.active]="tabActivo === 'plantratamiento'"
+                                        (click)="tabActivo = 'plantratamiento'">
+                                        Plan de tratamiento
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-content">
+
+                                    <div *ngIf="tabActivo === 'diagnostico'">
+                                        
+                                        <!-- Acordeón 1 -->
+                                        <p-accordion>
+                                            <p-accordion-panel value="0">
+                                                <p-accordion-header>
+                                                    <lucide-icon
+                                                        name="clipboard-list"
+                                                        [size]="20"
+                                                        >
+                                                    </lucide-icon>
+                                                    Sintomas detectados
+                                                </p-accordion-header>
+                                                <p-accordion-content>
+                                                    <!-- Sintomas detectados -->
+                                                    <div class="cont-sintomas">
+
+                                                        <div
+                                                            class="card-sintoma"
+                                                            *ngFor="let item of diagnosticoSeleccionado?.sintomas_detectados || []">
+
+                                                            <div class="sintoma-icono">
+                                                                <lucide-icon
+                                                                    name="circle-alert"
+                                                                    [size]="18">
+                                                                </lucide-icon>
+                                                            </div>
+
+                                                            <span class="sintoma-texto">
+                                                                {{ item | titlecase }}
+                                                            </span>
+
+                                                        </div>
+
+                                                    </div>
+                                                </p-accordion-content>
+                                            </p-accordion-panel>
+                                        </p-accordion>
+
+                                        <!-- Acordeón 2 -->
+                                        <p-accordion>
+                                            <p-accordion-panel value="0">
+                                                <p-accordion-header>
+                                                    <lucide-icon
+                                                        name="thermometer-sun"
+                                                        [size]="20"
+                                                        >
+                                                    </lucide-icon>
+                                                    Factores climaticos favorables
+                                                </p-accordion-header>
+                                                <p-accordion-content>
+                                                    <!-- Factores climaticos -->
+                                                    <div class="cont-factores">
+
+                                                        <div
+                                                            class="card-factores"
+                                                            *ngFor="let item of diagnosticoSeleccionado?.factores_climaticos_favorables | keyvalue"
+                                                            [ngClass]="{
+                                                            'humedad': item.key === 'humedad',
+                                                            'temperatura': item.key === 'temperatura',
+                                                            'viento': item.key === 'viento'
+                                                            }">
+
+                                                            <div class="factor-icono">
+
+                                                                <lucide-icon
+                                                                    *ngIf="item.key === 'humedad'"
+                                                                    name="droplets"
+                                                                    [size]="24">
+                                                                </lucide-icon>
+
+                                                                <lucide-icon
+                                                                    *ngIf="item.key === 'temperatura'"
+                                                                    name="cloud-sun"
+                                                                    [size]="24">
+                                                                </lucide-icon>
+
+                                                                <lucide-icon
+                                                                    *ngIf="item.key === 'viento'"
+                                                                    name="wind"
+                                                                    [size]="24">
+                                                                </lucide-icon>
+
+                                                            </div>
+
+                                                            <span class="factor-titulo">
+                                                                {{ item.key + '' | titlecase }}
+                                                            </span>
+
+                                                            <span class="factor-valor">
+                                                                {{ item.value }}
+                                                                <span *ngIf="item.key === 'humedad'">%</span>
+                                                                <span *ngIf="item.key === 'temperatura'">°C</span>
+                                                            </span>
+
+                                                        </div>
+
+                                                    </div>       
+                                                </p-accordion-content>
+                                            </p-accordion-panel>
+                                        </p-accordion>
+                                                                            
+                                        <!-- Acordeón 3 -->
+                                        <p-accordion>
+                                            <p-accordion-panel value="0">
+                                                <p-accordion-header>
+                                                    <lucide-icon
+                                                        name="bug"
+                                                        [size]="20"
+                                                        >
+                                                    </lucide-icon>
+                                                    Plagas relacionadas
+                                                </p-accordion-header>
+                                                <p-accordion-content>
+                                                    <!-- Plagas relacionadas-->
+                                                    <div class="cont-plagas">
+
+                                                        <div 
+                                                        class="card-plaga"
+                                                        *ngFor="let item of diagnosticoSeleccionado?.plagas_relacionadas || []">
+
+                                                            <div class="plaga-icono">
+                                                                <lucide-icon
+                                                                    name="bug"
+                                                                    [size]="24">
+                                                                </lucide-icon>
+                                                            </div>
+
+
+                                                            <div class="plaga-info">
+
+                                                                <span class="plaga-titulo">
+                                                                    {{ item.plaga + '' | titlecase }}
+                                                                </span>
+
+                                                                <span 
+                                                                class="plaga-riesgo"
+                                                                [ngClass]="{
+                                                                    'riesgo-alto': item.riesgo === 'alto',
+                                                                    'riesgo-medio': item.riesgo === 'medio',
+                                                                    'riesgo-bajo': item.riesgo === 'bajo'
+                                                                }">
+
+                                                                    Riesgo: {{ item.riesgo + '' | titlecase }}
+
+                                                                </span>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </p-accordion-content>
+                                            </p-accordion-panel>
+                                        </p-accordion>
+
+                                        <!-- Acordeón 4 -->
+                                        <p-accordion>
+                                            <p-accordion-panel value="0">
+                                                <p-accordion-header>
+                                                    <lucide-icon
+                                                        name="line-chart"
+                                                        [size]="20"
+                                                        >
+                                                    </lucide-icon>
+                                                    Prediccion evolutiva
+                                                </p-accordion-header>
+                                                <p-accordion-content>
+                                                    <!-- Prediccion evolutiva-->
+                                                    <div class="timeline-evolucion">
+
+                                                        <div
+                                                            class="timeline-item"
+                                                            *ngFor="let item of diagnosticoSeleccionado?.prediccion_evolucion || []; let last = last">
+
+                                                            <!-- Línea -->
+                                                            <div class="timeline-line" *ngIf="!last"></div>
+
+                                                            <!-- Punto -->
+                                                            <div class="timeline-marker">
+                                                                <lucide-icon
+                                                                    name="calendar-clock"
+                                                                    [size]="18">
+                                                                </lucide-icon>
+                                                            </div>
+
+                                                            <!-- Contenido -->
+                                                            <div class="timeline-card">
+
+                                                                <div class="timeline-header">
+
+                                                                    <span class="timeline-badge">
+                                                                        Semana {{ item.periodo }}
+                                                                    </span>
+
+                                                                </div>
+
+                                                                <p class="timeline-descripcion">
+                                                                    {{ item.descripcion | titlecase }}
+                                                                </p>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </p-accordion-content>
+                                            </p-accordion-panel>
+                                        </p-accordion>
+
+                                    </div>
+
+                                    <div *ngIf="tabActivo === 'tratamiento'" >
+                                        <div class="diagnostic-content">
+                                            <!-- Tratamiento natural-->
+                                            <div class="diagnostic-card trat-natural">
+                                                <div class="card-header">
+                                                    <lucide-icon
+                                                        name="leaf"
+                                                        [size]="20"
+                                                        color="var(--color-primary)">
+                                                    </lucide-icon>
+                                                    <h3>Tratamiento natural</h3>
+                                                </div>
+                                                
+
+                                                <ul class="lista-bullets">
+                                                    <li *ngFor="let item of diagnosticoSeleccionado?.tratamiento_natural || []">
+                                                        {{ item }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- Tratamiento quimico-->
+                                            <div class="diagnostic-card trat-quimico" >
+                                                <div class="card-header">
+                                                    <lucide-icon
+                                                        name="flask-conical"
+                                                        [size]="20"
+                                                        color="#3B82F6">
+                                                    </lucide-icon>
+                                                    <h3>Tratamiento quimico</h3>
+                                                </div>
+                                                
+                                                <ul class="lista-bullets">
+                                                    <li *ngFor="let item of diagnosticoSeleccionado?.tratamiento_quimico || []">
+                                                        {{ item }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- Prevención -->
+                                            <div class="diagnostic-card prevencion">
+                                                <div class="card-header">
+                                                    <lucide-icon
+                                                        name="shield-check"
+                                                        [size]="20"
+                                                        color="#8B5CF6">
+                                                    </lucide-icon>
+                                                    <h3>Como prevenir</h3>
+                                                </div>
+
+                                                <ul class="lista-bullets">
+                                                    <li *ngFor="let item of diagnosticoSeleccionado?.prevencion || []">
+                                                        {{ item }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="tabActivo === 'plantratamiento'" class="calendario-trat">
+                                        <div class="header-calendario">
+                                            <lucide-icon
+                                                name="calendar-check"
+                                                [size]="20"
+                                                color="var(--color-primary)">
+                                            </lucide-icon> 
+                                            <p>CALENDARIO</p>
+
+                                        </div>
+
+                                        <div class="semana"
+                                            *ngFor="let grupo of actividadesAgrupadas">
+
+                                            <h4 class="semana-titulo">
+                                                Semana {{ grupo.semana }}
+                                            </h4>
+
+                                            <div class="actividad"
+                                                *ngFor="let act of grupo.actividades">
+
+                                                <div class="actividad-item">
+
+                                                    <p-checkbox
+                                                        [binary]="true"
+                                                        [(ngModel)]="act.completada"
+                                                        (onChange)="onActividadChange(act)">
+                                                    </p-checkbox>
+
+
+                                                    <span 
+                                                        class="actividad-texto"
+                                                        [class.completada]="act.completada">
+
+                                                        {{ act.actividad }}
+
+                                                    </span>
+
+
+                                                    <span class="tipo">
+                                                        {{ act.tipo | titlecase }}
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="supervision">
+
+                                            <h4 class="semana-titulo">
+                                                Supervisión continua
+                                            </h4>
+
+                                            <div class="actividad-parte">
+
+                                                <div class="act-parte">
+                                                    <lucide-icon
+                                                        name="droplets"
+                                                        [size]="22"
+                                                        color="var(--color-primary)">
+                                                    </lucide-icon>
+
+                                                    <p>Control de humedad</p>
+                                                </div>
+
+                                                <div class="act-parte">
+                                                    <lucide-icon
+                                                        name="eye"
+                                                        [size]="22"
+                                                        color="var(--color-primary)">
+                                                    </lucide-icon>
+
+                                                    <p>Vigilancia constante</p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="tabActivo === 'analitica'">
+                                        <p>Gráficos y métricas del modelo...</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CHAT IA -->
+                    <div *ngIf="opcionActiva === 'chat'" class="chat-ia-container">
+
+                        <div class="container-box">
+                            <!-- HEADER -->
+                            <div class="chat-header">
+
+                                <div class="logo-container-chat">
+
+                                    <div class="logo-text-chat">
+                                        <h2>Asistente IA Agrícola</h2>
+                                        <span>
+                                            Consulta dudas sobre enfermedades, tratamientos,
+                                            fertilización y manejo de cultivos.
+                                        </span>
+                                    </div>
+
+                                    <div class="logo-icon-chat">
+
+                                        <!-- LOADING -->
+                                        <div
+                                            *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' ||
+                                                diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
+                                            class="loading-container-s"
+                                        >
+
+                                            <img
+                                                [src]="diagnosticoSeleccionado?.planta?.imagen"
+                                                alt="Planta base"
+                                                class="loading-image"
+                                            />
+
+                                            <div class="loading-overlay">
+                                                <p-progressSpinner></p-progressSpinner>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- IMAGEN -->
+                                        <img
+                                            [src]="diagnosticoSeleccionado?.imagen || diagnosticoSeleccionado?.planta?.imagen"
+                                            alt="Imagen planta"
+                                            class="plant-image"
+                                        />
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- MENSAJES -->
+                            <div #scrollContainer class="mensajes-container">
+
+                                <div
+                                    *ngFor="let mensaje of mensajes"
+                                    [ngClass]="{
+                                        'mensaje-usuario': mensaje.tipo === 'usuario',
+                                        'mensaje-ia': mensaje.tipo === 'ia'
+                                    }"
+                                >
+
+                                    <span *ngIf="mensaje.texto !== 'Analizando planta...'">
+                                        {{ mensaje.texto }}
+                                    </span>
+
+                                    <div
+                                        *ngIf="mensaje.texto === 'Analizando planta...'"
+                                        class="typing-loader"
+                                    >
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="chat-footer-wrapper">
+
+                                <div class="quick-carousel" *ngIf="!isSendingMessage">
+
+                                    <button
+                                        pButton
+                                        [raised]="true"
+                                        *ngFor="let msg of quickMessages"
+                                        class="quick-btn p-button-text"
+                                        (click)="enviarQuickMessage(msg)"
+                                        [disabled]="isSendingMessage"
+                                    >
+                                        {{ msg }}
+                                    </button>
+
+                                </div>
+
+                                <div class="chat-footer">
+
+                                    <input
+                                        pInputText
+                                        type="text"
+                                        class="chat-input"
+                                        placeholder="Escribe tu consulta..."
+                                        [(ngModel)]="nuevoMensaje"
+                                        [disabled]="isSendingMessage"
+                                        (keydown.enter)="enviarMensaje()"
+                                    />
+
+                                    <button
+                                        pButton
+                                        type="button"
+                                        icon="pi pi-send"
+                                        class="chat-button p-button-rounded p-button-primary"
+                                        [disabled]="isSendingMessage"
+                                        (click)="enviarMensaje()"
+                                    ></button>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BIENVENIDA -->
+                <ng-template #bienvenida>
+
+                    <div class="welcome-container">
+
+                        <div class="welcome-card">
+
+                            <div class="card-principle">
+                        
+                                <!-- IMAGEN -->
+                                <div class="logo-card">
+                                    <img src="/AgroVisionAI.png" alt="AgroVision AI">
+                                </div>
+
+                                <!-- TITLE -->
+                                <h1>AgoVision AI</h1>
+
+                                <p class="welcome-description">
+                                    Detecta enfermedades en cultivos usando inteligencia artificial avanzada.
+                                </p>
+
+                                <!-- ACTIONS -->
+                                <div class="action-buttons">
+
+                                    <!-- Estado: sin imagen -->
+                                    <ng-container *ngIf="!hasImage && !isAnalyzing">
+
+                                        <input
+                                            type="file"
+                                            #fileInput
+                                            accept="image/*"
+                                            hidden
+                                            (change)="onFileSelected($event)">
+
+                                        <button
+                                            pButton
+                                            type="button"
+                                            class="upload-btn"
+                                            (click)="fileInput.click()"
+                                        >
+                                            <i class="pi pi-upload"></i>
+                                            <span>Subir Imagen</span>
+                                        </button>
+
+                                        <button
+                                            pButton
+                                            type="button"
+                                            class="camera-btn"
+                                            (click)="tomarFoto()"
+                                        >
+                                            <i class="pi pi-camera"></i>
+                                            <span>Tomar Foto</span>
+                                        </button>
+
+                                    </ng-container>
+
+                                    <!-- Estado: imagen lista -->
+                                    <ng-container *ngIf="hasImage && !isAnalyzing">
+                                        
+                                        <button
+                                            pButton
+                                            type="button"
+                                            class="analyze-btn"
+                                            (click)="enviarAnalisis()"
+                                        >
+                                            <i class="pi pi-search"></i>
+                                            <span>Analizar planta</span>
+                                        </button>
+
+                                    </ng-container>
+
+                                    <!-- Estado: analizando -->
+                                    <ng-container *ngIf="isAnalyzing">
+                                        <p>Analizando planta...</p>
+                                    </ng-container>
+
+                                </div>
+                            </div>
+
+                            <div class="card-secondary">
+                                <!-- PREVIEW -->
+                                <div *ngIf="imagePreview && !isAnalyzing" class="preview-container">
+
+                                    <img
+                                        [src]="imagePreview"
+                                        alt="Preview">
+
+                                    <button
+                                        pButton
+                                        type="button"
+                                        icon="pi pi-times"
+                                        class="remove-image-btn p-button-rounded"
+                                        (click)="cancelarImagen()">
+                                    </button>
+
+                                </div>
+                            </div>
+                            
+                            <!-- LOADER -->
+                            <div
+                                *ngIf="isAnalyzing"
+                                class="loader-container">
+
+                                <p-progressSpinner
+                                    strokeWidth="4"
+                                    styleClass="custom-spinner">
+                                </p-progressSpinner>
+
+                                <h3>
+                                    Analizando cultivo...
+                                </h3>
+
+                                <p>
+                                    La IA está evaluando tejidos vegetales y posibles enfermedades.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </ng-template>
+
+            </main>
+            
+        </div>
+        
     </div>
     
 </div>

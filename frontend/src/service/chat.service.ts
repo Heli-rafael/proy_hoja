@@ -24,7 +24,27 @@ export class ChatService {
     return this.http.post<ChatModel>(this.apiUrl, { diagnostico: diagnosticoId, titulo });
   }
 
+  updateChatTitle(id: number, titulo: string) {
+    return this.http.patch(`${this.apiUrl}${id}/`, {
+      titulo
+    });
+  }
+
   eliminarChat(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
+
+  // Fijar o des-fijar un chat
+  togglePinned(id: number) {
+    return this.http.post<ChatModel>(`${this.apiUrl}${id}/fijar/`, {});
+  }
+
+  // Exportar formatos
+  exportChatsExcel() {
+    return this.http.get(
+      `${this.apiUrl}export/excel/`,
+      { responseType: 'blob' }
+    );
+  }
+
 }

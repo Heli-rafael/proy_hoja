@@ -79,13 +79,26 @@ import { Inicio } from './pages/inicio/inicio';
 // Menu
 import { MenubarModule } from 'primeng/menubar';
 
+// Locale
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs, 'es-ES');
+
+// ICONS LUCIDE
+import { LucideAngularModule } from 'lucide-angular';
+import { Icons } from './icons.lucide';
+
+// CHECKBOX
+import { CheckboxModule } from 'primeng/checkbox';
+import { Pruebas } from './pages/pruebas/pruebas';
 
 @NgModule({
   declarations: [
     App,
     Login,
     Chat,
-    Inicio
+    Inicio,
+    Pruebas
   ],
   imports: [
     BrowserModule,
@@ -147,6 +160,12 @@ import { MenubarModule } from 'primeng/menubar';
 
     // Menu
     MenubarModule,
+
+    // Checkbox
+    CheckboxModule,
+
+    // ICONS LUCIDE
+    LucideAngularModule.pick(Icons),
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -167,21 +186,23 @@ import { MenubarModule } from 'primeng/menubar';
 
     // Configuracion de Google
     {
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: false,
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider(
-            'TU_CLIENT_ID'
-          )
-        }
-      ],
-      onError: (err: any) => console.error(err)
-    }
-  },
-
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              'TU_CLIENT_ID'
+            )
+          }
+        ],
+        onError: (err: any) => console.error(err)
+      }
+    },
+    // Locale
+    { provide: LOCALE_ID, useValue: 'es-ES' },
+    
     // Confirmacion y Mensajes
     ConfirmationService,
     MessageService,

@@ -1,280 +1,324 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.body{
-    height: 100vh;
-    background:  var(--primary);
+.login-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.bg{
-    position: absolute;
-    width: 700px;
     height: 100vh;
-    background: rgba(255,255,255,.05);
-    border-radius: 50%;
-    filter: blur(80px);
+    width: 100%;
+    font-family: 'Inter', sans-serif;
 }
 
-.login-box{
-    width: 430px;
-    background: rgba(255,255,255,.12);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.15);
-    padding: 45px;
-    border-radius: 35px;
-    color:  var(--white-letter);
+/* ================= LEFT PANEL ================= */
+.left-panel {
     position: relative;
-    z-index: 1;
+    flex: 1;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.logo{
-    text-align:  center;
-    font-size: 35px;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color:  var(--white-letter);
+.left-panel::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background: url("/AgroVisionAI.png") no-repeat center;
+  background-size: 300px;
+
+  opacity: 0.09;
+  z-index: 0;
+  filter: blur(0px);
+  pointer-events: none;
 }
 
-.login-box p{
-    text-align:  center;
-    opacity: .85;
-    margin-bottom: 35px;
+
+.left-content {
+    justify-content: center;
+    width: 100%;
+    max-width: 420px;
 }
 
-.input-group {
+.brand {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 16px;
-    background: rgba(255,255,255,.12);
-    color: var(--white-letter);
-    outline: none;
-}
-
-::ng-deep .p-password {
-    width: 100%;
-}
-
-::ng-deep .p-password input {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 16px;
-    background: rgba(255,255,255,.12);
-    color: var(--white-letter);
-    outline: none;
-}
-
-.input-group input::placeholder,
-::ng-deep .p-password input::placeholder {
-    color: var(--white-letter);
-}
-
-
-.input-group input::placeholder{
-    color:  var(--white-letter);
-}
-
-::ng-deep .p-password .p-icon {
-    cursor: pointer;
-    color: white !important;
-    fill: white !important;
-    width: 1.4rem;
-    height: 1.2rem;
-}
-
-
-.button-into {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 16px;
-    background: white;
-    color: var(--primary);
+    gap: 10px;
+    font-size: 22px;
     font-weight: 700;
-    margin-top: 10px;
-
-    transition: all 0.25s ease;
-    box-shadow: 0 10px 20px var(--primary-shadow) !important;
-    cursor: pointer;
+    margin-bottom: 40px;
 }
 
-.button-into:hover{
-    border: none !important;
+.brand img{
+    border-radius: 20px;
+    width: 100px;
+    height: 100px;
 }
 
-.divider{
-    text-align: center;
-    margin: 25px 0;
-    color: var(--white-letter);
+.brand h1 {
+  letter-spacing: 0.8px;
+  color: white;
+  line-height: 1;  
 }
 
-.social{
-    display: flex;
-    justify-content: center;
+.icon-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.floating-icon {
+    display: inline-block;
+    animation: float 2.5s ease-in-out infinite;
+    color: #ffffff;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translateY(-8px) scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.8;
+    }
+}
+
+.left-panel h2 {
+    font-size: 34px;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.left-panel p {
+    opacity: 0.9;
+    margin-bottom: 40px;
+    max-width: 400px;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
 
-.social button{
-    background: rgba(255,255,255,.12);
-    color: white;
+.feature {
+    background: rgba(255,255,255,0.12);
+    padding: 14px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+}
+
+/* ================= RIGHT PANEL ================= */
+.right-panel {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.login-card {
+    width: 420px;
+    background: white;
+    border: 2px solid var(--color-primary-grey);
+    padding: 20px 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+
+.card-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.text-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-header img{
+    width: 100px;
+    height: 100px;
+}
+
+.login-card h2 {
+    font-size: 26px;
+    margin: 0;
+}
+
+.subtitle {
+    color: #64748b;
+    margin: 0;
+}
+
+/* ================= INPUTS ================= */
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+    color: var(--color-primary);
+    transition: all 0.2s ease;
+}
+
+.input lucide-icon {
+    color: #94a3b8;
+    transition: 0.2s ease;
+}
+
+.input:focus-within lucide-icon {
+    color: var(--color-primary);
+}
+
+.input i {
+    color: #64748b;
+}
+
+.input input,
+:host ::ng-deep .p-password input {
+    width: 100%;
     border: none;
-    transition: all 0.25s ease;
-    cursor: pointer;
+    outline: none;
+    background: transparent;
 }
 
-/* HOVER DEL BOTÓN */
-.social button:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(52, 211, 153, 0.35);
-    background: rgba(255,255,255,.18);
+/* ================= OPTIONS ================= */
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 20px;
+    color: #64748b;
 }
 
-
-.extra{
-    margin-top: 25px;
-    text-align: center;
+.options a {
+    color: var(--color-primary);
+    text-decoration: none;
 }
 
-.extra a{
+/* ================= BUTTON ================= */
+.login-btn {
+    width: 100%;
+    background: var(--color-primary);
+    padding: 14px;
+    border-radius: 14px;
     color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-@media (max-width: 1024px) {
-
-    .login-box {
-        width: 380px;
-        padding: 35px;
-        border-radius: 30px;
-    }
-
-    .logo {
-        font-size: 30px;
-    }
-
-    .bg {
-        width: 500px;
-        filter: blur(70px);
-    }
+.login-btn:hover {
+  transform: translateY(-2px);
 }
 
-/* =========================
-   MOBILE LARGE (<= 768px)
-========================= */
-@media (max-width: 768px) {
-
-    .body {
-        padding: 20px;
-    }
-
-    .login-box {
-        width: 100%;
-        max-width: 360px;
-        padding: 30px;
-        border-radius: 25px;
-    }
-
-    .logo {
-        font-size: 26px;
-    }
-
-    .login-box p {
-        font-size: 14px;
-        margin-bottom: 25px;
-    }
-
-    .input-group input,
-    ::ng-deep .p-password input {
-        padding: 15px;
-        border-radius: 14px;
-    }
-
-    button {
-        padding: 15px;
-        font-size: 14px;
-    }
-
-    .social {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .divider {
-        margin: 20px 0;
-        font-size: 14px;
-    }
-
-    .bg {
-        width: 400px;
-        filter: blur(60px);
-    }
+/* ================= DIVIDER ================= */
+.divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 13px;
+  margin: 25px 0;
 }
 
-/* =========================
-   MOBILE SMALL (<= 480px)
-========================= */
-@media (max-width: 480px) {
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
 
-    .body {
-        padding: 15px;
+.divider::before {
+  margin-right: 12px;
+}
+
+.divider::after {
+  margin-left: 12px;
+}
+
+/* ================= SOCIAL ================= */
+.social {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.social button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.social button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= REGISTER ================= */
+.register {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.register a {
+    color: #10b981;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 900px) {
+    .left-panel {
+        display: none;
     }
 
-    .login-box {
-        width: 100%;
-        max-width: 320px;
-        padding: 25px;
-        border-radius: 22px;
+    .right-panel {
+        flex: 1;
+        padding: 0;
     }
 
-    .logo {
-        font-size: 22px;
+    .login-card {
+        width: 90%; 
+        padding: 20px 20px;
     }
 
-    .login-box p {
-        font-size: 13px;
-        margin-bottom: 20px;
-    }
-
-    .input-group {
-        margin-bottom: 15px;
-    }
-
-    .input-group input,
-    ::ng-deep .p-password input {
-        padding: 13px;
-        font-size: 14px;
-    }
-
-    button {
-        padding: 14px;
-        font-size: 14px;
-    }
-
-    .social button {
-        padding: 14px;
-        font-size: 14px;
-    }
-
-    .extra {
-        font-size: 13px;
-    }
-
-    .bg {
-        width: 300px;
-        filter: blur(50px);
-    }
 }

@@ -7,5 +7,6 @@ export interface ChatModel {
   titulo: string;
   diagnostico: DiagnosticoIAModel;
   mensajes?: MensajeModel[];
+  is_pinned?: boolean;
   creado_en?: string | Date;
 }

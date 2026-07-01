@@ -1,96 +1,173 @@
-<div class="body">
+<div class="login-container">
 
-    <div class="bg"></div>
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
 
-    
-    
-    <div class="login-box">
-        <button
-            pButton
-            type="button"
-            icon="pi pi-arrow-left"
-            class="p-button-rounded p-button-primary"
-            (click)="regresarAtras()"
-        ></button>
-        <div class="logo">
-            AgroVision AI
+        <div class="left-content">
+
+            <div class="brand">
+                <img src="/AgroVisionAI3.png" alt="logo">
+                <h1>AgroVision AI</h1>
+            </div>
+
+            <div class="icon-wrapper">
+                <lucide-icon 
+                    class="floating-icon" 
+                    name="sparkles"
+                    [size]="50"
+                ></lucide-icon>
+            </div>
+
+            <h2>La Inteligencia Artificial al servicio de tu cultivo</h2>
+
+            <p>
+            Detecta, diagnostica y trata enfermedades en tus plantas con tecnología de vanguardia.
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    <lucide-icon 
+                        name="camera"
+                    ></lucide-icon>
+                    <span>Diagnóstico IA</span>
+                </div>
+
+                <div class="feature">
+                    <lucide-icon 
+                        name="message-circle"
+                    ></lucide-icon>
+                    <span>Chat Fitopatólogo</span>
+                </div>
+
+                <div class="feature">
+                    <lucide-icon 
+                        name="history"
+                    ></lucide-icon>
+                    <span>Historial</span>
+                </div>
+
+                <div class="feature">
+                    <lucide-icon 
+                        name="bar-chart"
+                    ></lucide-icon>
+                    <span>Estadísticas</span>
+                </div>
+
+            </div>
         </div>
 
-        <p>Inicia sesión para acceder al asistente inteligente de enfermedades vegetales.</p>
-        
-        <!-- FORMULARIO -->
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    </div>
 
-            <!-- Email -->
-            <div class="input-group">
-                <input 
-                    pInputText 
-                    type="email"
-                    formControlName="email" 
-                    (blur)="onFieldBlur('email')" 
-                    placeholder="Correo electrónico">
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+        <div class="login-card">
+
+            <div class="card-header">
+                <div class="text-header">
+                    <h2>Bienvenido</h2>
+                    <p class="subtitle">Inicia sesión para continuar</p>
+                </div>
+
+                <img src="/AgroVisionAI.png" alt="logo">
+
             </div>
+            
+                
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-            <!-- Contraseña -->
-            <div class="input-group" style="display: flex; align-items: center; justify-content: center;">
-                <p-password
-                    formControlName="password"
-                    [feedback]="false"
-                    [toggleMask]="true"
-                    placeholder="Contraseña"
-                    inputStyl eClass="input-password"
-                    (onBlur)="onFieldBlur('password')">
-                </p-password>
-            </div>
+                <!-- EMAIL -->
+                <div class="input-group">
+  
+                    <label>Correo electrónico</label>
 
-            <!-- Botón -->
-            <button
+                    <div class="input">
+                        <lucide-icon name="mail"></lucide-icon>
+
+                        <input
+                            pInputText
+                            type="email"
+                            formControlName="email"
+                            (blur)="onFieldBlur('email')"
+                            placeholder="Ingresa tu correo"
+                        />
+                    </div>
+
+                </div>
+                <!-- PASSWORD -->
+                <div class="input-group">
+
+                    <label>Contraseña</label>
+
+                    <div class="input">
+                        <lucide-icon 
+                            name="lock"
+                        ></lucide-icon>
+
+                        <p-password
+                            formControlName="password"
+                            [toggleMask]="true"
+                            [feedback]="false"
+                            placeholder="Ingresa tu contraseña"
+                            style="width: 100%;"
+                            (blur)="onFieldBlur('password')"
+                            >
+                        </p-password>
+
+                    </div>
+                </div>
+
+                <!-- OPTIONS -->
+                <div class="options">
+                    <label>
+                        <input type="checkbox" /> Recordarme
+                    </label>
+
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- BUTTON -->
+                <button
                 pButton
-                class="button-into"
                 type="submit"
-                label="{{ processing.value ? 'Ingresando...' : 'Ingresar' }}"
-                icon="{{ processing.value ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in' }}"
-                [disabled]="loginForm.invalid || processing.value"
-                [style]="{'width':'100%', 'background-color': 'trasparent'}"
-            >
-            </button>             
+                class="login-btn"
+                [disabled]="loginForm.invalid || processing.value">
 
-        </form>
+                <i [class]="processing.value ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in'"></i>
 
-        
-        <div class="divider">
-            o continuar con
-        </div>
+                {{ processing.value ? 'Ingresando...' : 'Iniciar Sesión' }}
 
-        <div class="social">
-            <!--
-            <button
-                pButton
-                class="button-google"
-                type="button"
-                icon="pi pi-google"
-                label="Google"
-                (click)="loginWithGoogle()">
-            </button>
-            <button
-                pButton
-                class="button-google"
-                type="button"
-                icon="pi pi-facebook"
-                label="Facebook"
-                >
-            </button> 
-            -->
-            <div id="googleButton">
-                Facebook
-            </div>  
+                </button>
 
-        </div>
+            </form>
 
-        <div class="extra">
-            <a href="#">
-                ¿Olvidaste tu contraseña?
-            </a>
+            <!-- DIVIDER -->
+            <div class="divider">o continúa con</div>
+
+            <!-- SOCIAL -->
+            <div class="social">
+
+                <div class="google" id="googleButton"></div>
+
+                <!--
+                    <button class="google" id=>
+                        <i class="pi pi-google"></i>
+                        Google
+                    </button>
+
+                    <button class="facebook">
+                        <i class="pi pi-facebook"></i>
+                        Facebook
+                    </button>
+                -->
+
+            </div>
+
+            <p class="register">
+                ¿No tienes cuenta? <a href="#">Crear cuenta</a>
+            </p>
+
         </div>
 
     </div>
