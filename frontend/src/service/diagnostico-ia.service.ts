@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiConfig } from './auth/api.config';
 import { Observable } from 'rxjs';
 import { DiagnosticoIAModel } from '../model/diagnostico-ia.model';
 import { ActividadTratamientoModel } from '../model/actividad-tratamiento';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DiagnosticoIAService {
-  private apiUrl = `${ApiConfig.apiUrl}api/diagnostico/`;
+  private apiUrl = `${environment.apiUrl}api/diagnostico/`;
 
   constructor(private http: HttpClient) {}
 
   // Actualizar calendario
   actualizarActividad(id: number, data: Partial<ActividadTratamientoModel>) {
     return this.http.patch(
-      `${ApiConfig.apiUrl}api/actividad-tratamiento/${id}/`,
+      `${environment.apiUrl}api/actividad-tratamiento/${id}/`,
       data
     );
   }

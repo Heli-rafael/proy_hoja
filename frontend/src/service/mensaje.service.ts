@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiConfig } from './auth/api.config';
 import { Observable } from 'rxjs';
 import { MensajeModel } from '../model/mensaje.model';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MensajeService {
-  private apiUrl = `${ApiConfig.apiUrl}api/mensajes/`;
+  private apiUrl = `${environment.apiUrl}api/mensajes/`;
 
   constructor(private http: HttpClient) {}
 

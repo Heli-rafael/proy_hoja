@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, Observable, of, switchMap, tap } from 'rxjs';
-import { ApiConfig } from './api.config';
 import { MessageService } from 'primeng/api';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiLoginUrl = `${ApiConfig.apiUrl}api/login/`;
-  private apiGoogleUrl = `${ApiConfig.apiUrl}api/google-login/`;
-  private apiLogoutUrl = `${ApiConfig.apiUrl}api/logout/`;
-  private apiMeUrl = `${ApiConfig.apiUrl}api/me/`;
+  private apiLoginUrl = `${environment.apiUrl}api/login/`;
+  private apiGoogleUrl = `${environment.apiUrl}api/google-login/`;
+  private apiLogoutUrl = `${environment.apiUrl}api/logout/`;
+  private apiMeUrl = `${environment.apiUrl}api/me/`;
 
   constructor(
     private http: HttpClient,

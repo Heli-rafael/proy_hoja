@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiConfig } from './auth/api.config';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user.model';
 import { AuthService } from './auth/auth.service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-    private profileUrl = `${ApiConfig.apiUrl}api/me/`;
-    private apiUrl = `${ApiConfig.apiUrl}api/usuario/`;
-    private planUrl = `${ApiConfig.apiUrl}api/plan/`;
-    private creditsUrl = `${ApiConfig.apiUrl}api/me/creditos/`;
+    private profileUrl = `${environment.apiUrl}api/me/`;
+    private apiUrl = `${environment.apiUrl}api/usuario/`;
+    private planUrl = `${environment.apiUrl}api/plan/`;
+    private creditsUrl = `${environment.apiUrl}api/me/creditos/`;
 
     constructor(
         private http: HttpClient,
@@ -57,7 +57,7 @@ export class UserService {
     }
 
     cambiarPassword(data: any): Observable<any> {
-        return this.http.post(`${ApiConfig.apiUrl}api/me/password/`, data);
+        return this.http.post(`${environment.apiUrl}api/me/password/`, data);
     }
 
     // Eliminar un usuario
