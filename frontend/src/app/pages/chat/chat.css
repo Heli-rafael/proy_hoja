@@ -391,7 +391,7 @@ ESTILOS PARA EL DRAWER IZQUIERDO
 }
 
 .popover-chat button{
-  font-size: 0.9rem; 
+  font-size: 0.9rem;
 }
 
 .btn-popover-menu {
@@ -603,6 +603,85 @@ ESTILOS PARA EL DRAWER IZQUIERDO
 MODALES DE OPCIONES USUARIO
 =======================================
 */
+
+/* DIALOG DE IMAGEN DEL DIAGNOSTICO */
+::ng-deep .imagen-dialog .p-dialog-content {
+  padding: 0 !important;
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+
+}
+
+.dialog-image-header{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 10px;
+}
+
+.dialog-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.dialog-title h2{
+  margin:0;
+  font-size:1.2rem;
+  font-weight:600;
+  color: var(--color-primary);
+}
+
+.dialog-title span{
+  color: var(--color-grey);
+  font-size:.9rem;
+}
+
+.zoom-container {
+  cursor: grab;
+}
+
+.zoom-container {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.zoom-container img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.zoom-container:active {
+  cursor: grabbing;
+}
+
+.footer-image {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.group {
+    display: flex;
+    gap: 6px;
+    padding-right: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.group:last-child {
+    border-right: none;
+}
+
 
 /* MODAL PLANES*/
 .plans-dialog .p-dialog-content {
@@ -3448,5 +3527,21 @@ MAIN CONTENT | BIENVENIDA
     height: 90px;
   }
 
+  /* DIALOG DE IMAGEN */
+  ::ng-deep .imagen-dialog .p-dialog-content {
+    display: block;
+  }
+
+  .dialog-image-header {
+    display: flex;
+    flex-direction: column;
+    
+  }
+
+  .zoom-container {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
 
 }

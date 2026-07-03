@@ -76,6 +76,7 @@ html, body {
     /* GRIS */
     --color-grey : #6b7280;
     --color-grey-light: #e5e7eb;
+    --color-background-grey: #f5f6f8;;
 
     /* ROJO */
     --color-red: #ef4444;
@@ -205,7 +206,27 @@ html, body {
     display: none;
 }
 
+/* BOTONES DE GALLERIA */
+.p-galleria {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.p-galleria button {
+    background: var(--color-primary) !important;
+    z-index: 10 !important;
+}
+
+.p-tooltip .p-tooltip-text {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1.2;
+}
 
 @media (max-width: 768px) {
   .p-toast {
@@ -218,5 +239,9 @@ html, body {
     width: 100% !important;
     font-size: 13px;
     padding: 10px 12px;
+  }
+
+  .p-galleria {
+    display: block;
   }
 }

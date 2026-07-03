@@ -61,6 +61,16 @@ import {
   Download,
   Bookmark,
   Clock,
+  Star,
+  StarOff,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  RotateCw,
+  RefreshCw,
+  FileDown,
+  Edit3,
+  Trash2,
 
 } from 'lucide-angular';
 
@@ -127,4 +137,15 @@ export const Icons = {
   Download,
   Bookmark,
   Clock,
+  Star,
+  StarOff,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  RotateCw,
+  RefreshCw,
+  FileDown,
+  Edit3,
+  Trash2,
+
 }

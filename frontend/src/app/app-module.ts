@@ -92,6 +92,10 @@ import { Icons } from './icons.lucide';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Pruebas } from './pages/pruebas/pruebas';
 
+// IMAGENES
+import { GalleriaModule } from 'primeng/galleria';
+
+
 @NgModule({
   declarations: [
     App,
@@ -157,6 +161,7 @@ import { Pruebas } from './pages/pruebas/pruebas';
 
     // Comparar imagenes
     ImageCompareModule,
+    GalleriaModule,
 
     // Menu
     MenubarModule,

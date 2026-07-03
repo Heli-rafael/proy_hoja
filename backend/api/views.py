@@ -248,6 +248,7 @@ def login_view(request):
         'message': 'Login exitoso',
         'user_id': user.pk,
         'email': user.email,
+        'username': user.username,
         'first_name': user.first_name
     })
 

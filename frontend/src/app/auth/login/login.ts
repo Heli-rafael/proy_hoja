@@ -68,7 +68,7 @@ export class Login {
         this.messageService.add({
           severity: 'success',
           summary: 'Bienvenido',
-          detail: `Hola, ${res.first_name}`,
+          detail: `Hola, ${res.username || res.first_name}`,
           icon: 'pi pi-check-circle',
           // Para el tiempo: life: 500000
         });

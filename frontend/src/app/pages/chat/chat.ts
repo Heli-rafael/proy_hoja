@@ -112,7 +112,6 @@ export class Chat {
 
   isMobile: boolean = false;
 
-  mostrarDialogImagen: boolean = false;
   zoomImagen: number = 1;
 
   // Mensajes predeterminados
@@ -155,21 +154,6 @@ export class Chat {
       this.editableUser = { ...user };
       this.originalPicture = user.picture;
     });
-  }
-
-  zoomIn(): void {
-    this.zoomImagen += 0.2;
-  }
-
-  zoomOut(): void {
-
-    if (this.zoomImagen > 0.4) {
-      this.zoomImagen -= 0.2;
-    }
-  }
-
-  resetZoom(): void {
-    this.zoomImagen = 1;
   }
   
   // ==================================================
@@ -1297,6 +1281,143 @@ export class Chat {
     }
   }
   
+  // ==================================================
+  // IMAGENES
+  // ==================================================
+  mostrarDialogImagen: boolean = false;
+
+  imagenesGaleria: any[] = [];
+  imagenActual:'original' | 'analizada' = 'analizada';
+
+  // Detectar posición
+  activeIndex: number = 0;
+
+  zoom: number = 1;
+  rotation: number = 0;
+
+  zoomIn() {
+    this.zoom += 0.2;
+  }
+
+  zoomOut() {
+    if (this.zoom > 0.4) this.zoom -= 0.2;
+  }
+
+  rotateRight() {
+    this.rotation += 90;
+  }
+
+  rotateLeft() {
+    this.rotation -= 90;
+  }
+
+  reset() {
+    this.zoom = 1;
+    this.rotation = 0;
+
+    this.posX = 0;
+    this.posY = 0;
+
+    this.startX = 0;
+    this.startY = 0;
+
+    this.isDragging = false;
+  }
+
+  // Escritorio
+  isDragging = false;
+  posX = 0;
+  posY = 0;
+  startX = 0;
+  startY = 0;
+
+  startDrag(event: MouseEvent) {
+    this.isDragging = true;
+    this.startX = event.clientX - this.posX;
+    this.startY = event.clientY - this.posY;
+  }
+
+  onDrag(event: MouseEvent) {
+    if (!this.isDragging) return;
+
+    this.posX = event.clientX - this.startX;
+    this.posY = event.clientY - this.startY;
+  }
+
+  stopDrag() {
+    this.isDragging = false;
+  }
+
+  // Moviles
+  touchStartX = 0;
+  touchStartY = 0;
+
+  startTouch(event: TouchEvent) {
+    const touch = event.touches[0];
+
+    this.isDragging = true;
+
+    this.touchStartX = touch.clientX - this.posX;
+    this.touchStartY = touch.clientY - this.posY;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (!this.isDragging) return;
+
+    const touch = event.touches[0];
+
+    this.posX = touch.clientX - this.touchStartX;
+    this.posY = touch.clientY - this.touchStartY;
+  }
+
+  downloadImage() {
+    const imgUrl = this.imagenesGaleria?.[this.activeIndex]?.itemImageSrc;
+
+    if (!imgUrl) return;
+
+    const name =
+      this.activeIndex === 0 ? 'original.jpg' : 'analizada.jpg';
+
+    fetch(imgUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        window.URL.revokeObjectURL(url);
+      });
+  }
+
   
+  abrirDialogImagen(diagnostico: any) {
+
+    this.diagnosticoSeleccionado = diagnostico;
+
+    this.imagenesGaleria = [
+      {
+        itemImageSrc: diagnostico.planta.imagen,
+        thumbnailImageSrc: diagnostico.planta.imagen,
+        alt: 'Imagen Original',
+        title: 'Original'
+      },
+      {
+        itemImageSrc: diagnostico.imagen,
+        thumbnailImageSrc: diagnostico.imagen,
+        alt: 'Imagen Analizada',
+        title: 'Analizada'
+      }
+    ];
+
+    this.mostrarDialogImagen = true;
+  }
+
+
   
 }
