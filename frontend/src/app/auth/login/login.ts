@@ -4,8 +4,9 @@ import { AuthService } from '../../../service/auth/auth.service';
 import { MessageService } from 'primeng/api';
 import { ProcessingService } from '../../../service/auth/processing.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { ThemeService } from '../../../service/theme/thema.service';
 import { finalize } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 declare const google: any;
 
@@ -17,23 +18,31 @@ declare const google: any;
   providers: [ProcessingService],
 })
 export class Login {
+
   loginForm!: FormGroup;
+  private googleInitialized = false;
+  logo = '/AgroVisionAI.png';
+
+  private apiOauth = `${environment.apiOAuthGoogle}`;
 
   constructor(
     public processing: ProcessingService,
     private authService: AuthService,
+    private themeService: ThemeService,
+
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private messageService: MessageService
+    
   ) {}
 
   ngOnInit() {
+    
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
-    this.initGoogle();
 
     // Verificacion
     this.authService.checkAuth().subscribe((isAuth) => {
@@ -41,11 +50,20 @@ export class Login {
         this.router.navigate(['/page/chat']);
       }
     });
+
+    // Tema
+    this.themeService.theme$.subscribe(theme => {
+      this.renderGoogleButton(theme);
+    });
+
+    this.themeService.useSystemTheme();
+    
   }
 
   regresarAtras(){
     this.router.navigate(['/page/inicio']);
   }
+
   onSubmit(): void {
     if (!this.loginForm.valid) {
       this.messageService.add({
@@ -102,24 +120,38 @@ export class Login {
     }
   }
   
-  initGoogle(): void {
-
-    google.accounts.id.initialize({
-      client_id: '706928771973-055jk48vvstl4sj8pu2seht1qhfolint.apps.googleusercontent.com',
-      callback: (response: any) => {
-        this.handleGoogleLogin(response);
+  private waitForGoogle(callback: () => void) {
+    const interval = setInterval(() => {
+      if ((window as any).google?.accounts?.id) {
+        clearInterval(interval);
+        callback();
       }
-    });
-
-    google.accounts.id.renderButton(
-      document.getElementById('googleButton'),
-      {
-        theme: 'outline',
-        size: 'large',
-        width: '100%',
-      }
-    );
+    }, 50);
   }
+
+  renderGoogleButton(theme: 'light' | 'dark') {
+    const container = document.getElementById('googleButton');
+    if (!container) return;
+
+    this.waitForGoogle(() => {
+      container.innerHTML = '';
+
+      if (!this.googleInitialized) {
+        google.accounts.id.initialize({
+          client_id: this.apiOauth,
+          callback: (response: any) => this.handleGoogleLogin(response)
+        });
+
+        this.googleInitialized = true;
+      }
+
+      google.accounts.id.renderButton(container, {
+        theme: theme === 'dark' ? 'filled_black' : 'outline',
+        size: 'large',
+      });
+    });
+  }
+  
   
   handleGoogleLogin(response: any): void {
 

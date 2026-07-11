@@ -2,6 +2,7 @@ import { Component, HostListener, ViewChild, ElementRef  } from '@angular/core';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../../../service/auth/auth.service';
 import { MessageService } from 'primeng/api';
+import { ThemeService, Theme } from '../../../service/theme/thema.service';
 
 import { ChatModel } from '../../../model/chat.model';
 import { ChatService } from '../../../service/chat.service';
@@ -131,6 +132,7 @@ export class Chat {
     private confirmationService: ConfirmationService,
     private authService: AuthService,
     private messageService: MessageService,
+     private themeService: ThemeService,
 
     private userService: UserService,
 
@@ -144,11 +146,30 @@ export class Chat {
   // ==================================================
   // LIFECYCLE
   // ==================================================
+  logo = '/AgroVisionAI.png';
+
   ngOnInit(): void {
     this.cargarChats();
     this.checkScreen();
     this.cargarPlanes();
 
+    // THEME
+    const chatTheme =
+        (localStorage.getItem('user-theme') as Theme) ?? 'system';
+
+    this.settings.theme = chatTheme;
+
+    this.themeService.setTheme(chatTheme);   
+
+
+    this.themeService.theme$.subscribe(theme => {
+      this.logo =
+        theme === 'dark'
+          ? '/AgroVisionAI3.png'
+          : '/AgroVisionAI.png';
+    });
+
+    // USER
     this.userService.getProfile().subscribe(user => {
       this.user = user;
       this.editableUser = { ...user };
@@ -990,8 +1011,18 @@ export class Chat {
     
   ];
 
+  changeTheme(theme: Theme) {
+
+    this.settings.theme = theme;
+
+    localStorage.setItem('user-theme', theme);
+
+    this.themeService.setTheme(theme);
+
+  }
+
   settings = {
-    theme: 'dark',
+    theme: (localStorage.getItem('theme') as Theme) || 'system',
     language: 'Español',
     timezone: 'America/Lima'
   };

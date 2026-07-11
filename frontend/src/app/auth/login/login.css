@@ -9,8 +9,8 @@
 .left-panel {
     position: relative;
     flex: 1;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-    color: white;
+    background: linear-gradient(135deg, var(--color-gradient-1), var(--color-gradient-2));
+    color: var(--text-primary);
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -56,7 +56,7 @@
 
 .brand h1 {
   letter-spacing: 0.8px;
-  color: white;
+  color: var(--text-on-primary);
   line-height: 1;  
 }
 
@@ -69,9 +69,11 @@
 .floating-icon {
     display: inline-block;
     animation: float 2.5s ease-in-out infinite;
-    color: #ffffff;
+    color: var(--text-on-primary);
     filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
 }
+
+/* ================= LEFT PANEL ================= */
 
 @keyframes float {
     0% {
@@ -94,12 +96,14 @@
     font-size: 34px;
     margin-bottom: 15px;
     line-height: 1.2;
+    color: var(--text-on-primary);
 }
 
 .left-panel p {
     opacity: 0.9;
     margin-bottom: 40px;
     max-width: 400px;
+    color: var(--text-on-primary);
 }
 
 .features {
@@ -116,6 +120,7 @@
     align-items: center;
     gap: 10px;
     backdrop-filter: blur(10px);
+    color: var(--text-on-primary);
 }
 
 /* ================= RIGHT PANEL ================= */
@@ -125,16 +130,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: white;
+    background: var(--surface-background);
 }
 
 .login-card {
     width: 420px;
-    background: white;
+    background: var(--surface-card);
     border: 2px solid var(--color-primary-grey);
     padding: 20px 40px;
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-md);
 }
 
 .card-header {
@@ -159,10 +164,11 @@
 .login-card h2 {
     font-size: 26px;
     margin: 0;
+    color: var(--text-primary);
 }
 
 .subtitle {
-    color: #64748b;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -175,6 +181,8 @@
 .input-group label {
     font-size: 15px;
     font-weight: 500;
+    color: var(--text-primary);
+
 }
 
 .input {
@@ -212,10 +220,9 @@
 /* ================= OPTIONS ================= */
 .options {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: 13px;
     margin-bottom: 20px;
-    color: #64748b;
 }
 
 .options a {
@@ -246,6 +253,7 @@
   width: 100%;
   font-size: 13px;
   margin: 25px 0;
+  color: var(--text-secondary);
 }
 
 .divider::before,
@@ -253,7 +261,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: #e2e8f0;
+  background: var(--text-secondary);
 }
 
 .divider::before {
@@ -297,10 +305,11 @@
     margin-top: 20px;
     text-align: center;
     font-size: 13px;
+    color: var(--text-primary);
 }
 
 .register a {
-    color: #10b981;
+    color: var(--color-primary);
     font-weight: 600;
     text-decoration: none;
 }

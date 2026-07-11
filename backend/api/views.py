@@ -70,7 +70,7 @@ class ChangePasswordView(APIView):
 class PlanViewSet(viewsets.ModelViewSet):
     queryset = models.Plan.objects.all()
     serializer_class = serializers.PlanSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class CreditoDiarioViewSet(viewsets.ModelViewSet):
     queryset = models.CreditoDiario.objects.all()
@@ -257,6 +257,7 @@ def login_view(request):
 # =========================
 
 import requests
+from google.auth.transport.requests import Request
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 
@@ -277,7 +278,7 @@ def google_login(request):
         # validar token con Google
         idinfo = id_token.verify_oauth2_token(
             token,
-            requests.Request(),
+            Request(),
             settings.GOOGLE_CLIENT_ID
         )
 

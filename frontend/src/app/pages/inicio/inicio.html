@@ -9,14 +9,20 @@
         </div>
 
         <nav class="nav-links">
-        <a href="#inicio">Inicio</a>
-        <a href="#features">Solución</a>
-        <a href="#tecnologia">Tecnología</a>
-        <a href="#planes">Planes</a>
-        <a href="#comunidad">Comunidad</a>
+            <a href="#inicio">Inicio</a>
+            <a href="#funcionamiento">Cómo funciona</a>
+            <a href="#caracteristicas">Características</a>
+            <a href="#planes">Planes</a>
+            <a href="#testimonios">Testimonios</a>
+            <a href="#comunidad">Comunidad</a>
         </nav>
         
-        <a href="auth/login/" class="btn">Empezar</a>
+        <button
+            pButton
+            type="button"
+            label="Empezar"
+            [routerLink]="['/auth/login']">
+        </button>
     </header>
 
     <!-- HERO -->
@@ -40,13 +46,19 @@
         </p>
 
         <div class="hero-actions">
-            <a href="auth/login/" class="btn">
-            <i class="pi pi-play"></i> Probar gratis
-            </a>
+            <p-button
+                label="Probar gratis"
+                icon="pi pi-play"
+                [routerLink]="['/auth/login']">
+            </p-button>
 
-            <button class="btn btn-outline" (click)="showDemoMessage()">
-                <i class="pi pi-video"></i> Ver demo
-            </button>
+            <p-button
+                label="Ver demo"
+                icon="pi pi-video"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="showDemoMessage()">
+            </p-button>
         </div>
 
         <div class="stats">
@@ -59,42 +71,42 @@
 
         <div class="hero-card">
 
-        <div class="scan">
-            <span class="scan-badge">
-            <i class="pi pi-circle-fill"></i> Escaneo activo
-            </span>
-
-            <div class="scan-frame"></div>
-        </div>
-
-        <div class="diagnostic">
-
-            <div class="diagnostic-header">
-                <div class="diagnostic-title">
-                <i class="pi pi-apple"></i>
-                <span>Diagnóstico IA</span>
-                </div>
-
-                <span class="status">
-                <i class="pi pi-check-circle"></i>
-                Analizado
+            <div class="scan">
+                <span class="scan-badge">
+                <i class="pi pi-circle-fill"></i> Escaneo activo
                 </span>
+
+                <div class="scan-frame"></div>
             </div>
 
-            <div class="diagnostic-result">
-                Posible <strong>roya del café</strong> detectada
-            </div>
+            <div class="diagnostic">
 
-            <div class="confidence">
-                <div class="confidence-bar">
-                <div class="confidence-fill"></div>
+                <div class="diagnostic-header">
+                    <div class="diagnostic-title">
+                    <i class="pi pi-apple"></i>
+                    <span>Diagnóstico IA</span>
+                    </div>
+
+                    <span class="status">
+                    <i class="pi pi-check-circle"></i>
+                    Analizado
+                    </span>
                 </div>
-                <span>98% de confianza</span>
-            </div>
 
-            <p class="diagnostic-text">
-                Se recomienda aplicar tratamiento antifúngico...
-            </p>
+                <div class="diagnostic-result">
+                    Posible <strong>roya del café</strong> detectada
+                </div>
+
+                <div class="confidence">
+                    <div class="confidence-bar">
+                    <div class="confidence-fill"></div>
+                    </div>
+                    <span>98% de confianza</span>
+                </div>
+
+                <p class="diagnostic-text">
+                    Se recomienda aplicar tratamiento antifúngico...
+                </p>
 
             </div>
 
@@ -102,88 +114,174 @@
 
     </section>
 
-    <!-- FEATURES -->
-    <section class="section features" id="features">
+    <!-- Funcionamiento -->
+    <section class="section funcionamiento" id="funcionamiento">
 
-    <div class="section-header">
-        <h2>Una plataforma completa para agricultura inteligente</h2>
-        <p>Detección, prevención y asistencia agrícola impulsada por inteligencia artificial</p>
-    </div>
-
-    <div class="features-grid">
-
-        <article class="feature-card">
-        <div class="feature-icon">
-            <i class="pi pi-camera"></i>
+        <div class="section-header">
+            <h2>Cómo Funciona</h2>
+            <p>Diagnóstico inteligente en 4 simples pasos</p>
         </div>
-        <h3>Escaneo inteligente</h3>
-        <p>Analiza enfermedades con modelos entrenados en miles de cultivos.</p>
-        </article>
 
-        <article class="feature-card">
-        <div class="feature-icon">
-            <i class="pi pi-video"></i>
+        <div class="steps-grid">
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <lucide-icon name="camera"></lucide-icon>
+                </div>
+
+                <span class="step-number">Paso 1</span>
+                <h3>Toma una foto</h3>
+                <p>Captura o sube una imagen de la planta para que nuestra IA analice posibles enfermedades o daños.</p>
+
+            </div>
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <lucide-icon name="brain"></lucide-icon>
+                </div>
+
+                <span class="step-number">Paso 2</span>
+                <h3>La IA analiza</h3>
+                <p>Nuestro modelo de inteligencia artificial procesa la imagen e identifica posibles enfermedades.</p>
+
+            </div>
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <lucide-icon name="microscope"></lucide-icon>
+                </div>
+
+                <span class="step-number">Paso 3</span>
+                <h3>Obtén el diagnóstico</h3>
+                <p>Recibe un diagnóstico con su nivel de confianza y conoce la enfermedad detectada
+            </div>
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <lucide-icon name="book-open"></lucide-icon>
+                </div>
+
+                <span class="step-number">Paso 4</span>
+
+                <h3>Aplica la recomendación</h3>
+                <p>Consulta tratamientos, medidas preventivas y recomendaciones para proteger tus plantas.</p>
+
+            </div>
         </div>
-        <h3>Detección en vivo</h3>
-        <p>Usa la cámara para análisis en tiempo real con baja latencia.</p>
-        </article>
-
-        <article class="feature-card">
-        <div class="feature-icon">
-            <i class="pi pi-comments"></i>
-        </div>
-        <h3>Asistente IA</h3>
-        <p>Recomendaciones personalizadas según cultivo, clima y región.</p>
-        </article>
-
-        <article class="feature-card">
-        <div class="feature-icon">
-            <i class="pi pi-map"></i>
-        </div>
-        <h3>Mapa global</h3>
-        <p>Detecta brotes agrícolas y patrones emergentes en tu zona.</p>
-        </article>
-
-    </div>
     </section>
 
-    <!-- TECNOLOGÍA -->
-    <section class="section" id="tecnologia">
+    <!-- Características -->
+    <section class="section caracteristicas" id="caracteristicas">
 
-    <div class="section-header">
-        <h2>Tecnología que impulsa PlantCare AI</h2>
-        <p>
-        Arquitectura avanzada de inteligencia artificial diseñada para precisión agrícola en tiempo real
-        </p>
-    </div>
-
-    <div class="grid">
-
-        <div class="card">
-        <i class="pi pi-bolt icon"></i>
-        <h3>Deep Learning de Alta Precisión</h3>
-        <p>Modelos entrenados con millones de imágenes agrícolas para detectar patrones complejos de enfermedad.</p>
+        <div class="section-header">
+            <h2>Características</h2>
+            <p>Todo lo que necesitas para el cuidado de tus cultivos</p>
         </div>
 
-        <div class="card">
-        <i class="pi pi-image icon"></i>
-        <h3>Visión por Computadora</h3>
-        <p>Análisis detallado de hojas, tallos y frutos para identificar síntomas visibles e invisibles.</p>
-        </div>
 
-        <div class="card">
-        <i class="pi pi-cloud icon"></i>
-        <h3>Infraestructura en la Nube</h3>
-        <p>Procesamiento escalable que permite respuestas rápidas en tiempo real desde cualquier dispositivo.</p>
-        </div>
+        <div class="features-grid">
 
-        <div class="card">
-        <i class="pi pi-shield icon"></i>
-        <h3>Predicción Inteligente</h3>
-        <p>Anticipa brotes agrícolas antes de que se propaguen, reduciendo pérdidas en cultivos.</p>
-        </div>
+            <div class="feature-card">
 
-    </div>
+                <div class="feature-icon">
+                    <lucide-icon name="scan-eye"></lucide-icon>
+                </div>
+
+                <h3>Escaneo IA</h3>
+                <p>Análisis fotográfico avanzado para detectar enfermedades y daños en tus cultivos.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="message-circle"></lucide-icon>
+                </div>
+
+                <h3>Chat Fitopatólogo IA</h3>
+                <p>Consulta con un experto virtual especializado en salud vegetal.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="history"></lucide-icon>
+                </div>
+
+                <h3>Historial de cultivos</h3>
+                <p>Guarda y revisa el seguimiento completo de tus plantas.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="chart-column"></lucide-icon>
+                </div>
+
+                <h3>Estadísticas</h3>
+                <p>Visualiza métricas detalladas sobre el estado de tus cultivos.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="zap"></lucide-icon>
+                </div>
+
+                <h3>Diagnóstico rápido</h3>
+                <p>Obtén resultados en segundos gracias a nuestra inteligencia artificial.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="shield-check"></lucide-icon>
+                </div>
+
+                <h3>Prevención</h3>
+                <p>Recibe alertas tempranas para evitar pérdidas en tus cultivos.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="sprout"></lucide-icon>
+                </div>
+
+                <h3>Tratamientos</h3>
+                <p>Encuentra soluciones personalizadas según el diagnóstico.</p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <lucide-icon name="git-compare"></lucide-icon>
+                </div>
+
+                <h3>Comparación temporal</h3>
+                <p>Analiza la evolución de tus cultivos a través del tiempo.</p>
+
+            </div>
+
+
+        </div>
 
     </section>
 
@@ -191,72 +289,140 @@
     <section class="section" id="planes">
 
         <div class="section-header">
-        <h2>Planes diseñados para cada etapa de crecimiento</h2>
-        <p>Desde hobby agrícola hasta producción profesional</p>
+            <h2>Planes diseñados para cada etapa de crecimiento</h2>
+            <p>Desde hobby agrícola hasta producción profesional</p>
         </div>
 
-        <div class="plans">
+        <div class="plans-grid">
 
-        <div class="plan">
-            <div class="plan-header">
-            <h3>Básico</h3>
-            <span class="badge">Gratis</span>
+            <div
+                class="plan-card"
+                *ngFor="let plan of planes"
+                [class.featured]="plan.destacado"
+            >
+
+                <div
+                    class="badge"
+                    *ngIf="plan.destacado"
+                >
+                    Más popular
+                </div>
+
+                <div class="plan-title">
+                    <lucide-icon
+                        [name]="obtenerIconoConfig(plan.nombre).icon"
+                        [size]="25"
+                        [style.color]="obtenerIconoConfig(plan.nombre).color">
+                    </lucide-icon>
+                    <h3>{{ plan.nombre }}</h3>
+                </div>
+
+                <div class="price">
+                    <ng-container *ngIf="plan.precio > 0; else gratis">
+                        S/{{ plan.precio }}
+                        <span>/mes</span>
+                    </ng-container>
+
+                    <ng-template #gratis>
+                        Gratis
+                    </ng-template>
+                </div>
+
+                <ul>
+                    <li *ngFor="let beneficio of plan.beneficios" class="beneficio-item">
+                        <lucide-icon
+                            name="check"
+                            [size]="16"
+                            class="beneficio-icon">
+                        </lucide-icon>
+                        <span>{{ beneficio }}</span>
+                    </li>
+                </ul>
+
+                <button
+                    class="plan-btn"
+                    [class.primary]="plan.nombre === 'Pro'"
+                    [class.outline]="plan.nombre === 'Enterprise'"
+                    [class.outline]="plan.nombre === 'Free'"
+                    (click)="seleccionarPlan(plan)"
+                >
+
+                    {{ obtenerTextoBoton(plan.nombre) }}
+
+                </button>
+
             </div>
 
-            <div class="price">S/ 0</div>
-
-            <p class="plan-desc">Ideal para estudiantes y exploración inicial.</p>
-
-            <ul>
-            <li><i class="pi pi-check"></i> 20 análisis diario</li>
-            <li><i class="pi pi-check"></i> Diagnóstico básico</li>
-            <li><i class="pi pi-check"></i> Historial limitado</li>
-            </ul>
-
-            <a class="btn btn-outline">Comenzar</a>
         </div>
 
-        <div class="plan highlight">
+    </section>
 
-            <div class="plan-header">
-            <h3>Pro</h3>
-            <span class="badge highlight-badge">Más popular</span>
+    <!-- Testimonios -->
+    <section class="section testimonios" id="testimonios">
+
+        <div class="section-header">
+            <h2>Lo que dicen nuestros usuarios</h2>
+            <p>Agricultores, ciudadanos y profesionales confían en AgroVision AI</p>
+        </div>
+
+        <div class="testimonios-grid">
+
+            <div class="testimonial-card">
+                <div class="quote-icon">
+                    <lucide-icon name="quote"></lucide-icon>
+                </div>
+
+                <p class="testimonial-text">
+                    "Ahora puedo identificar plagas desde mi celular en cuestión de segundos. Me ha ayudado a actuar antes de que el problema se extienda."
+                </p>
+
+                <div class="testimonial-user">
+                    <div class="avatar">M</div>
+
+                    <div>
+                        <h4>María López</h4>
+                        <span>Productora Agrícola</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="price">S/ 19 / mes</div>
+            <div class="testimonial-card">
+                <div class="quote-icon">
+                    <lucide-icon name="quote"></lucide-icon>
+                </div>
 
-            <p class="plan-desc">Perfecto para agricultores activos.</p>
+                <p class="testimonial-text">
+                    "La plataforma es muy fácil de usar y las recomendaciones son claras. Se ha convertido en una herramienta esencial para mi trabajo diario."
+                </p>
 
-            <ul>
-            <li><i class="pi pi-check"></i> 50 análisis diarios</li>
-            <li><i class="pi pi-check"></i> IA avanzada</li>
-            <li><i class="pi pi-check"></i> Recomendaciones inteligentes</li>
-            <li><i class="pi pi-check"></i> Historial completo</li>
-            </ul>
+                <div class="testimonial-user">
+                    <div class="avatar">J</div>
 
-            <a class="btn">Elegir Pro</a>
-        </div>
-
-        <div class="plan">
-
-            <div class="plan-header">
-            <h3>Premium</h3>
-            <span class="badge">Profesional</span>
+                    <div>
+                        <h4>José Ramírez</h4>
+                        <span>Técnico Agrícola</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="price">S/ 49 / mes</div>
+            <div class="testimonial-card">
+                <div class="quote-icon">
+                    <lucide-icon name="quote"></lucide-icon>
+                </div>
 
-            <p class="plan-desc">Nivel profesional con máxima precisión.</p>
+                <p class="testimonial-text">
+                    "Como estudiante de agronomía, AgroVision AI me permite aprender sobre enfermedades de cultivos de forma rápida y práctica."
+                </p>
 
-            <ul>
-            <li><i class="pi pi-check"></i> Análisis ilimitados</li>
-            <li><i class="pi pi-check"></i> Alertas tempranas</li>
-            <li><i class="pi pi-check"></i> IA prioritaria</li>
-            <li><i class="pi pi-check"></i> Soporte 24/7</li>
-            </ul>
+                <div class="testimonial-user">
+                    <div class="avatar">A</div>
 
-            <a class="btn btn-outline">Ir Premium</a>
-        </div>
+                    <div>
+                        <h4>Ana Torres</h4>
+                        <span>Estudiante de Agronomía</span>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </section>
@@ -272,27 +438,27 @@
     <div class="grid">
 
         <div class="card">
-        <i class="pi pi-users icon"></i>
-        <h3>+50,000 usuarios</h3>
-        <p>Agricultores, estudiantes y expertos usando la plataforma.</p>
+            <i class="pi pi-users icon"></i>
+            <h3>+10,000 usuarios</h3>
+            <p>Agricultores, estudiantes y expertos usando la plataforma.</p>
         </div>
 
         <div class="card">
-        <i class="pi pi-comments icon"></i>
-        <h3>Foros activos</h3>
-        <p>Resuelve dudas y comparte diagnósticos con la comunidad.</p>
+            <i class="pi pi-comments icon"></i>
+            <h3>Foros activos</h3>
+            <p>Resuelve dudas y comparte diagnósticos con la comunidad.</p>
         </div>
 
         <div class="card">
-        <i class="pi pi-book icon"></i>
-        <h3>Guías y aprendizaje</h3>
-        <p>Contenido educativo sobre plagas, clima y cultivo inteligente.</p>
+            <i class="pi pi-book icon"></i>
+            <h3>Guías y aprendizaje</h3>
+            <p>Contenido educativo sobre plagas, clima y cultivo inteligente.</p>
         </div>
 
         <div class="card">
-        <i class="pi pi-heart icon"></i>
-        <h3>Casos reales</h3>
-        <p>Historias de éxito de agricultores que aumentaron su producción.</p>
+            <i class="pi pi-heart icon"></i>
+            <h3>Casos reales</h3>
+            <p>Historias de éxito de agricultores que aumentaron su producción.</p>
         </div>
 
     </div>
@@ -312,9 +478,56 @@
 
     </section>
 
-  <footer>
-    © 2026 PlantCare AI — Construyendo el futuro de la agricultura con IA
-  </footer>
+  <footer class="footer">
+    <div class="footer-container">
+
+        <!-- Logo -->
+        <div class="footer-column">
+            <div class="footer-logo">
+                <img src="/AgroVisionAI.png" alt="Logo">
+                <span>AgroVision AI</span>
+            </div>
+            <p>
+                Inteligencia Artificial al servicio de la agricultura moderna.
+            </p>
+        </div>
+
+        <!-- Producto -->
+        <div class="footer-column">
+            <h4>Producto</h4>
+            <ul>
+                <li><a href="#features">Características</a></li>
+                <li><a href="#plans">Planes</a></li>
+                <li><a href="#api">API</a></li>
+            </ul>
+        </div>
+
+        <!-- Empresa -->
+        <div class="footer-column">
+            <h4>Empresa</h4>
+            <ul>
+                <li><a href="#about">Sobre nosotros</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </div>
+
+        <!-- Legal -->
+        <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+                <li><a href="#privacy">Privacidad</a></li>
+                <li><a href="#terms">Términos</a></li>
+                <li><a href="#cookies">Cookies</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 AgroVision AI. Todos los derechos reservados.
+    </div>
+    </footer>
 
 </div>
 

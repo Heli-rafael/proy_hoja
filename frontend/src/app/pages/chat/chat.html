@@ -18,12 +18,12 @@
                     <div class="logo-container">
 
                         <div class="logo-principle">
-                            <img src="/AgroVisionAI.png" alt="logo">
+                            <img src="/AgroVisionAI.png" alt="AgroVision AI">
                         </div>
 
                         <div class="logo-text">
-                            <h2>AgoVision AI</h2>
-                            <span>IA Especializada</span>
+                            <h2>AgroVision AI</h2>
+                            <span>IA Especializada en plantas</span>
                         </div>
 
                     </div>
@@ -351,7 +351,7 @@
                             <button
                                 pButton
                                 type="button"
-                                class="p-button-text p-button-danger btn-popover-menu"
+                                class="p-button-text p-button-danger btn-popover-menu danger"
                                 (click)="eliminarChat(chatSeleccionado); op.hide()">
 
                                 <lucide-icon name="trash-2" size="18"></lucide-icon>
@@ -465,7 +465,7 @@
                     <button
                         pButton
                         type="button"
-                        class="user-button p-button-text p-button-plain"
+                        class="user-button p-button-text p-button-secondary"
                         style="width: 100%;">
 
                         <!-- Avatar -->
@@ -492,7 +492,8 @@
 
                             <p-tag
                                 [value]="user.plan.nombre"
-                                severity="secondary"
+                                severity="success"
+                                [rounded]="true"
                                 class="tag-small">
                             </p-tag>
 
@@ -503,7 +504,7 @@
                             pButton
                             type="button"
                             icon="pi pi-ellipsis-v"
-                            class="p-button-text"
+                            class="p-button-text user-ellipsis"
                             (click)="opUser.toggle($event)">
                         </button>
 
@@ -521,7 +522,7 @@
                                 <h4 class="username">Hola, {{ user.username | titlecase }}</h4>
                                 <p-tag 
                                     [value]="user.plan.nombre"
-                                    severity="secondary"
+                                    severity="success"
                                     class="tag-header"
                                 ></p-tag>
                             </div>
@@ -555,7 +556,7 @@
                                 (click)="upgradePlan()"
                                 style="width: 100%">
 
-                                <lucide-icon name="crown" [size]="20" class="icon"></lucide-icon>
+                                <lucide-icon name="crown" [size]="20" [strokeWidth]="1.5" class="icon"></lucide-icon>
                                 Mejorar plan
                             </button>
 
@@ -565,7 +566,7 @@
                                 (click)="openPersonalizacion()"
                                 style="width: 100%">
 
-                                <lucide-icon name="Paintbrush" [size]="20" class="icon"></lucide-icon>
+                                <lucide-icon name="Paintbrush" [size]="20" [strokeWidth]="1.5" class="icon"></lucide-icon>
                                 Personalización
                             </button>
 
@@ -575,7 +576,7 @@
                                 (click)="openPerfil()"
                                 style="width: 100%">
 
-                                <lucide-icon name="circle-user" [size]="20" class="icon"></lucide-icon>
+                                <lucide-icon name="circle-user" [size]="20" [strokeWidth]="1.5" class="icon"></lucide-icon>
                                 Perfil
                             </button>
 
@@ -585,7 +586,7 @@
                                 (click)="openConfiguracion()"
                                 style="width: 100%">
 
-                                <lucide-icon name="settings" [size]="20" class="icon"></lucide-icon>
+                                <lucide-icon name="settings" [size]="20" [strokeWidth]="1.5" class="icon"></lucide-icon>
                                 Configuración
                             </button>
 
@@ -595,7 +596,7 @@
 
                         <button 
                             pButton
-                            class="p-button-text p-button-danger" 
+                            class="p-button-text p-button-danger btn-popover-user danger" 
                             (click)="logout()"
                             icon="pi pi-sign-out"
                             style="width: 100%"
@@ -769,6 +770,7 @@
             </ng-template>
 
             <ng-template pTemplate="content">
+
                 <div class="settings-container">
 
                     <!-- SIDEBAR -->
@@ -804,46 +806,44 @@
                                         <small>Elige cómo se verá la aplicación</small>
                                     </div>
                                     <div class="theme-selector">
-                                        <div class="theme-selector">
-                                            <button
-                                                type="button"
-                                                [class.active]="settings.theme === 'light'"
-                                                (click)="settings.theme = 'light'">
+                                        <button
+                                            type="button"
+                                            [class.active]="settings.theme === 'light'"
+                                            (click)="changeTheme('light')">
 
-                                                <lucide-icon
-                                                    name="sun"
-                                                    [size]="18">
-                                                </lucide-icon>
+                                            <lucide-icon
+                                                name="sun"
+                                                [size]="18">
+                                            </lucide-icon>
 
-                                                <span>Claro</span>
-                                            </button>
+                                            <span>Claro</span>
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                [class.active]="settings.theme === 'dark'"
-                                                (click)="settings.theme = 'dark'">
+                                        <button
+                                            type="button"
+                                            [class.active]="settings.theme === 'dark'"
+                                            (click)="changeTheme('dark')">
 
-                                                <lucide-icon
-                                                    name="moon"
-                                                    [size]="18">
-                                                </lucide-icon>
+                                            <lucide-icon
+                                                name="moon"
+                                                [size]="18">
+                                            </lucide-icon>
 
-                                                <span>Oscuro</span>
-                                            </button>
+                                            <span>Oscuro</span>
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                [class.active]="settings.theme === 'system'"
-                                                (click)="settings.theme = 'system'">
+                                        <button
+                                            type="button"
+                                            [class.active]="settings.theme === 'system'"
+                                            (click)="changeTheme('system')">
 
-                                                <lucide-icon
-                                                    name="monitor"
-                                                    [size]="18">
-                                                </lucide-icon>
+                                            <lucide-icon
+                                                name="monitor"
+                                                [size]="18">
+                                            </lucide-icon>
 
-                                                <span>Sistema</span>
-                                            </button>
-                                        </div>
+                                            <span>Sistema</span>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -1380,7 +1380,7 @@
                     <button
                         pButton
                         type="button"
-                        class="p-button-text"
+                        class="p-button-text btn-menu"
                         (click)="sidebarVisible = !sidebarVisible">
 
                         <lucide-icon
@@ -1393,14 +1393,8 @@
                     <div class="topbar-header-content" *ngIf="diagnosticoSeleccionado">
                         <div class="icon-stack">
                             <lucide-icon 
-                                name="scan" 
+                                name="scan-search" 
                                 [size]="50" 
-                                color="var(--color-primary)"
-                            ></lucide-icon>
-                            <lucide-icon 
-                                name="leaf" 
-                                [size]="25" 
-                                class="leaf-overlay"
                                 color="var(--color-primary)"
                             ></lucide-icon>
                         </div>
@@ -1411,23 +1405,68 @@
                                 <lucide-icon
                                     name="chevron-right"
                                     [size]="25"
-                                    color="var(--color-primary)"
                                 ></lucide-icon>
-                                
-                                <h2 class="title-topbar-2">{{ chatSeleccionado?.diagnostico?.enfermedad_detectada | titlecase }}</h2>
+                                <h2 class="title-topbar">{{ chatSeleccionado?.diagnostico?.enfermedad_detectada | titlecase }}</h2>
+                                <div class="tag-icon">
+                                    <lucide-icon name="bug" [size]="14"></lucide-icon>
+
+                                    <span>
+                                        Contagio: {{ diagnosticoSeleccionado?.contagio }}
+                                    </span>
+                                </div>
                             </div>
                             
                             <div class="card-topbar-secondary">
-                                <p-tag
-                                    [value]="(chatSeleccionado?.creado_en | date:'short') ?? ''"
-                                    severity="secondary">
-                                </p-tag>
 
-                                <p-tag
-                                    [value]="diagnosticoSeleccionado?.confianza_ia + '% confianza IA'"
-                                    severity="success">
-                                </p-tag>
+                                <div class="topbar-secondary-content">
+                                    <lucide-icon 
+                                        name="calendar" 
+                                        [size]="14" 
+                                        color="var(--text-secondary)"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        {{ chatSeleccionado?.creado_en | date:'dd/MM/yyyy' }}
+                                    </span>
+                                </div>
                                 
+
+                                <lucide-icon 
+                                    name="dot" 
+                                    [size]="14" 
+                                    color="var(--text-secondary)"
+                                ></lucide-icon>
+
+                                <div class="topbar-secondary-content">
+                                    <lucide-icon 
+                                        name="sparkles" 
+                                        [size]="14" 
+                                        color="var(--text-secondary)"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        {{ diagnosticoSeleccionado?.confianza_ia }}% confianza IA
+                                    </span>
+                                </div>
+
+                                <lucide-icon 
+                                    name="dot" 
+                                    [size]="14" 
+                                    color="var(--text-secondary)"
+                                ></lucide-icon>
+
+                                <div class="topbar-secondary-content">
+                                    <lucide-icon 
+                                        name="leaf" 
+                                        [size]="14" 
+                                        color="var(--text-secondary)"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        {{ diagnosticoSeleccionado?.planta?.nombre | titlecase }}
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
                         
@@ -1876,8 +1915,9 @@
                                                     Sintomas detectados
                                                 </p-accordion-header>
                                                 <p-accordion-content>
+
                                                     <!-- Sintomas detectados -->
-                                                    <div class="cont-sintomas">
+                                                    <div class="cont-sintomas accordeon-content">
 
                                                         <div
                                                             class="card-sintoma"
@@ -1914,7 +1954,7 @@
                                                 </p-accordion-header>
                                                 <p-accordion-content>
                                                     <!-- Factores climaticos -->
-                                                    <div class="cont-factores">
+                                                    <div class="cont-factores accordeon-content">
 
                                                         <div
                                                             class="card-factores"
@@ -1977,7 +2017,7 @@
                                                 </p-accordion-header>
                                                 <p-accordion-content>
                                                     <!-- Plagas relacionadas-->
-                                                    <div class="cont-plagas">
+                                                    <div class="cont-plagas accordeon-content">
 
                                                         <div 
                                                         class="card-plaga"
@@ -2031,7 +2071,7 @@
                                                 </p-accordion-header>
                                                 <p-accordion-content>
                                                     <!-- Prediccion evolutiva-->
-                                                    <div class="timeline-evolucion">
+                                                    <div class="timeline-evolucion accordeon-content">
 
                                                         <div
                                                             class="timeline-item"
@@ -2244,25 +2284,6 @@
 
                                     <div class="logo-icon-chat">
 
-                                        <!-- LOADING -->
-                                        <div
-                                            *ngIf="diagnosticoSeleccionado?.estado_imagen === 'Pendiente' ||
-                                                diagnosticoSeleccionado?.estado_imagen === 'Procesando'"
-                                            class="loading-container-s"
-                                        >
-
-                                            <img
-                                                [src]="diagnosticoSeleccionado?.planta?.imagen"
-                                                alt="Planta base"
-                                                class="loading-image"
-                                            />
-
-                                            <div class="loading-overlay">
-                                                <p-progressSpinner></p-progressSpinner>
-                                            </div>
-
-                                        </div>
-
                                         <!-- IMAGEN -->
                                         <img
                                             [src]="diagnosticoSeleccionado?.imagen || diagnosticoSeleccionado?.planta?.imagen"
@@ -2367,7 +2388,7 @@
                                 </div>
 
                                 <!-- TITLE -->
-                                <h1>AgoVision AI</h1>
+                                <h1>AgroVision AI</h1>
 
                                 <p class="welcome-description">
                                     Detecta enfermedades en cultivos usando inteligencia artificial avanzada.

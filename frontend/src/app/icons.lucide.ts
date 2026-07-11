@@ -71,6 +71,15 @@ import {
   FileDown,
   Edit3,
   Trash2,
+  AlarmClock,
+  Dot,
+  Quote,
+  Brain,
+  Microscope,
+  BookOpen,
+  ScanEye,
+  ChartColumn,
+  GitCompare,
 
 } from 'lucide-angular';
 
@@ -147,5 +156,14 @@ export const Icons = {
   FileDown,
   Edit3,
   Trash2,
-
+  AlarmClock,
+  Dot,
+  Quote,
+  Brain,
+  Microscope,
+  BookOpen,
+  ScanEye,
+  ChartColumn,
+  GitCompare,
+  
 }
