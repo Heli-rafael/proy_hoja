@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DiagnosticoIAModel } from '../model/diagnostico-ia.model';
+import { DiagnosticoProgreso } from '../model/diagnostico-ia.model';
 import { ActividadTratamientoModel } from '../model/actividad-tratamiento';
 import { environment } from '../environments/environment';
 
@@ -12,6 +12,13 @@ export class DiagnosticoIAService {
   private apiUrl = `${environment.apiUrl}api/diagnostico/`;
 
   constructor(private http: HttpClient) {}
+
+  // Obtener progreso de un diagnóstico
+  getDiagnosticoProgreso(diagnosticoId: number): Observable<DiagnosticoProgreso> {
+    return this.http.get<DiagnosticoProgreso>(
+    `${this.apiUrl}${diagnosticoId}/progreso/`
+  );
+  }
 
   // Actualizar calendario
   actualizarActividad(id: number, data: Partial<ActividadTratamientoModel>) {
@@ -39,9 +46,18 @@ export class DiagnosticoIAService {
 
   // Exportar un diagnostico en PDF
   exportDiagnosticoPDF(id: number) {
+    return this.http.get(
+      `${this.apiUrl}export/pdfindividual/${id}/`,
+      { responseType: 'blob' }
+    );
+  }
+
+  // Exportar imagenes
+  exportDiagnosticoImagen(id: number) {
   return this.http.get(
-    `${this.apiUrl}export/pdfindividual/${id}/`,
+    `${this.apiUrl}export/imagenindividual/${id}/`,
     { responseType: 'blob' }
   );
-}
+  }
+  
 }

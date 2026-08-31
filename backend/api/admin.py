@@ -4,4 +4,6 @@ import api.models as models
 admin.site.register(models.Usuario)
 admin.site.register(models.CreditoDiario)
 admin.site.register(models.Plan)
+admin.site.register(models.PlanPrecio)
 admin.site.register(models.DiagnosticoIA)
+admin.site.register(models.SolicitudCambioPlan)

@@ -3,58 +3,315 @@
     <!-- LEFT PANEL -->
     <div class="left-panel">
 
+        <!-- BACKGROUND -->
+        <div class="image-overlay"></div>
+        <div class="image-vignette"></div>
+        <div class="image-gradient"></div>
+
+        <!-- Subtle decorative particles -->
+        <div class="ambient-light ambient-light-1"></div>
+        <div class="ambient-light ambient-light-2"></div>
+
+
+        <!-- MAIN CONTENT -->
         <div class="left-content">
 
-            <div class="brand">
-                <img src="/AgroVisionAI3.png" alt="logo">
-                <h1>AgroVision AI</h1>
+            <!-- BRAND -->
+            <header class="brand">
+                <div class="brand-logo">
+                    <img src="/AgroVisionAI-I.webp" alt="AgroVision AI">
+                </div>
+
+                <div class="brand-info">
+                    <div class="brand-name">
+                        AgroVision <span>AI</span>
+                    </div>
+
+                    <div class="brand-description">
+                        <span class="status-dot"></span>
+                        INTELIGENCIA ARTIFICIAL
+                        PARA HORTICULTURA
+                    </div>
+                </div>
+            </header>
+
+            <!-- CARRUSEL -->
+            <div class="hero-carousel">
+
+                <!-- SLIDE 1 - HERO -->
+                <section
+                    class="hero-section"
+                    [class.active]="vistaActual === 0">
+                    <h1>
+                        La Inteligencia 
+                        <span>Artificial al servicio </span>
+                        <strong>de tus plantas.</strong>
+                    </h1>
+                </section>
+
+                <!-- SLIDE 2 - PRODUCT PREVIEW -->
+                <section
+                    class="product-preview"
+                    [class.active]="vistaActual === 1">
+
+                    <!-- MAIN AI CARD -->
+                    <div class="ai-card">
+
+                        <!-- Card header -->
+                        <div class="ai-card-header">
+
+                            <div class="ai-brand">
+
+                                <div class="ai-icon">
+                                    <lucide-icon
+                                        name="scan-eye"
+                                        [size]="17">
+                                    </lucide-icon>
+                                </div>
+
+                                <div>
+                                    <strong>AgroVision AI</strong>
+                                    <span>Análisis de tu planta</span>
+                                </div>
+
+                            </div>
+
+                            <div class="live-status">
+                                <span></span>
+                                ACTIVO
+                            </div>
+
+                        </div>
+
+                        <!-- PLANT ANALYSIS -->
+                        <div class="analysis-area">
+
+                            <div class="analysis-grid"></div>
+
+                            <!-- Scanner -->
+                            <div class="scanner-frame">
+
+                                <span class="corner top-left"></span>
+                                <span class="corner top-right"></span>
+                                <span class="corner bottom-left"></span>
+                                <span class="corner bottom-right"></span>
+
+                            </div>
+
+                            <!-- Scanner line -->
+                            <div class="scanner-line"></div>
+
+                            <!-- Detection points -->
+                            <span class="detection-point point-1"></span>
+                            <span class="detection-point point-2"></span>
+                            <span class="detection-point point-3"></span>
+
+                            <!-- Center -->
+                            <div class="scan-center">
+
+                                <lucide-icon
+                                    name="scan"
+                                    [size]="24">
+                                </lucide-icon>
+
+                            </div>
+
+                            <!-- Analysis label -->
+                            <div class="analysis-label">
+                                <span class="label-dot"></span>
+                                ANALIZANDO VEGETACIÓN
+                            </div>
+
+                        </div>
+
+                        <!-- RESULT -->
+                        <div class="analysis-result">
+
+                            <div class="result-information">
+                                <div class="result-icon">
+                                    <lucide-icon
+                                        name="check"
+                                        [size]="15">
+                                    </lucide-icon>
+                                </div>
+
+                                <div>
+                                    <strong>Planta saludable</strong>
+                                    <span>No se detectaron lesiones</span>
+                                </div>
+                            </div>
+                            <div class="confidence-score">
+                                <strong>96.8%</strong>
+                                <span>confianza</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- FLOATING DIAGNOSIS CARD -->
+                    <div class="floating-card diagnosis-card">
+                        <div class="floating-card-icon diagnosis">
+                            <lucide-icon
+                                name="camera"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
+                        <div class="floating-card-content">
+                            <span>DIAGNÓSTICO IA</span>
+                            <strong>Análisis completado</strong>
+                        </div>
+                        <div class="floating-success">
+                            <lucide-icon
+                                name="check"
+                                [size]="11">
+                            </lucide-icon>
+                        </div>
+                    </div>
+
+                    <!-- FLOATING CHAT CARD -->
+                    <div class="floating-card chat-card">
+                        <div class="floating-card-icon chat">
+                            <lucide-icon
+                                name="message-circle"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
+                        <div class="floating-card-content">
+                            <span>ASISTENTE IA</span>
+                            <strong>Nueva recomendación</strong>
+                        </div>
+                        <span class="notification"></span>
+                    </div>
+
+                    <!-- FLOATING HISTORY CARD -->
+                    <div class="floating-card statistics-card">
+
+                        <div class="floating-card-icon statistics">
+                            <lucide-icon
+                                name="chart-no-axes-column-increasing"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
+
+                        <div class="floating-card-content">
+                            <span>ESTADÍSTICAS</span>
+                            <strong>24 análisis este mes</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- CONTROLES DEL CARRUSEL -->
+                <button
+                    type="button"
+                    class="carousel-control carousel-prev"
+                    aria-label="Vista anterior"
+                    (click)="vistaAnterior()"
+                >
+                    <lucide-icon
+                        name="chevron-left"
+                        [size]="15">
+                    </lucide-icon>
+                </button>
+
+                <button
+                    type="button"
+                    class="carousel-control carousel-next"
+                    aria-label="Vista siguiente"
+                    (click)="vistaSiguiente()"
+                >
+                    <lucide-icon
+                        name="chevron-right"
+                        [size]="15">
+                    </lucide-icon>
+                </button>
+
+                <!-- INDICADORES -->
+                <div class="carousel-indicators">
+                    <button
+                        type="button"
+                        class="carousel-indicator"
+                        [class.active]="vistaActual === 0"
+                        aria-label="Mostrar presentación"
+                        (click)="seleccionarVista(0)">
+                    </button>
+                    <button
+                        type="button"
+                        class="carousel-indicator"
+                        [class.active]="vistaActual === 1"
+                        aria-label="Mostrar análisis IA"
+                        (click)="seleccionarVista(1)">
+                    </button>
+                </div>
+
             </div>
 
-            <div class="icon-wrapper">
-                <lucide-icon 
-                    class="floating-icon" 
-                    name="sparkles"
-                    [size]="50"
-                ></lucide-icon>
-            </div>
-
-            <h2>La Inteligencia Artificial al servicio de tu cultivo</h2>
-
-            <p>
-            Detecta, diagnostica y trata enfermedades en tus plantas con tecnología de vanguardia.
-            </p>
-
-            <div class="features">
-
+            <!-- FEATURES -->
+            <div class="feature-bar">
                 <div class="feature">
-                    <lucide-icon 
-                        name="camera"
-                    ></lucide-icon>
+                    <div class="feature-icon">
+                        <lucide-icon
+                            name="scan-line"
+                            [size]="15">
+                        </lucide-icon>
+                    </div>
                     <span>Diagnóstico IA</span>
                 </div>
 
-                <div class="feature">
-                    <lucide-icon 
-                        name="message-circle"
-                    ></lucide-icon>
-                    <span>Chat Fitopatólogo</span>
-                </div>
+                <div class="feature-divider"></div>
 
                 <div class="feature">
-                    <lucide-icon 
-                        name="history"
-                    ></lucide-icon>
+                    <div class="feature-icon">
+                        <lucide-icon
+                            name="message-circle"
+                            [size]="15">
+                        </lucide-icon>
+                    </div>
+                    <span>Asistente</span>
+                </div>
+
+                <div class="feature-divider"></div>
+
+                <div class="feature">
+                    <div class="feature-icon">
+                        <lucide-icon
+                            name="history"
+                            [size]="15">
+                        </lucide-icon>
+                    </div>
+
                     <span>Historial</span>
                 </div>
 
+                <div class="feature-divider"></div>
+
                 <div class="feature">
-                    <lucide-icon 
-                        name="bar-chart"
-                    ></lucide-icon>
+                    <div class="feature-icon">
+                        <lucide-icon
+                            name="bar-chart-3"
+                            [size]="15">
+                        </lucide-icon>
+                    </div>
                     <span>Estadísticas</span>
                 </div>
-
             </div>
+
+            <!-- FOOTER -->
+            <footer class="panel-footer">
+                <div class="system-status">
+                    <span class="system-dot"></span>
+                    Sistema inteligente activo
+                </div>
+                <span class="footer-separator">
+                    •
+                </span>
+                <span>
+                    Agricultura basada en datos
+                </span>
+            </footer>
+
         </div>
 
     </div>
@@ -64,108 +321,1204 @@
 
         <div class="login-card">
 
-            <div class="card-header">
-                <div class="text-header">
-                    <h2>Bienvenido</h2>
-                    <p class="subtitle">Inicia sesión para continuar</p>
-                </div>
+            <div class="card-content">
 
-                <img src="/AgroVisionAI.png" alt="logo">
+                <!-- INICIO DE SESION -->
+                <ng-container *ngIf="view === 'login'">
 
-            </div>
-            
-                
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <!-- HEADER -->
+                    <header class="login-header">
+                        <div class="login-title">
+                            <span class="login-eyebrow">
+                                BIENVENIDO
+                            </span>
+                            <h2>Inicia sesión</h2>
+                            <p>Accede a tu espacio de AgroVisionAI.</p>
+                        </div>
+                        <img src="/AgroVisionAI-B.webp" alt="logo">
+                    </header>
+                    
+                    <!-- CONTENIDO -->
+                    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-                <!-- EMAIL -->
-                <div class="input-group">
-  
-                    <label>Correo electrónico</label>
+                        <!-- EMAIL -->
+                        <div class="input-group">
+                            <label>Correo electrónico</label>
+                            <p-iconfield>
+                                <p-inputicon>
+                                    <lucide-icon name="mail"></lucide-icon>
+                                </p-inputicon>
 
-                    <div class="input">
-                        <lucide-icon name="mail"></lucide-icon>
+                                <input
+                                    pInputText
+                                    type="email"
+                                    formControlName="email"
+                                    (blur)="onFieldBlur('email')"
+                                    placeholder="Ingresa tu correo"
+                                />
+                            </p-iconfield>
+                        </div>
 
-                        <input
-                            pInputText
-                            type="email"
-                            formControlName="email"
-                            (blur)="onFieldBlur('email')"
-                            placeholder="Ingresa tu correo"
-                        />
-                    </div>
+                        <!-- PASSWORD -->
+                        <div class="input-group">
+                            <label>Contraseña</label>
+                            <p-iconfield>
+                                <p-inputicon>
+                                    <lucide-icon name="lock"></lucide-icon>
+                                </p-inputicon>
 
-                </div>
-                <!-- PASSWORD -->
-                <div class="input-group">
+                                <p-password
+                                    formControlName="password"
+                                    [toggleMask]="true"
+                                    [feedback]="false"
+                                    placeholder="Ingresa tu contraseña"
+                                    (blur)="onFieldBlur('password')"
+                                ></p-password>
+                            </p-iconfield>
+                        </div>
 
-                    <label>Contraseña</label>
-
-                    <div class="input">
-                        <lucide-icon 
-                            name="lock"
-                        ></lucide-icon>
-
-                        <p-password
-                            formControlName="password"
-                            [toggleMask]="true"
-                            [feedback]="false"
-                            placeholder="Ingresa tu contraseña"
-                            style="width: 100%;"
-                            (blur)="onFieldBlur('password')"
+                        <!-- OPTIONS -->
+                        <div class="options">
+                            <a
+                                href="javascript:void(0)"
+                                (click)="openRecovery()"
                             >
-                        </p-password>
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
+
+                        <!-- BUTTON -->
+                        <button
+                            pButton
+                            type="submit"
+                            class="login-btn"
+                            [disabled]="loginForm.invalid || processing.value"
+                        >
+                            <lucide-icon
+                                [name]="processing.value ? 'loader-circle' : 'log-in'"
+                                [size]="20"
+                                [strokeWidth]="3"
+                                [class.spin]="processing.value"
+                            ></lucide-icon>
+
+                            {{ processing.value ? 'Ingresando...' : 'Iniciar Sesión' }}
+                        </button>
+
+                    </form>
+
+                    <!-- DIVIDER -->
+                    <div class="divider">o continúa con</div>
+
+                    <!-- SOCIAL -->
+                    <div class="social">
+
+                        <div
+                            class="google"
+                            #googleButton
+                        ></div>
+
+                        <!--
+                            <button class="google" id=>
+                                <i class="pi pi-google"></i>
+                                Google
+                            </button>
+
+                            <button class="facebook">
+                                <i class="pi pi-facebook"></i>
+                                Facebook
+                            </button>
+                        -->
 
                     </div>
-                </div>
 
-                <!-- OPTIONS -->
-                <div class="options">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
-                </div>
+                    <p class="register">
+                        ¿No tienes cuenta? <a href="javascript:void(0)" (click)="openRegister()">Crear cuenta</a>
+                    </p>
 
-                <!-- BUTTON -->
-                <button
-                pButton
-                type="submit"
-                class="login-btn"
-                [disabled]="loginForm.invalid || processing.value">
+                </ng-container>
 
-                <i [class]="processing.value ? 'pi pi-spin pi-spinner' : 'pi pi-sign-in'"></i>
+                <!-- REGISTRO -->
+                <ng-container *ngIf="view === 'register'">
 
-                {{ processing.value ? 'Ingresando...' : 'Iniciar Sesión' }}
+                    <div class="register-container">
 
-                </button>
+                        <!-- HEADER DEL REGISTRO -->
+                        <header class="register-header">
+                            <button
+                                type="button"
+                                class="back-btn"
+                                (click)="backToLogin()"
+                            >
+                                <lucide-icon
+                                    name="arrow-left"
+                                    [size]="18"
+                                ></lucide-icon>
+                            </button>
 
-            </form>
+                            <div class="register-title">
 
-            <!-- DIVIDER -->
-            <div class="divider">o continúa con</div>
+                                <span class="login-eyebrow">
+                                    CREAR CUENTA
+                                </span>
+                                <h2>{{ getRegisterTitle() }}</h2>
+                            </div>
+                        </header>
 
-            <!-- SOCIAL -->
-            <div class="social">
+                        <!-- PROGRESS -->
+                        <div class="register-progress">
 
-                <div class="google" id="googleButton"></div>
+                            <!-- PROGRESO STEP 1 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="registerStep === 1"
+                                [class.completed]="registerStep > 1"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="registerStep > 1"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+                                    <lucide-icon
+                                        *ngIf="registerStep <= 1"
+                                        name="mail"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+                                <span class="progress-label">
+                                    Correo
+                                </span>
+                            </div>
 
-                <!--
-                    <button class="google" id=>
-                        <i class="pi pi-google"></i>
-                        Google
-                    </button>
+                            <!-- LINE -->
+                            <div
+                                class="progress-line"
+                                [class.active]="registerStep > 1"
+                            >
+                                <span></span>
+                            </div>
 
-                    <button class="facebook">
-                        <i class="pi pi-facebook"></i>
-                        Facebook
-                    </button>
-                -->
+                            <!-- PROGRESO STEP 2 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="registerStep === 2"
+                                [class.completed]="registerStep > 2"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="registerStep > 2"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+                                    <lucide-icon
+                                        *ngIf="registerStep <= 2"
+                                        name="shield-check"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+                                <span class="progress-label">
+                                    Verificación
+                                </span>
+                            </div>
 
+                            <!-- LINE -->
+                            <div
+                                class="progress-line"
+                                [class.active]="registerStep > 2"
+                            >
+                                <span></span>
+                            </div>
+
+                            <!-- STEP 3 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="registerStep === 3"
+                                [class.completed]="registerStep > 3"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="registerStep > 3"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+                                    <lucide-icon
+                                        *ngIf="registerStep <= 3"
+                                        name="user-round"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+                                <span class="progress-label">
+                                    Perfil
+                                </span>
+                            </div>
+
+                            <!-- LINE -->
+                            <div
+                                class="progress-line"
+                                [class.active]="registerStep > 2"
+                            >
+                                <span></span>
+                            </div>
+
+                            <!-- STEP 4 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="registerStep === 4"
+                                [class.completed]="registerStep > 4"
+                            >
+                                <div class="progress-step">
+
+                                    <lucide-icon
+                                        *ngIf="registerStep > 4"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+
+                                    <lucide-icon
+                                        *ngIf="registerStep <= 4"
+                                        name="shield-check"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+
+                                </div>
+
+                                <span class="progress-label">
+                                    Seguridad
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- STEP 1 -->
+                        <form
+                            *ngIf="registerStep === 1"
+                            class="register-form"
+                            [formGroup]="registerForm"
+                            (ngSubmit)="continueEmail()"
+                        >
+                            <div class="input-group">
+                                <label>Correo electrónico
+                                </label>
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="mail"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+                                    <input
+                                        pInputText
+                                        type="email"
+                                        formControlName="email"
+                                        placeholder="Ingresa tu correo"
+                                    />
+                                </p-iconfield>
+                            </div>
+
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="registerForm.get('email')?.invalid || processing.value"
+                            >
+                                <lucide-icon
+                                    [name]="processing.value ? 'loader-circle' : 'arrow-right'"
+                                    [size]="20"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{ processing.value ? 'Cargando...' : 'Continuar' }}
+                            </button>
+                        </form>
+
+                        <!-- STEP 2 -->
+                        <form
+                            *ngIf="registerStep === 2"
+                            class="register-form verification-form"
+                            [formGroup]="registerForm"
+                            (ngSubmit)="verifyCode()"
+                        >
+
+                            <!-- EMAIL DESTINATION -->
+                            <div class="verification-email">
+                                <div class="verification-email-icon">
+                                    <lucide-icon
+                                        name="mail-check"
+                                        [size]="24"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+                                <div class="verification-email-content">
+                                    <span>Código enviado a</span>
+                                    <strong>
+                                        {{ registerForm.get('email')?.value }}
+                                    </strong>
+                                </div>
+
+                                <!-- CAMBIAR CORREO -->
+                                <button
+                                    type="button"
+                                    class="change-email-btn"
+                                    (click)="registerStep = 1"
+                                >
+                                    <lucide-icon
+                                        name="pencil"
+                                        [size]="13"
+                                    ></lucide-icon>
+                                    Cambiar correo
+                                </button>
+                            </div>
+
+                            <!-- CODE -->
+                            <div class="input-group verification-code-group">
+
+                                <div class="input-group-otp">
+                                    <label>Código de verificación</label>
+                                    <div class="otp-wrapper">
+                                        <p-inputotp
+                                            formControlName="verificationCode"
+                                            [length]="6"
+                                            [integerOnly]="true"
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- COUNTDOWN -->
+                                <div class="verification-timer" [class.expired]="verificationSeconds <= 0">
+                                    <lucide-icon
+                                        [name]="verificationSeconds > 0
+                                            ? 'timer'
+                                            : 'timer-off'"
+                                        [size]="14"
+                                    ></lucide-icon>
+                                    <span *ngIf="verificationSeconds > 0">
+                                        Código válido durante
+                                        <strong>
+                                            {{ formatVerificationTime() }}
+                                        </strong>
+                                    </span>
+                                    <span *ngIf="verificationSeconds <= 0">
+                                        El código ha expirado
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- VERIFY BUTTON -->
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    registerForm.get('verificationCode')?.invalid ||
+                                    verificationSeconds <= 0 ||
+                                    processing.value
+                                "
+                            >
+                                <lucide-icon
+                                    [name]="processing.value ? 'loader-circle' : 'check'"
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{ processing.value ? 'Cargando...' : 'Confirmar código' }}
+                            </button>
+
+                            <!-- RESEND -->
+                            <button
+                                *ngIf="verificationSeconds <= 0"
+                                type="button"
+                                class="resend-code-btn"
+                                [disabled]="processing.value"
+                                (click)="resendVerificationCode()"
+                            >
+                                <lucide-icon
+                                    [name]="processing.value ? 'loader-circle' : 'refresh-cw'"
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{ processing.value ? 'Cargando...' : 'Reenviar código' }}
+                            </button>
+                        </form>
+
+                        <!-- STEP 3 -->
+                        <form
+                            *ngIf="registerStep === 3"
+                            class="register-form"
+                            [formGroup]="registerForm"
+                            (ngSubmit)="continueProfile()"
+                        >
+                            <div class="two-columns">
+                                <div class="input-group">
+                                    <label>Nickname</label>
+                                    <p-iconfield>
+                                        <p-inputicon>
+                                            <lucide-icon
+                                                name="at-sign"
+                                            ></lucide-icon>
+                                        </p-inputicon>
+                                        <input
+                                            pInputText
+                                            type="text"
+                                            formControlName="nickname"
+                                            placeholder="Ej. agrojuan"
+                                        />
+                                    </p-iconfield>
+                                </div>
+
+                                <div class="input-group">
+                                    <label>Teléfono</label>
+                                    <p-iconfield>
+                                        <p-inputicon>
+                                            <lucide-icon
+                                                name="phone"
+                                            ></lucide-icon>
+                                        </p-inputicon>
+                                        <input
+                                            pInputText
+                                            type="tel"
+                                            formControlName="phone"
+                                            placeholder="Ej. 999888777"
+                                            inputmode="numeric"
+                                            autocomplete="tel"
+                                            maxlength="9"
+                                            (input)="onPhoneInput($event)"
+                                        />
+                                    </p-iconfield>
+                                </div>
+                                
+                            </div>
+
+                            <div class="input-group">
+                                <label>Nombre</label>
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="user"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+                                    <input
+                                        pInputText
+                                        type="text"
+                                        formControlName="name"
+                                        placeholder="Tu nombre"
+                                    />
+                                </p-iconfield>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Apellido</label>
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="user-round"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+                                    <input
+                                        pInputText
+                                        type="text"
+                                        formControlName="lastname"
+                                        placeholder="Tu apellido"
+                                    />
+                                </p-iconfield>
+                            </div>
+
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    registerForm.get('nickname')?.invalid ||
+                                    registerForm.get('name')?.invalid ||
+                                    registerForm.get('lastname')?.invalid ||
+                                    registerForm.get('phone')?.invalid
+                                "
+                            >
+                                Continuar
+                                <i class="pi pi-arrow-right"></i>
+                            </button>
+                        </form>
+
+                        <!-- STEP 4 -->
+                        <form
+                            *ngIf="registerStep === 4"
+                            class="register-form security-form"
+                            [formGroup]="registerForm"
+                            (ngSubmit)="completeRegister()"
+                        >
+
+                            <!-- PASSWORD -->
+                            <div class="input-group">
+
+                                <label>Contraseña</label>
+
+                                <p-iconfield>
+
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="lock"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+
+                                    <p-password
+                                        formControlName="password"
+                                        [toggleMask]="true"
+                                        [feedback]="false"
+                                        placeholder="Crea una contraseña"
+                                    ></p-password>
+
+                                </p-iconfield>
+
+                                <!-- PASSWORD STRENGTH -->
+                                <div
+                                    class="password-strength"
+                                    *ngIf="registerForm.get('password')?.value"
+                                >
+
+                                    <div class="strength-bars">
+
+                                        <span
+                                            [class.active]="getPasswordStrength() >= 1"
+                                            [class.weak]="getPasswordStrength() === 1"
+                                        ></span>
+
+                                        <span
+                                            [class.active]="getPasswordStrength() >= 2"
+                                            [class.medium]="getPasswordStrength() === 2"
+                                        ></span>
+
+                                        <span
+                                            [class.active]="getPasswordStrength() >= 3"
+                                            [class.strong]="getPasswordStrength() === 3"
+                                        ></span>
+
+                                        <span
+                                            [class.active]="getPasswordStrength() >= 4"
+                                            [class.strong]="getPasswordStrength() === 4"
+                                        ></span>
+
+                                    </div>
+
+                                    <span
+                                        class="strength-label"
+                                        [class.weak]="getPasswordStrength() === 1"
+                                        [class.medium]="getPasswordStrength() === 2"
+                                        [class.strong]="getPasswordStrength() >= 3"
+                                    >
+                                        {{ getPasswordStrengthLabel() }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+                            <div class="input-group">
+
+                                <label>Confirmar contraseña</label>
+
+                                <p-iconfield>
+
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="lock-keyhole"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+
+                                    <p-password
+                                        formControlName="confirmPassword"
+                                        [toggleMask]="true"
+                                        [feedback]="false"
+                                        placeholder="Repite tu contraseña"
+                                        [class.ng-invalid]="passwordMismatch"
+                                    ></p-password>
+
+                                </p-iconfield>
+
+                                <!-- MATCH ERROR -->
+                                <div
+                                    class="password-match-error"
+                                    *ngIf="passwordMismatch"
+                                >
+                                    <lucide-icon
+                                        name="circle-alert"
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        Las contraseñas no coinciden.
+                                    </span>
+                                </div>
+
+                                <!-- MATCH SUCCESS -->
+                                <div
+                                    class="password-match-success"
+                                    *ngIf="
+                                        !passwordMismatch &&
+                                        registerForm.get('confirmPassword')?.valid &&
+                                        registerForm.get('confirmPassword')?.value
+                                    "
+                                >
+                                    <lucide-icon
+                                        name="circle-check"
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        Las contraseñas coinciden.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <!-- PASSWORD REQUIREMENTS -->
+                            <div class="password-requirements">
+
+                                <span class="requirements-title">
+                                    Tu contraseña debe tener:
+                                </span>
+
+                                <div
+                                    class="requirement"
+                                    [class.valid]="hasMinLength()"
+                                >
+                                    <lucide-icon
+                                        [name]="hasMinLength() ? 'check' : 'circle'"
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    Al menos 8 caracteres
+                                </div>
+
+                            </div>
+
+
+                            <!-- SUBMIT -->
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    registerForm.get('password')?.invalid ||
+                                    registerForm.get('confirmPassword')?.invalid ||
+                                    passwordMismatch ||
+                                    processing.value
+                                "
+                            >
+                                <lucide-icon
+                                    [name]="processing.value ? 'loader-circle' : 'user-plus'"
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{ processing.value ? 'Cargando...' : 'Crear cuenta' }}
+                            </button>
+
+                        </form>
+
+                        <p class="register">
+                            ¿Ya tienes una cuenta?
+                            <a href="javascript:void(0)" (click)="backToLogin()">
+                                Iniciar sesión
+                            </a>
+                        </p>
+                    </div>
+                </ng-container>
+
+                <!-- RECUPERACION -->
+                <ng-container *ngIf="view === 'recovery'">
+                    <div class="register-container">
+                        <!-- HEADER -->
+                        <header class="register-header">
+                            <button
+                                type="button"
+                                class="back-btn"
+                                (click)="backToLogin()"
+                            >
+                                <lucide-icon
+                                    name="arrow-left"
+                                    [size]="18"
+                                ></lucide-icon>
+                            </button>
+
+                            <div class="register-title">
+                                <span class="login-eyebrow">RECUPERAR CUENTA</span>
+                                <h2>{{ getRecoveryTitle() }}</h2>
+                                <p>{{ getRecoveryDescription() }}</p>
+                            </div>
+                        </header>
+
+                        <!-- PROGRESS -->
+                        <div class="register-progress">
+                            <!-- STEP 1 -->
+                            <div class="progress-item"
+                                [class.active]="recoveryStep === 1"
+                                [class.completed]="recoveryStep > 1"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="recoveryStep > 1"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+
+                                    <lucide-icon
+                                        *ngIf="recoveryStep <= 1"
+                                        name="mail"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+
+                                <span class="progress-label">Correo</span>
+                            </div>
+
+                            <!-- LINE -->
+                            <div
+                                class="progress-line"
+                                [class.active]="recoveryStep > 1"
+                            >
+                                <span></span>
+                            </div>
+
+                            <!-- STEP 2 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="recoveryStep === 2"
+                                [class.completed]="recoveryStep > 2"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="recoveryStep > 2"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+
+                                    <lucide-icon
+                                        *ngIf="recoveryStep <= 2"
+                                        name="shield-check"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+
+                                <span class="progress-label">Verificación</span>
+                            </div>
+
+                            <!-- LINE -->
+                            <div
+                                class="progress-line"
+                                [class.active]="recoveryStep > 2"
+                            >
+                                <span></span>
+                            </div>
+
+                            <!-- STEP 3 -->
+                            <div
+                                class="progress-item"
+                                [class.active]="recoveryStep === 3"
+                                [class.completed]="recoveryStep > 3"
+                            >
+                                <div class="progress-step">
+                                    <lucide-icon
+                                        *ngIf="recoveryStep > 3"
+                                        name="check"
+                                        [size]="16"
+                                        [strokeWidth]="2.5"
+                                    ></lucide-icon>
+
+                                    <lucide-icon
+                                        *ngIf="recoveryStep <= 3"
+                                        name="lock-keyhole"
+                                        [size]="16"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+
+                                <span class="progress-label">
+                                    Contraseña
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- STEP 1 — EMAIL -->
+                        <form
+                            *ngIf="recoveryStep === 1"
+                            class="register-form"
+                            [formGroup]="recoveryForm"
+                            (ngSubmit)="continueRecoveryEmail()"
+                        >
+                            <div class="input-group">
+                                <label>Correo electrónico</label>
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="mail"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+
+                                    <input
+                                        pInputText
+                                        type="email"
+                                        formControlName="email"
+                                        placeholder="Ingresa tu correo"
+                                    />
+                                </p-iconfield>
+                            </div>
+
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    recoveryForm.get('email')?.invalid ||
+                                    processing.value
+                                "
+                            >
+                                <lucide-icon
+                                    [name]="
+                                        processing.value
+                                            ? 'loader-circle'
+                                            : 'arrow-right'
+                                    "
+                                    [size]="20"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{
+                                    processing.value
+                                        ? 'Cargando...'
+                                        : 'Continuar'
+                                }}
+                            </button>
+                        </form>
+
+                        <!-- STEP 2 — OTP -->
+                        <form
+                            *ngIf="recoveryStep === 2"
+                            class="register-form verification-form"
+                            [formGroup]="recoveryForm"
+                            (ngSubmit)="verifyRecoveryCode()"
+                        >
+                            <!-- EMAIL DESTINATION -->
+                            <div class="verification-email">
+                                <div class="verification-email-icon">
+                                    <lucide-icon
+                                        name="mail-check"
+                                        [size]="24"
+                                        [strokeWidth]="2"
+                                    ></lucide-icon>
+                                </div>
+
+                                <div class="verification-email-content">
+                                    <span>Código enviado a</span>
+                                    <strong>{{ recoveryForm.get('email')?.value }}</strong>
+                                </div>
+
+                                <!-- CAMBIAR CORREO -->
+                                <button
+                                    type="button"
+                                    class="change-email-btn"
+                                    (click)="recoveryStep = 1"
+                                >
+                                    <lucide-icon
+                                        name="pencil"
+                                        [size]="13"
+                                    ></lucide-icon>
+
+                                    Cambiar correo
+                                </button>
+                            </div>
+
+                            <!-- CODE -->
+                            <div class="input-group verification-code-group">
+                                <div class="input-group-otp">
+                                    <label>Código de recuperación</label>
+                                    <div class="otp-wrapper">
+                                        <p-inputotp
+                                            formControlName="verificationCode"
+                                            [length]="6"
+                                            [integerOnly]="true"
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- COUNTDOWN -->
+                                <div class="verification-timer"
+                                    [class.expired]="verificationSeconds <= 0"
+                                >
+                                    <lucide-icon
+                                        [name]="
+                                            verificationSeconds > 0
+                                                ? 'timer'
+                                                : 'timer-off'
+                                        "
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    <span *ngIf="verificationSeconds > 0">
+                                        Código válido durante
+
+                                        <strong>
+                                            {{ formatVerificationTime() }}
+                                        </strong>
+                                    </span>
+
+                                    <span
+                                        *ngIf="verificationSeconds <= 0"
+                                    >
+                                        El código ha expirado
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- VERIFY BUTTON -->
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    recoveryForm.get('verificationCode')?.invalid ||
+                                    verificationSeconds <= 0 ||
+                                    processing.value
+                                "
+                            >
+                                <lucide-icon
+                                    [name]="
+                                        processing.value
+                                            ? 'loader-circle'
+                                            : 'check'
+                                    "
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{
+                                    processing.value
+                                        ? 'Cargando...'
+                                        : 'Confirmar código'
+                                }}
+                            </button>
+
+                            <!-- RESEND -->
+                            <button
+                                *ngIf="verificationSeconds <= 0"
+                                type="button"
+                                class="resend-code-btn"
+                                [disabled]="processing.value"
+                                (click)="resendRecoveryCode()"
+                            >
+                                <lucide-icon
+                                    [name]="
+                                        processing.value
+                                            ? 'loader-circle'
+                                            : 'refresh-cw'
+                                    "
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+                                {{
+                                    processing.value
+                                        ? 'Cargando...'
+                                        : 'Reenviar código'
+                                }}
+                            </button>
+                        </form>
+
+                        <!-- STEP 3 — NUEVA CONTRASEÑA -->
+                        <form
+                            *ngIf="recoveryStep === 3"
+                            class="register-form security-form"
+                            [formGroup]="recoveryForm"
+                            (ngSubmit)="completeRecovery()"
+                        >
+                            <!-- NUEVA CONTRASEÑA -->
+                            <div class="input-group">
+                                <label>Nueva contraseña</label>
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="lock"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+
+                                    <p-password
+                                        formControlName="password"
+                                        [toggleMask]="true"
+                                        [feedback]="false"
+                                        placeholder="Crea una nueva contraseña"
+                                    ></p-password>
+                                </p-iconfield>
+
+                                <!-- PASSWORD STRENGTH -->
+                                <div
+                                    class="password-strength"
+                                    *ngIf="recoveryForm.get('password')?.value"
+                                >
+                                    <div class="strength-bars">
+                                        <span [class.active]="getRecoveryPasswordStrength() >= 1"
+                                            [class.weak]="getRecoveryPasswordStrength() === 1"></span>
+
+                                        <span [class.active]="getRecoveryPasswordStrength() >= 1"
+                                            [class.weak]="getRecoveryPasswordStrength() === 1"></span>
+
+                                        <span [class.active]="getRecoveryPasswordStrength() >= 2"
+                                            [class.medium]="getRecoveryPasswordStrength() === 2"></span>
+
+                                        <span [class.active]="getRecoveryPasswordStrength() >= 3"
+                                            [class.strong]="getRecoveryPasswordStrength() === 3"></span>
+
+                                        <span [class.active]="getRecoveryPasswordStrength() >= 4"
+                                            [class.strong]="getRecoveryPasswordStrength() === 4"></span>
+                                    </div>
+
+                                    <span
+                                        class="strength-label"
+                                        [class.weak]="getRecoveryPasswordStrength() === 1"
+                                        [class.medium]="getRecoveryPasswordStrength() === 2"
+                                        [class.strong]="getRecoveryPasswordStrength() >= 3"
+                                    >
+                                        {{ getRecoveryPasswordStrengthLabel() }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- CONFIRMAR CONTRASEÑA -->
+                            <div class="input-group">
+                                <label>Confirmar contraseña</label>
+
+                                <p-iconfield>
+                                    <p-inputicon>
+                                        <lucide-icon
+                                            name="lock-keyhole"
+                                        ></lucide-icon>
+                                    </p-inputicon>
+
+                                    <p-password
+                                        formControlName="confirmPassword"
+                                        [toggleMask]="true"
+                                        [feedback]="false"
+                                        placeholder="Repite tu nueva contraseña"
+                                        [class.ng-invalid]="recoveryPasswordMismatch"
+                                    ></p-password>
+                                </p-iconfield>
+
+                                <!-- MATCH ERROR -->
+                                <div
+                                    class="password-match-error"
+                                    *ngIf="recoveryPasswordMismatch"
+                                >
+                                    <lucide-icon
+                                        name="circle-alert"
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        Las contraseñas no coinciden.
+                                    </span>
+                                </div>
+
+                                <!-- MATCH SUCCESS -->
+                                <div
+                                    class="password-match-success"
+                                    *ngIf="
+                                        !recoveryPasswordMismatch &&
+                                        recoveryForm.get('confirmPassword')?.valid &&
+                                        recoveryForm.get('confirmPassword')?.value
+                                    "
+                                >
+                                    <lucide-icon
+                                        name="circle-check"
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    <span>
+                                        Las contraseñas coinciden.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- PASSWORD REQUIREMENTS -->
+                            <div class="password-requirements">
+                                <span class="requirements-title">
+                                    Tu contraseña debe tener:
+                                </span>
+
+                                <div
+                                    class="requirement"
+                                    [class.valid]="hasRecoveryMinLength()"
+                                >
+                                    <lucide-icon
+                                        [name]="
+                                            hasRecoveryMinLength()
+                                                ? 'check'
+                                                : 'circle'
+                                        "
+                                        [size]="14"
+                                    ></lucide-icon>
+
+                                    Al menos 8 caracteres
+                                </div>
+                            </div>
+
+                            <!-- SUBMIT -->
+                            <button
+                                pButton
+                                type="submit"
+                                class="login-btn"
+                                [disabled]="
+                                    recoveryForm.get('password')?.invalid ||
+                                    recoveryForm.get('confirmPassword')?.invalid ||
+                                    recoveryPasswordMismatch ||
+                                    processing.value
+                                "
+                            >
+                                <lucide-icon
+                                    [name]="
+                                        processing.value
+                                            ? 'loader-circle'
+                                            : 'lock-keyhole'
+                                    "
+                                    [size]="18"
+                                    [class.spin]="processing.value"
+                                ></lucide-icon>
+
+                                {{
+                                    processing.value
+                                        ? 'Cambiando contraseña...'
+                                        : 'Cambiar contraseña'
+                                }}
+                            </button>
+                        </form>
+
+                        <!-- FOOTER -->
+                        <p class="register">
+                            ¿Recordaste tu contraseña?
+
+                            <a
+                                href="javascript:void(0)"
+                                (click)="backToLogin()"
+                            >
+                                Iniciar sesión
+                            </a>
+                        </p>
+                    </div>
+                </ng-container>
             </div>
-
-            <p class="register">
-                ¿No tienes cuenta? <a href="#">Crear cuenta</a>
-            </p>
 
         </div>
 
     </div>
-
+    
 </div>

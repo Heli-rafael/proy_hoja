@@ -1,111 +1,1291 @@
-<aside class="sidebar">
+<div class="shadow-test">
+  <div class="shadow-test__header">
+    <span class="shadow-test__eyebrow">Design System</span>
+    <h2>Shadow Tokens</h2>
+    <p>Prueba visual de las sombras de marca y dark.</p>
+  </div>
 
-  <!-- BRAND / IDENTIDAD -->
-  <div class="brand">
+  <div class="shadow-grid">
 
-    <div class="brand-mark">
-      🌿
+    <!-- Brand SM -->
+    <div class="shadow-card shadow-card--brand-sm">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand SM</span>
+        <span class="shadow-card__value">--shadow-brand-sm</span>
+      </div>
     </div>
 
-    <div class="brand-text">
-      <h1>AgroVision AI</h1>
-      <p>Diagnóstico inteligente de cultivos</p>
+    <!-- Brand MD -->
+    <div class="shadow-card shadow-card--brand-md">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand MD</span>
+        <span class="shadow-card__value">--shadow-brand-md</span>
+      </div>
+    </div>
+
+    <!-- Brand LG -->
+    <div class="shadow-card shadow-card--brand-lg">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand LG</span>
+        <span class="shadow-card__value">--shadow-brand-lg</span>
+      </div>
+    </div>
+
+    <!-- Brand XL -->
+    <div class="shadow-card shadow-card--brand-xl">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand XL</span>
+        <span class="shadow-card__value">--shadow-brand-xl</span>
+      </div>
+    </div>
+
+    <!-- Brand Button -->
+    <div class="shadow-card shadow-card--brand-button">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand Button</span>
+        <span class="shadow-card__value">--shadow-brand-button</span>
+      </div>
+    </div>
+
+    <!-- Brand Glow -->
+    <div class="shadow-card shadow-card--brand-glow">
+      <div class="shadow-card__content">
+        <span class="shadow-card__label">Brand Glow</span>
+        <span class="shadow-card__value">--shadow-brand-glow</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="shadow-section">
+    <span class="shadow-section__title">Dark Shadows</span>
+
+    <div class="shadow-grid">
+
+      <!-- Dark SM -->
+      <div class="shadow-card shadow-card--dark-sm">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark SM</span>
+          <span class="shadow-card__value">--shadow-dark-sm</span>
+        </div>
+      </div>
+
+      <!-- Dark MD -->
+      <div class="shadow-card shadow-card--dark-md">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark MD</span>
+          <span class="shadow-card__value">--shadow-dark-md</span>
+        </div>
+      </div>
+
+      <!-- Dark LG -->
+      <div class="shadow-card shadow-card--dark-lg">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark LG</span>
+          <span class="shadow-card__value">--shadow-dark-lg</span>
+        </div>
+      </div>
+
+      <!-- Dark XL -->
+      <div class="shadow-card shadow-card--dark-xl">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark XL</span>
+          <span class="shadow-card__value">--shadow-dark-xl</span>
+        </div>
+      </div>
+
+      <!-- Dark Button -->
+      <div class="shadow-card shadow-card--dark-button">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark Button</span>
+          <span class="shadow-card__value">--shadow-dark-button</span>
+        </div>
+      </div>
+
+      <!-- Dark Glow -->
+      <div class="shadow-card shadow-card--dark-glow">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Dark Glow</span>
+          <span class="shadow-card__value">--shadow-dark-glow</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="shadow-test">
+
+  <!-- ========================================================= -->
+  <!-- HEADER -->
+  <!-- ========================================================= -->
+
+  <div class="shadow-test__header">
+    <span class="shadow-test__eyebrow">Design System</span>
+
+    <h2>PrimeNG Design System</h2>
+
+    <p>
+      Playground visual para probar componentes, estados,
+      superficies, sombras y comportamiento Light / Dark.
+    </p>
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- THEME -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <div>
+        <span class="shadow-section__title">Theme</span>
+        <h3>Modo de color</h3>
+        <p>
+          Cambia entre Light, Dark y System para comprobar
+          cómo reaccionan los componentes.
+        </p>
+      </div>
+
+      <div class="theme-status">
+        <strong>Tema actual:</strong>
+        {{ currentTheme }}
+      </div>
+    </div>
+
+    <div class="demo-row">
+
+      <p-button
+        label="Claro"
+        icon="pi pi-sun"
+        severity="secondary"
+        [outlined]="currentTheme !== 'light'"
+        (onClick)="setTheme('light')"
+      />
+
+      <p-button
+        label="Oscuro"
+        icon="pi pi-moon"
+        [outlined]="currentTheme !== 'dark'"
+        (onClick)="setTheme('dark')"
+      />
+
+      <p-button
+        label="Sistema"
+        icon="pi pi-desktop"
+        severity="secondary"
+        [outlined]="currentTheme !== 'system'"
+        (onClick)="setTheme('system')"
+      />
+
     </div>
 
   </div>
 
 
-  <!-- ACCIÓN PRINCIPAL -->
-  <div class="action-section">
+  <!-- ========================================================= -->
+  <!-- SHADOW TOKENS -->
+  <!-- ========================================================= -->
 
-    <button class="primary-action">
-      + Nuevo análisis
-    </button>
+  <div class="demo-section">
 
-    <p class="hint">
-      Sube una imagen para analizar la salud de tu planta
+    <div class="shadow-test__header">
+      <span class="shadow-test__eyebrow">Design System</span>
+      <h2>Shadow Tokens</h2>
+      <p>Prueba visual de las sombras de marca y dark.</p>
+    </div>
+
+    <div class="shadow-grid">
+
+      <div class="shadow-card shadow-card--brand-sm">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand SM</span>
+          <span class="shadow-card__value">--shadow-brand-sm</span>
+        </div>
+      </div>
+
+      <div class="shadow-card shadow-card--brand-md">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand MD</span>
+          <span class="shadow-card__value">--shadow-brand-md</span>
+        </div>
+      </div>
+
+      <div class="shadow-card shadow-card--brand-lg">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand LG</span>
+          <span class="shadow-card__value">--shadow-brand-lg</span>
+        </div>
+      </div>
+
+      <div class="shadow-card shadow-card--brand-xl">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand XL</span>
+          <span class="shadow-card__value">--shadow-brand-xl</span>
+        </div>
+      </div>
+
+      <div class="shadow-card shadow-card--brand-button">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand Button</span>
+          <span class="shadow-card__value">--shadow-brand-button</span>
+        </div>
+      </div>
+
+      <div class="shadow-card shadow-card--brand-glow">
+        <div class="shadow-card__content">
+          <span class="shadow-card__label">Brand Glow</span>
+          <span class="shadow-card__value">--shadow-brand-glow</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="shadow-section">
+
+      <span class="shadow-section__title">Dark Shadows</span>
+
+      <div class="shadow-grid">
+
+        <div class="shadow-card shadow-card--dark-sm">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark SM</span>
+            <span class="shadow-card__value">--shadow-dark-sm</span>
+          </div>
+        </div>
+
+        <div class="shadow-card shadow-card--dark-md">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark MD</span>
+            <span class="shadow-card__value">--shadow-dark-md</span>
+          </div>
+        </div>
+
+        <div class="shadow-card shadow-card--dark-lg">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark LG</span>
+            <span class="shadow-card__value">--shadow-dark-lg</span>
+          </div>
+        </div>
+
+        <div class="shadow-card shadow-card--dark-xl">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark XL</span>
+            <span class="shadow-card__value">--shadow-dark-xl</span>
+          </div>
+        </div>
+
+        <div class="shadow-card shadow-card--dark-button">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark Button</span>
+            <span class="shadow-card__value">--shadow-dark-button</span>
+          </div>
+        </div>
+
+        <div class="shadow-card shadow-card--dark-glow">
+          <div class="shadow-card__content">
+            <span class="shadow-card__label">Dark Glow</span>
+            <span class="shadow-card__value">--shadow-dark-glow</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- BUTTONS -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Button</span>
+      <h3>Buttons</h3>
+    </div>
+
+    <div class="demo-row">
+
+      <p-button label="Primary" />
+
+      <p-button
+        label="Secondary"
+        severity="secondary"
+      />
+
+      <p-button
+        label="Success"
+        severity="success"
+      />
+
+      <p-button
+        label="Info"
+        severity="info"
+      />
+
+      <p-button
+        label="Warn"
+        severity="warn"
+      />
+
+      <p-button
+        label="Danger"
+        severity="danger"
+      />
+
+      <p-button
+        label="Contrast"
+        severity="contrast"
+      />
+
+    </div>
+
+    <div class="demo-row">
+
+      <p-button
+        label="Outlined"
+        [outlined]="true"
+      />
+
+      <p-button
+        label="Text"
+        [text]="true"
+      />
+
+      <p-button
+        icon="pi pi-heart"
+        label="Icon"
+      />
+
+      <p-button
+        icon="pi pi-check"
+        [rounded]="true"
+        aria-label="Check"
+      />
+
+      <p-button
+        icon="pi pi-trash"
+        severity="danger"
+        [rounded]="true"
+        [text]="true"
+        aria-label="Delete"
+      />
+
+      <p-button
+        label="Loading"
+        [loading]="loading"
+        (onClick)="simulateLoading()"
+      />
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- INPUTS -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Forms</span>
+      <h3>Inputs</h3>
+    </div>
+
+    <div class="demo-grid">
+
+      <div class="demo-field">
+        <label>Input Text</label>
+
+        <input
+          pInputText
+          [(ngModel)]="textValue"
+          placeholder="Escribe algo..."
+        />
+      </div>
+
+
+      <div class="demo-field">
+
+        <label>Input con icono</label>
+
+        <p-iconfield>
+          <p-inputicon class="pi pi-search" />
+
+          <input
+            pInputText
+            [(ngModel)]="searchValue"
+            placeholder="Buscar..."
+          />
+        </p-iconfield>
+
+      </div>
+
+
+      <div class="demo-field">
+
+        <label>Password</label>
+
+        <p-password
+          [(ngModel)]="passwordValue"
+          [toggleMask]="true"
+          placeholder="Contraseña"
+        />
+
+      </div>
+
+
+      <div class="demo-field">
+
+        <label>Textarea</label>
+
+        <textarea
+          pTextarea
+          [(ngModel)]="textareaValue"
+          rows="5"
+          placeholder="Escribe una descripción..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- SELECT -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Selection</span>
+      <h3>Select / MultiSelect</h3>
+    </div>
+
+    <div class="demo-grid">
+
+      <div class="demo-field">
+
+        <label>Select</label>
+
+        <p-select
+          [options]="cities"
+          [(ngModel)]="selectedCity"
+          optionLabel="name"
+          placeholder="Selecciona una ciudad"
+          [showClear]="true"
+        />
+
+      </div>
+
+
+      <div class="demo-field">
+
+        <label>MultiSelect</label>
+
+        <p-multiSelect
+          [options]="cities"
+          [(ngModel)]="selectedCities"
+          optionLabel="name"
+          placeholder="Selecciona ciudades"
+          [filter]="true"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- TOGGLE / CHECKBOX / SLIDER / KNOB -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Controls</span>
+      <h3>Controles interactivos</h3>
+    </div>
+
+    <div class="demo-grid">
+
+      <div class="demo-control">
+
+        <label>Toggle Switch</label>
+
+        <p-toggleswitch
+          [(ngModel)]="toggleValue"
+        />
+
+        <span>
+          {{ toggleValue ? 'Activado' : 'Desactivado' }}
+        </span>
+
+      </div>
+
+
+      <div class="demo-control">
+
+        <label>Checkbox</label>
+
+        <p-checkbox
+          [(ngModel)]="checkboxValue"
+          [binary]="true"
+        />
+
+        <span>
+          {{ checkboxValue ? 'Marcado' : 'No marcado' }}
+        </span>
+
+      </div>
+
+
+      <div class="demo-control">
+
+        <label>Slider</label>
+
+        <p-slider
+          [(ngModel)]="sliderValue"
+        />
+
+        <span>{{ sliderValue }}</span>
+
+      </div>
+
+
+      <div class="demo-control">
+
+        <label>Knob</label>
+
+        <p-knob
+          [(ngModel)]="knobValue"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- DATEPICKER -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Date</span>
+      <h3>DatePicker</h3>
+    </div>
+
+    <div class="demo-grid">
+
+      <div class="demo-field">
+
+        <label>Fecha</label>
+
+        <p-datepicker
+          [(ngModel)]="dateValue"
+          placeholder="Selecciona una fecha"
+          [showIcon]="true"
+          [showButtonBar]="true"
+        />
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- TAG / BADGES / AVATAR -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Feedback</span>
+      <h3>Tags / Avatar / Progress</h3>
+    </div>
+
+    <div class="demo-row">
+
+      <p-tag value="Primary" />
+
+      <p-tag
+        value="Success"
+        severity="success"
+      />
+
+      <p-tag
+        value="Info"
+        severity="info"
+      />
+
+      <p-tag
+        value="Warn"
+        severity="warn"
+      />
+
+      <p-tag
+        value="Danger"
+        severity="danger"
+      />
+
+      <p-avatar
+        label="JD"
+        size="large"
+        shape="circle"
+      />
+
+      <p-avatar
+        icon="pi pi-user"
+        size="large"
+        shape="circle"
+      />
+
+    </div>
+
+
+    <div class="demo-progress">
+
+      <label>Progress Bar</label>
+
+      <p-progressbar
+        [value]="progressValue"
+      />
+
+    </div>
+
+
+    <div class="demo-row">
+
+      <p-progressSpinner />
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- ACCORDION -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Navigation</span>
+      <h3>Accordion</h3>
+    </div>
+
+    <p-accordion>
+
+      <p-accordion-panel value="0">
+
+        <p-accordion-header>
+          General
+        </p-accordion-header>
+
+        <p-accordion-content>
+
+          <p>
+            Contenido del primer panel.
+            Comprueba superficies, texto, bordes y estados.
+          </p>
+
+        </p-accordion-content>
+
+      </p-accordion-panel>
+
+
+      <p-accordion-panel value="1">
+
+        <p-accordion-header>
+          Configuración
+        </p-accordion-header>
+
+        <p-accordion-content>
+
+          <p>
+            Segundo panel del Accordion.
+          </p>
+
+        </p-accordion-content>
+
+      </p-accordion-panel>
+
+
+      <p-accordion-panel value="2">
+
+        <p-accordion-header>
+          Información
+        </p-accordion-header>
+
+        <p-accordion-content>
+
+          <p>
+            Tercer panel para probar el modo oscuro.
+          </p>
+
+        </p-accordion-content>
+
+      </p-accordion-panel>
+
+    </p-accordion>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- MENUS -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Menus</span>
+      <h3>Menu / Menubar / PanelMenu</h3>
+    </div>
+
+
+    <div class="demo-menu">
+
+      <p-menu
+        [model]="menuItems"
+      />
+
+    </div>
+
+
+    <div class="demo-menu">
+
+      <p-menubar
+        [model]="menuItems"
+      />
+
+    </div>
+
+
+    <div class="demo-menu">
+
+      <p-panelMenu
+        [model]="menuItems"
+      />
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- DRAWER / DIALOG / POPOVER -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Overlays</span>
+      <h3>Dialog / Drawer / Popover</h3>
+    </div>
+
+    <div class="demo-row">
+
+      <p-button
+        label="Abrir Dialog"
+        icon="pi pi-window-maximize"
+        (onClick)="dialogVisible = true"
+      />
+
+      <p-button
+        label="Abrir Drawer"
+        icon="pi pi-bars"
+        severity="secondary"
+        (onClick)="drawerVisible = true"
+      />
+
+      <p-button
+        #popoverButton
+        label="Abrir Popover"
+        icon="pi pi-comment"
+        severity="secondary"
+        (onClick)="popover.toggle($event)"
+      />
+
+    </div>
+
+
+    <p-dialog
+      header="PrimeNG Dialog"
+      [(visible)]="dialogVisible"
+      [modal]="true"
+      [style]="{ width: 'min(600px, 90vw)' }"
+    >
+
+      <div class="dialog-content">
+
+        <h4>Dialog de prueba</h4>
+
+        <p>
+          Este Dialog sirve para comprobar que la superficie,
+          los textos, botones y controles cambian correctamente
+          entre Light y Dark.
+        </p>
+
+        <div class="demo-row">
+
+          <p-button
+            label="Guardar"
+            icon="pi pi-check"
+          />
+
+          <p-button
+            label="Cancelar"
+            severity="secondary"
+            [text]="true"
+            (onClick)="dialogVisible = false"
+          />
+
+        </div>
+
+      </div>
+
+    </p-dialog>
+
+
+    <p-drawer
+      header="PrimeNG Drawer"
+      [(visible)]="drawerVisible"
+      position="right"
+    >
+
+      <div>
+
+        <p>
+          Drawer de prueba para comprobar superficies,
+          bordes, texto y navegación.
+        </p>
+
+        <p-button
+          label="Cerrar"
+          severity="secondary"
+          (onClick)="drawerVisible = false"
+        />
+
+      </div>
+
+    </p-drawer>
+
+
+    <p-popover #popover>
+
+      <div class="popover-content">
+
+        <h4>Popover</h4>
+
+        <p>
+          Este contenido está dentro de un overlay.
+        </p>
+
+        <p-button
+          label="Aceptar"
+          size="small"
+        />
+
+      </div>
+
+    </p-popover>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- FLOAT LABEL -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Forms</span>
+      <h3>Float Label</h3>
+    </div>
+
+    <div class="demo-grid">
+
+      <p-floatlabel>
+
+        <input
+          pInputText
+          id="float-name"
+          [(ngModel)]="floatValue"
+          autocomplete="off"
+        />
+
+        <label for="float-name">
+          Nombre
+        </label>
+
+      </p-floatlabel>
+
+
+      <p-floatlabel variant="on">
+
+        <input
+          pInputText
+          id="float-email"
+          [(ngModel)]="emailValue"
+          autocomplete="off"
+        />
+
+        <label for="float-email">
+          Email
+        </label>
+
+      </p-floatlabel>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- FILE UPLOAD -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Upload</span>
+      <h3>File Upload</h3>
+    </div>
+
+    <p-fileupload
+      mode="advanced"
+      name="demoFiles"
+      [multiple]="true"
+      accept="image/*"
+      [maxFileSize]="5000000"
+      chooseLabel="Seleccionar"
+      uploadLabel="Subir"
+      cancelLabel="Cancelar"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- SELECT BUTTON -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Selection</span>
+      <h3>Select Button</h3>
+    </div>
+
+    <p-selectbutton
+      [options]="selectButtonOptions"
+      [(ngModel)]="selectedOption"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- TOGGLE BUTTON -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Toggle</span>
+      <h3>Toggle Button</h3>
+    </div>
+
+    <p-togglebutton
+      [(ngModel)]="toggleButtonValue"
+      onLabel="Activo"
+      offLabel="Inactivo"
+      offIcon="pi pi-times"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- MEGA MENU -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Navigation</span>
+      <h3>Mega Menu</h3>
+    </div>
+
+    <p-megaMenu
+      [model]="megaMenuItems"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- DIVIDER -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Layout</span>
+      <h3>Divider</h3>
+    </div>
+
+    <p>
+      Contenido antes del Divider.
+    </p>
+
+    <p-divider />
+
+    <p>
+      Contenido después del Divider.
     </p>
 
   </div>
 
 
-  <!-- SEARCH (IA MEMORY) -->
-  <div class="search-section">
+  <!-- ========================================================= -->
+  <!-- TOOLTIP -->
+  <!-- ========================================================= -->
 
-    <div class="search-label">Buscar en historial</div>
+  <div class="demo-section">
 
-    <div class="search-box">
-      <span class="icon">⌕</span>
-      <input type="text" placeholder="Ej: tomate, plaga, hoja...">
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Feedback</span>
+      <h3>Tooltip</h3>
+    </div>
+
+    <p-button
+      label="Pasa el mouse"
+      icon="pi pi-info-circle"
+      pTooltip="Este es un tooltip de PrimeNG"
+      tooltipPosition="top"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- CONFIRM -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Feedback</span>
+      <h3>Confirm Dialog</h3>
+    </div>
+
+    <p-button
+      label="Eliminar"
+      icon="pi pi-trash"
+      severity="danger"
+      (onClick)="confirmDelete()"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- TOAST -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Feedback</span>
+      <h3>Toast</h3>
+    </div>
+
+    <div class="demo-row">
+
+      <p-button
+        label="Success"
+        severity="success"
+        (onClick)="showSuccess()"
+      />
+
+      <p-button
+        label="Info"
+        severity="info"
+        (onClick)="showInfo()"
+      />
+
+      <p-button
+        label="Warn"
+        severity="warn"
+        (onClick)="showWarn()"
+      />
+
+      <p-button
+        label="Error"
+        severity="danger"
+        (onClick)="showError()"
+      />
+
     </div>
 
   </div>
 
 
-  <!-- FILTER QUICK ACCESS -->
-  <div class="filters">
+  <!-- ========================================================= -->
+  <!-- CHART -->
+  <!-- ========================================================= -->
 
-    <button class="filter active">Todos</button>
-    <button class="filter">Recientes</button>
-    <button class="filter">Críticos</button>
+  <div class="demo-section">
 
-  </div>
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Data</span>
+      <h3>Chart</h3>
+    </div>
 
+    <div style="height: 300px">
 
-  <!-- HISTORY (IA MEMORY CORE) -->
-  <div class="history">
-
-    <div class="section-title">Memoria de análisis</div>
-
-    <div class="history-list">
-
-      <div class="history-item active">
-        <div class="icon">🍃</div>
-
-        <div class="info">
-          <strong>Hoja de tomate</strong>
-          <span>87% salud • hace 2h</span>
-        </div>
-
-        <div class="status ok"></div>
-      </div>
-
-
-      <div class="history-item">
-        <div class="icon">🪲</div>
-
-        <div class="info">
-          <strong>Plaga detectada</strong>
-          <span>riesgo alto • ayer</span>
-        </div>
-
-        <div class="status danger"></div>
-      </div>
+      <p-chart
+        type="bar"
+        [data]="chartData"
+        [options]="chartOptions"
+      />
 
     </div>
 
   </div>
 
 
-  <!-- USER SECTION -->
-  <div class="user-section">
+  <!-- ========================================================= -->
+  <!-- GALLERIA -->
+  <!-- ========================================================= -->
 
-    <div class="user-card">
+  <div class="demo-section">
 
-      <div class="avatar">U</div>
-
-      <div class="user-info">
-        <strong>Usuario</strong>
-        <span>Plan Pro</span>
-      </div>
-
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Media</span>
+      <h3>Galleria</h3>
     </div>
 
-    <div class="user-actions">
-      <button class="secondary-btn">Configuración</button>
-      <button class="danger-btn">Cerrar sesión</button>
-    </div>
+    <p-galleria
+      [value]="images"
+      [numVisible]="4"
+      [circular]="true"
+      [showThumbnails]="true"
+      [showItemNavigators]="true"
+      [containerStyle]="{ 'max-width': '700px' }"
+    >
+
+      <ng-template #item let-item>
+        <img
+          [src]="item.itemImageSrc"
+          [alt]="item.alt"
+          style="width: 100%; display: block;"
+        />
+      </ng-template>
+
+      <ng-template #thumbnail let-item>
+        <img
+          [src]="item.thumbnailImageSrc"
+          [alt]="item.alt"
+          style="display: block;"
+        />
+      </ng-template>
+
+    </p-galleria>
 
   </div>
 
-</aside>
+
+  <!-- ========================================================= -->
+  <!-- BLOCK UI -->
+  <!-- ========================================================= -->
+  <div class="block-demo">
+
+    <p-button
+      [label]="blocked ? 'Desbloquear' : 'Bloquear'"
+      (onClick)="blocked = !blocked"
+    />
+
+    <p-blockui
+      [blocked]="blocked"
+    />
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- IMAGE COMPARE -->
+  <!-- ========================================================= -->
+
+  <div class="demo-section">
+
+    <div class="demo-section__header">
+      <span class="shadow-section__title">Media</span>
+      <h3>Image Compare</h3>
+    </div>
+
+    <p-imagecompare
+      style="width: 600px; display: block;"
+    >
+
+      <ng-template #left>
+
+        <img
+          [src]="compareImages.left"
+          alt="Imagen izquierda"
+          style="width: 100%; display: block;"
+        />
+
+      </ng-template>
+
+
+      <ng-template #right>
+
+        <img
+          [src]="compareImages.right"
+          alt="Imagen derecha"
+          style="width: 100%; display: block;"
+        />
+
+      </ng-template>
+
+    </p-imagecompare>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- CONFIRM DIALOG GLOBAL -->
+  <!-- ========================================================= -->
+
+  <p-confirmDialog />
+
+  <!-- ========================================================= -->
+  <!-- TOAST GLOBAL -->
+  <!-- ========================================================= -->
+
+  <p-toast />
+
+</div>

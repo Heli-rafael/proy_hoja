@@ -39,13 +39,181 @@ from api.services.excel.report import (
     export_diagnosticos
 )
 
+from api.services.otp_service import generate_otp
 
-# ===== USUARIO =====
+
+from api.services.otp_service import (
+    generate_otp, OTP_EMAIL_HANDLERS
+)
+
+# USUARIO
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = models.Usuario.objects.all()
     serializer_class = serializers.UsuarioSerializer
     permission_classes = [IsAuthenticated]
 
+# USUARIO - REGISTER
+class RegisterView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        serializer = serializers.RegistroSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            user = serializer.save()
+
+            return Response(
+                {
+                    "detail": "Cuenta creada correctamente.",
+                    "user": {
+                        "id": user.id,
+                        "email": user.email,
+                        "username": user.username,
+                        "first_name": user.first_name,
+                        "last_name": user.last_name,
+                    }
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        except Exception as e:
+            return Response(
+                {
+                    "detail": "No se pudo crear la cuenta."
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+#OTP
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class RequestOTPView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+
+        serializer = serializers.RequestOTPSerializer(
+            data=request.data
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data["email"]
+        purpose = serializer.validated_data["purpose"]
+
+        # OBTENER USUARIO
+        user = getattr(serializer, "user", None)
+
+        # GENERAR OTP
+        otp = generate_otp(
+            email=email,
+            user=user,
+            purpose=purpose,
+        )
+
+        # ENVIAR FORMATO
+        OTP_EMAIL_HANDLERS[purpose](otp)
+
+        return Response(
+            {
+                "detail": "Código enviado correctamente."
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class VerifyOTPView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+
+        serializer = serializers.VerifyOTPSerializer(
+            data=request.data
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data["email"]
+        code = serializer.validated_data["code"]
+        purpose = serializer.validated_data["purpose"]
+
+        # BUSCAR OTP
+        otp = (
+            models.OTP.objects
+            .filter(
+                email=email,
+                purpose=purpose,
+                is_used=False,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+        # VERIFICAR EXPIRACIÓN / INTENTOS
+        if not otp:
+            return Response(
+                {
+                    "detail": "Código inválido o expirado."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not otp.is_valid():
+            return Response(
+                {
+                    "detail": "Código inválido o expirado."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # VERIFICAR CÓDIGO
+        if otp.code != code:
+
+            otp.attempts += 1
+
+            otp.save(
+                update_fields=["attempts"]
+            )
+
+            return Response(
+                {
+                    "detail": "Código incorrecto."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # OTP CORRECTO
+        otp.is_used = True
+
+        otp.save(
+            update_fields=["is_used"]
+        )
+
+        response_data = {
+            "detail": "OTP verificado correctamente.",
+            "email": otp.email,
+            "purpose": otp.purpose,
+        }
+
+        if otp.user is not None:
+            response_data["user_id"] = otp.user.id
+
+        return Response(
+            response_data,
+            status=status.HTTP_200_OK,
+        )
+
+    
 # CONTRASEÑA
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
@@ -72,6 +240,27 @@ class PlanViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PlanSerializer
     permission_classes = [AllowAny]
 
+class PlanPrecioViewSet(viewsets.ModelViewSet):
+    queryset = models.PlanPrecio.objects.all()
+    serializer_class = serializers.PlanPrecioSerializer
+    permission_classes = [AllowAny]
+
+class SolicitudCambioPlanViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.SolicitudCambioPlanSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return models.SolicitudCambioPlan.objects.filter(
+            usuario=self.request.user
+        )
+    
+    def perform_create(self, serializer):
+        serializer.save(
+            usuario=self.request.user,
+            plan_actual=self.request.user.plan
+    )
+
+    
 class CreditoDiarioViewSet(viewsets.ModelViewSet):
     queryset = models.CreditoDiario.objects.all()
     serializer_class = serializers.CreditoDiarioSerializer
@@ -106,6 +295,20 @@ class DiagnosticoIAViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DiagnosticoIASerializer
     permission_classes = [IsAuthenticated]
 
+class DiagnosticoProgresoView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, diagnostico_id):
+        try:
+            diagnostico = models.DiagnosticoIA.objects.get(
+                id=diagnostico_id,
+                usuario=request.user
+            )
+        except models.DiagnosticoIA.DoesNotExist:
+            return Response({"error": "Diagnóstico no encontrado."},status=404)
+
+        serializer = serializers.DiagnosticoProgresoSerializer(diagnostico)
+        return Response(serializer.data)
+    
 class ActividadTratamientoViewSet(viewsets.ModelViewSet):
     queryset = models.ActividadTratamiento.objects.all()
     serializer_class = serializers.ActividadTratamientoSerializer

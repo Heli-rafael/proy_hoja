@@ -1,6 +1,36 @@
 import { PlantaModel } from "./planta.model";
 import { ActividadTratamientoModel } from "./actividad-tratamiento";
 
+export interface BBoxModel {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+export interface LesionDetectadaModel {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  confidence: number;
+  bbox: BBoxModel;
+}
+
+export interface DiagnosticoProgreso {
+  id: number;
+  progreso: number;
+  estado_imagen: string;
+}
+
+// TRATAMIENTOS
+export interface TratamientoProductoModel {
+  producto: string;
+  dosis: string;
+  aplicacion: string;
+  frecuencia: string;
+}
+
 export interface DiagnosticoIAModel {
   id?: number;
 
@@ -16,9 +46,11 @@ export interface DiagnosticoIAModel {
   porcentaje_salud: number;
   confianza_ia: number;
 
+  lesiones_detectadas: LesionDetectadaModel[];
+
   // JSONField → arrays en Angular
-  tratamiento_natural: string[];
-  tratamiento_quimico: string[];
+  tratamiento_natural: TratamientoProductoModel[];
+  tratamiento_quimico: TratamientoProductoModel[];
   prevencion: string[];
 
   sintomas_detectados: string[];
@@ -35,4 +67,5 @@ export interface DiagnosticoIAModel {
   actividades?: ActividadTratamientoModel[];
 
   creado_en?: string | Date;
+  progreso?: number;
 }

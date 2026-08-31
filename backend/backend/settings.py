@@ -35,14 +35,31 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+SITE_URL = "https://proy-hoja.duckdns.org/"
+
+# SERVICIOS
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# OTP EMAIL
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # Application definition
 
 INSTALLED_APPS = [
     'api',
+    "django_crontab",
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -65,6 +82,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+#
+CRONJOBS = [
+    ('* * * * *', 'api.cron.verificar_planes'),
 ]
 
 #

@@ -14,12 +14,52 @@ export class AuthService {
   private apiGoogleUrl = `${environment.apiUrl}api/google-login/`;
   private apiLogoutUrl = `${environment.apiUrl}api/logout/`;
   private apiMeUrl = `${environment.apiUrl}api/me/`;
+  private apiOTP =`${environment.apiUrl}api/otp/`;
+  private apiRegister =`${environment.apiUrl}api/register/`;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private messageService: MessageService
   ) {}
+
+
+  // ========================
+  // OTP
+  // ========================
+  requestOTP(
+    email: string,
+    purpose: 'login' | 'register' | 'reset_password' = 'login'
+  ) {
+    return this.http.post(
+      `${this.apiOTP}request`,
+      {
+        email,
+        purpose
+      },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  verifyOTP(
+    email: string,
+    code: string,
+    purpose: 'login' | 'register' | 'reset_password' = 'login'
+  ) {
+    return this.http.post(
+      `${this.apiOTP}verify`,
+      {
+        email,
+        code,
+        purpose
+      },
+      {
+        withCredentials: true
+      }
+    );
+  }
 
   // ========================
   // Login Auth
@@ -70,6 +110,23 @@ export class AuthService {
       
 
       catchError(() => of(false))
+    );
+  }
+
+  // ========================
+  // Register User
+  // ========================
+  register(registerData: {
+    email: string;
+    password: string;
+    nickname: string;
+    name: string;
+    lastname: string;
+    phone: string;
+  }) {
+    return this.http.post(
+      `${this.apiRegister}`,
+      registerData,{withCredentials: true}
     );
   }
 

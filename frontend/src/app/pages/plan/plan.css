@@ -1,0 +1,970 @@
+.layout-container {
+  display: flex;
+  width: 100%;
+  background-color: var(--surface-background);
+  position: relative;
+}
+
+.back-button{
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+/* ICONS LUCIDE */
+lucide-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+
+/* MODAL PLANES*/
+.plans-dialog .p-dialog-content {
+  padding: 0;
+}
+
+.plans-container {
+  width: 100%;
+}
+
+.plans-header{
+  display:flex;
+  flex-direction: column;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+
+  padding:32px 36px;
+
+  border-bottom:1px solid var(--border-color);
+}
+
+.plans-header-title{
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  gap:12px;
+  max-width:650px;
+}
+
+.plans-label{
+  width:max-content;
+  padding:5px 12px;
+  border-radius:999px;
+  background:rgba(0,194,111,.08);
+  color:var(--color-primary);
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+}
+
+.plans-header-title h2{
+  margin:0;
+  font-size:2rem;
+  font-weight:700;
+  color:var(--text-primary);
+  line-height:1.2;
+}
+
+.subtitle{
+  margin:0;
+  font-size:.95rem;
+  line-height:1.7;
+  color:var(--text-secondary);
+  max-width:550px;
+}
+
+.toggle-billing{
+  width: 30%;
+  display:flex;
+  align-items:center;
+  padding:3px;
+  border-radius:999px;
+  background:var(--surface-secondary);
+  border:1px solid var(--border-color);
+  gap:6px;
+}
+
+.toggle-btn{
+  width: 100%;
+  border:none !important;
+  background:transparent !important;
+  color:var(--text-secondary) !important;
+  padding:10px 18px !important;
+  border-radius:999px !important;
+  font-weight:500;
+  transition:.25s;
+}
+
+.toggle-btn:hover{
+  color:var(--text-primary) !important;
+}
+
+.toggle-btn.active{
+  background:var(--color-primary) !important;
+  color:white !important;
+  box-shadow:0 6px 18px rgba(0,194,111,.25);
+}
+
+/* PLANES SOLICITUD */
+.request-badge{
+
+  position:absolute;
+  width: 60%;
+
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  gap:.4rem;
+
+  background: var(--color-yellow-secondary);
+  color: var(--text-on-primary);
+  padding:.45rem .9rem;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:600;
+}
+
+.request-progress{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  margin:1.5rem 0;
+}
+
+.progress-item{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  font-size:.95rem;
+}
+
+.progress-item.done{
+  color:var(--color-primary);
+}
+
+.progress-item.active{
+  color:var(--color-yellow-secondary);
+  font-weight:600;
+}
+
+.spinner{
+  width:18px;
+  height:18px;
+  border:3px solid rgba(245,158,11,.2);
+  border-top:3px solid var(--color-yellow-secondary);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  from{
+      transform:rotate(0deg);
+  }
+
+  to{
+      transform:rotate(360deg);
+  }
+}
+
+.request-status-box{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:auto;
+  padding:.9rem 1rem;
+  border-radius:12px;
+  background:var(--surface-hover);
+}
+
+.status-title{
+  color: var(--text-primary);
+  font-weight:600;
+}
+
+.status{
+  padding:.4rem .9rem;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:700;
+}
+
+.status.pending{
+  background:var(--color-yellow-secondary);
+  color:var(--text-on-primary);
+}
+
+.request-date{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:.4rem;
+  margin-top:1rem;
+  color:var(--text-secondary);
+  font-size:.82rem;
+}
+
+/* PLANES */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 280px));
+  justify-content: center;
+  gap: 24px;
+  padding: 32px;
+}
+
+.request-icon{
+  width:55px;
+  height:55px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  color-mix(
+      in srgb,
+      var(--color-primary) 15%,
+      transparent
+  );
+
+  color:var(--color-primary);
+}
+
+.request-content{
+  flex:1;
+}
+
+.request-label{
+  font-size:13px;
+  color:var(--text-secondary);
+}
+
+.request-content h3{
+  margin:4px 0;
+}
+
+.request-content p{
+  margin:0;
+  color:var(--text-secondary);
+}
+
+.request-status span{
+  display:inline-flex;
+  margin-top:10px;
+  padding:5px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.approved{
+  background:#d1fae5;
+  color:#065f46;
+}
+
+.rejected{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.request-date{
+  display: flex;
+  gap: 10px;
+
+  font-size:13px;
+  color:var(--text-secondary);
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  border-left: 2px solid var(--border-color);
+  padding-left: 5px;
+  gap: 3px;
+}
+
+/* CARD */
+
+.plan-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  background:var(--surface-card);
+  border:1px solid var(--border-color);
+  border-radius:18px;
+  padding:28px;
+  transition:.25s;
+  min-height:610px;
+}
+
+.plan-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--color-primary);
+  box-shadow:0 20px 50px rgba(0,0,0,.08);
+}
+
+.plan-card.featured{
+  border:2px solid var(--color-primary);
+  box-shadow:0 15px 40px rgba(0,194,111,.15);
+}
+
+/* BADGE */
+
+.plan-badge{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--color-primary);
+  color:white;
+  font-size:.75rem;
+  font-weight:600;
+  padding:6px 14px;
+  border-radius:999px;
+}
+
+/* HEADER */
+
+.plan-header{
+  margin-bottom:26px;
+}
+
+.plan-name{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.plan-icon {
+  width:52px;
+  height:52px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:14px;
+  background-color: var(--surface-container);
+}
+
+.plan-name h3{
+  margin:0;
+  font-size:1.35rem;
+  color:var(--text-primary);
+}
+
+.plan-name small{
+  display:block;
+  margin-top:5px;
+  color:var(--text-secondary);
+  line-height:1.5;
+}
+
+/* PRECIO */
+
+.plan-price{
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  margin-bottom:26px;
+}
+
+.currency{
+  color: var(--text-primary);
+  font-size:1.2rem;
+  font-weight:600;
+}
+
+.amount{
+  font-size:3rem;
+  line-height:1;
+  font-weight:700;
+  color:var(--text-primary);
+}
+
+.period{
+  color:var(--text-secondary);
+  margin-bottom:8px;
+}
+
+.free{
+  color: var(--text-primary);
+  font-size:2.5rem;
+  font-weight:700;
+}
+
+/* PLAN SEPARADOR */
+
+.plan-card hr{
+  border:none;
+  border-top:1px solid var(--border-color);
+  margin:0 0 24px;
+}
+
+/* PLAN BENEFICIOS */
+
+.plan-benefits{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  flex:1;
+}
+
+.benefit{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  color:var(--text-secondary);
+  line-height:1.5;
+}
+
+.benefit-icon{
+  color:var(--color-primary);
+  margin-top:2px;
+  flex-shrink:0;
+}
+
+/* PLAN FOOTER */
+
+.plan-footer{
+  margin-top:28px;
+}
+
+.plan-btn{
+  width:100%;
+  height:48px;
+  border-radius:12px;
+  border:1px solid var(--color-primary);
+  background:transparent;
+  color:var(--color-primary);
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.plan-btn:hover{
+  background:var(--color-primary);
+  color:white;
+}
+
+.plan-btn.primary{
+  background:var(--color-primary);
+  color:white;
+  border:none;
+}
+
+.plan-btn.primary:hover{
+  filter:brightness(.95);
+}
+
+.plan-btn.outline{
+  background:transparent;
+}
+
+.plan-btn.current{
+  background:var(--surface-secondary);
+  color:var(--text-secondary);
+  border-color:var(--border-color);
+  cursor:default;
+}
+
+/* DIALOG PLAN */
+
+.subscription-dialog .p-dialog-content{
+  padding-top:0;
+}
+
+.dialog-header{
+  display:flex;
+  flex-direction:column;
+}
+
+.dialog-label{
+  color:var(--color-primary);
+  font-size:13px;
+  font-weight:600;
+}
+
+.dialog-header h2{
+  color: var(--text-primary);
+  margin:4px 0 0;
+  font-size:22px;
+}
+
+.dialog-plan{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* PLAN */
+.selected-plan{
+  display:flex;
+  align-items:center;
+  gap:15px;
+
+  padding:18px;
+  border-radius:16px;
+
+  background:
+  linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--plan-color) 15%,
+        transparent
+      ),
+      transparent
+  );
+
+  border:1px solid color-mix(
+      in srgb,
+      var(--plan-color) 35%,
+      var(--border-color)
+  );
+}
+
+.plan-icon-box{
+  width:55px;
+  height:55px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:14px;
+  background:var(--surface-card);
+}
+
+.plan-info h2{
+  color: var(--text-primary);
+  margin:0 0 5px;
+  font-size:22px;
+  text-align: center;
+}
+
+.plan-info h3{
+  color: var(--text-primary);
+  margin:0 0 5px;
+  font-size:18px;
+}
+
+.plan-price-dialog span{
+  color: var(--text-primary);
+  font-size:22px;
+  font-weight:700;
+}
+
+.plan-price-dialog small{
+  font-weight:400;
+  color:var(--text-secondary);
+}
+
+.description{
+  color:var(--text-secondary);
+  margin:0;
+}
+
+/* SECCIONES */
+.title-section {
+  text-align: center;
+}
+
+.title-section h2 {
+  color: var(--text-primary);
+  margin:0;
+  font-size:18px;
+}
+
+.dialog-section{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.dialog-section h3{
+  color: var(--text-primary);
+  margin:0;
+  font-size:15px;
+}
+
+/* PAGOS */
+.payment-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.payment-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:15px;
+  min-height:75px;
+  border-radius:16px;
+  border:1px solid var(--border-color);
+  background:var(--surface-card);
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.payment-card:hover{
+  border-color:var(--color-primary);
+  transform:translateY(-2px);
+}
+
+.payment-card input{
+  display:none;
+}
+
+.payment-content{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.payment-icon{
+  width:42px;
+  height:42px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-weight:700;
+  font-size:18px;
+}
+
+.payment-icon.bank{
+  background: #f5f6f8;
+  color: var(--surface-overlay);
+}
+
+.payment-icon.yape{
+  background:#742284;
+  color: var(--text-on-primary);
+}
+
+.payment-icon.plin{
+  background:#00a99d;
+  color: var(--text-on-primary);
+}
+
+.payment-details{
+  color: var(--text-primary);
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.payment-details strong{
+  font-size:14px;
+  line-height:18px;
+}
+
+.payment-details span{
+  font-size:12px;
+  color:var(--text-secondary);
+}
+
+.radio-indicator{
+  width:22px;
+  height:22px;
+
+  border-radius:50%;
+
+  border:2px solid var(--border-color);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.radio-indicator i{
+  font-size:12px;
+  color: var(--text-on-primary);
+}
+
+.payment-card.active{
+  border-color:var(--color-primary);
+  background:
+
+  color-mix(
+    in srgb,
+    var(--color-primary) 10%,
+    transparent
+  );
+
+}
+
+.payment-card.active .radio-indicator{
+  background:var(--color-primary);
+  border-color:var(--color-primary);
+}
+
+/* UPLOAD */
+.upload-container{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.upload-btn{
+  width:100%;
+  justify-content:center;
+}
+
+.upload-container small{
+  color:var(--text-secondary);
+  font-size:12px;
+}
+
+.preview-file{
+  position:relative;
+  width:100%;
+  height:220px;
+  border-radius:15px;
+  overflow:hidden;
+  background:var(--surface-ground);
+  border:1px solid var(--surface-border);
+}
+
+.preview-file img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.pdf-preview{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-box);
+  gap:12px;
+  flex-direction:column;
+}
+
+.pdf-preview i{
+  font-size:45px;
+  color:#ef4444;
+}
+
+.remove-image-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+
+  width:35px!important;
+  height:35px!important;
+
+  border-radius:50%!important;
+  background: var(--color-red)!important;
+  border:none!important;
+}
+
+.file-name{
+  padding:10px;
+  background:var(--surface-box);
+  color: var(--text-primary);
+  border-radius:10px;
+  font-size:14px;
+}
+
+/* TEXTAREA */
+.dialog-section label {
+  color: var(--text-primary);
+}
+
+/* FOOTER */
+.plan-card-footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 30px;
+
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.payment-info{
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  gap: 4px;
+}
+
+.payment-info h3{
+  margin: 0;
+}
+
+.payment-info small{
+  color:var(--text-secondary);
+}
+
+.payment-img {
+  display: flex;
+  gap: 10px;
+}
+.payment-img img{
+  height: 50px;
+  width: auto;
+  border-radius: 10px;
+}
+
+
+@media (max-width: 768px) {
+  /*OPCION - PLANES */
+  .payment-grid{
+    grid-template-columns:1fr;
+  }
+
+  ::ng-deep .p-dialog {
+    width: 95vw !important;
+    max-height: 95vh !important;
+  }
+
+  .plans-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 1rem;
+  }
+
+  .plans-header-title {
+    gap: 6px;
+    text-align: center;
+  }
+
+  .plans-header-title h2 {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .toggle-billing {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .plans-grid {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 14px;
+    padding: 1rem;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .plan-card {
+    flex: 0 0 80%;
+    scroll-snap-align: center;
+  }
+
+  .plan-card:hover {
+    transform: none;
+  }
+
+  .plan-card.featured {
+    transform: none;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .plan-title {
+    margin: 6px 0;
+  }
+
+  .plan-title h3 {
+    font-size: 20px;
+  }
+
+  .price {
+    font-size: 30px;
+  }
+
+  .price span {
+    font-size: 13px;
+  }
+
+  .beneficio-item {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .plan-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .plan-card-footer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 20px;
+    width: 95%;
+    padding: 16px;
+  }
+
+  .payment-info {
+    width: 100%;
+  }
+
+  .payment-img {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .payment-img img {
+    height: 36px;
+  }
+}

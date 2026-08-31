@@ -20,6 +20,7 @@ export class ThemeService {
 
   constructor() {
 
+    // Escuchar cambios del tema del sistema
     this.mediaQuery.addEventListener('change', () => {
 
       if (this.followSystem) {
@@ -28,6 +29,9 @@ export class ThemeService {
 
     });
 
+    // Aplicar el tema inicial
+    this.applySystemTheme();
+
   }
 
   getCurrentTheme(): 'light' | 'dark' {
@@ -35,18 +39,13 @@ export class ThemeService {
   }
 
   setTheme(theme: Theme): void {
-
     if (theme === 'system') {
-
       this.followSystem = true;
       this.applySystemTheme();
       return;
-
     }
-
     this.followSystem = false;
     this.applyTheme(theme);
-
   }
 
   useSystemTheme(): void {
@@ -57,21 +56,30 @@ export class ThemeService {
   }
 
   private applySystemTheme(): void {
-
     const theme: 'light' | 'dark' =
       this.mediaQuery.matches ? 'dark' : 'light';
-
     this.applyTheme(theme);
 
   }
 
   private applyTheme(theme: 'light' | 'dark'): void {
 
-    document.documentElement.setAttribute('data-theme', theme);
+    const html = document.documentElement;
 
+    // ==========================================
+    // Tu atributo personalizado
+    // ==========================================
+    html.setAttribute('data-theme', theme);
+
+    // ==========================================
+    // PrimeNG Dark Mode
+    // ==========================================
+    html.classList.toggle('app-dark', theme === 'dark');
+
+    // ==========================================
+    // Actualizar estado
+    // ==========================================
     this.currentTheme.next(theme);
-
-    console.log('Tema aplicado:', theme);
 
   }
 

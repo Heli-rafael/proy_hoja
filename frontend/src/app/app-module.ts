@@ -94,6 +94,11 @@ import { Pruebas } from './pages/pruebas/pruebas';
 
 // IMAGENES
 import { GalleriaModule } from 'primeng/galleria';
+import { Plan } from './pages/plan/plan';
+
+// CODIGO DIGITOS
+import { InputOtpModule } from 'primeng/inputotp';
+
 
 
 @NgModule({
@@ -102,7 +107,8 @@ import { GalleriaModule } from 'primeng/galleria';
     Login,
     Chat,
     Inicio,
-    Pruebas
+    Pruebas,
+    Plan
   ],
   imports: [
     BrowserModule,
@@ -171,15 +177,21 @@ import { GalleriaModule } from 'primeng/galleria';
 
     // ICONS LUCIDE
     LucideAngularModule.pick(Icons),
+
+    // CODIGO
+    InputOtpModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideAnimationsAsync(),
     providePrimeNG({
-        theme: {
-            preset: MyPreset
-        }
-    }),
+      theme: {
+          preset: MyPreset,
+          options: {
+              darkModeSelector: '.app-dark'
+          }
+      }
+  }),
 
     // Interceptor
     {

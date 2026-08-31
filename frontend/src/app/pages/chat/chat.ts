@@ -3,6 +3,7 @@ import { finalize, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../../../service/auth/auth.service';
 import { MessageService } from 'primeng/api';
 import { ThemeService, Theme } from '../../../service/theme/thema.service';
+import { HttpClient } from '@angular/common/http';
 
 import { ChatModel } from '../../../model/chat.model';
 import { ChatService } from '../../../service/chat.service';
@@ -11,12 +12,32 @@ import { MensajeModel } from '../../../model/mensaje.model';
 import { DiagnosticoIAService } from '../../../service/diagnostico-ia.service';
 import { PlantaService } from '../../../service/planta.service';
 import { UserService } from '../../../service/user.service';
-import { Plan, User } from '../../../model/user.model';
+import { PlanModel, User } from '../../../model/user.model';
 import { ActividadTratamientoModel } from '../../../model/actividad-tratamiento';
 
 import { ProcessingService } from '../../../service/auth/processing.service';
 import { Observable } from 'rxjs';
 import { ConfirmationService } from 'primeng/api';
+import { Router } from '@angular/router';
+
+
+import {
+  Subscription,
+  interval
+} from 'rxjs';
+
+import {
+  startWith,
+  takeWhile,
+} from 'rxjs/operators';
+
+import {
+  timer,
+} from 'rxjs';
+
+import {
+  exhaustMap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -34,6 +55,12 @@ export class Chat {
   // Drawer Menu
   sidebarVisible: boolean = true;
 
+  sidebarCollapsed = false;
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
   // Enviando mensaje
   isSendingMessage: boolean = false;
 
@@ -44,10 +71,23 @@ export class Chat {
   editableUser!: User;
 
   chats: ChatModel[] = [];
-  planes: Plan[] = [];
+  planes: PlanModel[] = [];
+
+  // Chat
   chatSeleccionado: ChatModel | null = null;
 
+  // Lesiones activas IMAGEN
+  lesionActiva: number | null = null;
+
   opcionActiva: 'diagnostico' | 'chat' = 'diagnostico';
+  get mostrarDiagnostico(): boolean {
+      return this.opcionActiva === 'diagnostico';
+  }
+
+  get mostrarChatIA(): boolean {
+      return this.opcionActiva === 'chat';
+  }
+  
   tabActivo: 'diagnostico' | 'tratamiento' | 'plantratamiento' | 'analitica' = 'diagnostico';
   // Para filtros
   chatsFiltrados: ChatModel[] = [];
@@ -56,12 +96,30 @@ export class Chat {
 
   // Filtros opciones
   filtroActivo: string = 'fecha';
+  
 
-  ordenFechaActivo: 'recientes' | 'antiguos' = 'recientes';
+  ordenFechaActivo: 'recientes' | 'antiguos' | null = 'recientes';
 
+  severidadActivo: 'Leve' | 'Moderada' | 'Grave' | null = null;
+  urgenciaActivo: 'Baja' | 'Media' | 'Alta' | null = null;
 
-  severidadActivo: string | null = null;
-  urgenciaActivo: string | null = null;
+  filtroTieneValor(key: string): boolean {
+
+    switch (key) {
+
+        case 'fecha':
+            return this.ordenFechaActivo !== null;
+
+        case 'severidad':
+            return this.severidadActivo !== null;
+
+        case 'urgencia':
+            return this.urgenciaActivo !== null;
+
+        default:
+            return false;
+    }
+  }
 
   filtros = [
     {
@@ -135,6 +193,8 @@ export class Chat {
      private themeService: ThemeService,
 
     private userService: UserService,
+    public router:Router,
+    private http:HttpClient,
 
     private chatService: ChatService,
     private diagnosticoService: DiagnosticoIAService,
@@ -144,9 +204,8 @@ export class Chat {
   }
 
   // ==================================================
-  // LIFECYCLE
+  // LOGICA DE INICICIALIZACION
   // ==================================================
-  logo = '/AgroVisionAI.png';
 
   ngOnInit(): void {
     this.cargarChats();
@@ -161,14 +220,6 @@ export class Chat {
 
     this.themeService.setTheme(chatTheme);   
 
-
-    this.themeService.theme$.subscribe(theme => {
-      this.logo =
-        theme === 'dark'
-          ? '/AgroVisionAI3.png'
-          : '/AgroVisionAI.png';
-    });
-
     // USER
     this.userService.getProfile().subscribe(user => {
       this.user = user;
@@ -176,7 +227,65 @@ export class Chat {
       this.originalPicture = user.picture;
     });
   }
-  
+
+  // OBTENER DATOS
+  get planFree(): PlanModel | null {
+    return this.planes.find(plan => plan.orden === 1) ?? null;
+  }
+
+  get planActual(): PlanModel {
+    const plan = this.planFree;
+
+    if (!this.user) {
+      return plan as PlanModel;
+    }
+
+    const fechaFin = this.user.suscripcion?.fin;
+
+    if (!fechaFin || new Date(fechaFin) <= new Date()) {
+      return plan as PlanModel;
+    }
+
+    return this.user.plan;
+  }
+
+  get tieneSuscripcionActiva(): boolean {
+    return !!(
+      this.user?.suscripcion &&
+      this.user.suscripcion.fin &&
+      new Date(this.user.suscripcion.fin) > new Date()
+    );
+  }
+
+  get suscripcionVencida(): boolean {
+    if (!this.user?.suscripcion) {
+      return false;
+    }
+    if (!this.user.suscripcion.fin) {
+      return false;
+    }
+    return new Date(this.user.suscripcion.fin) <= new Date();
+
+  }
+  get chatsFijados() {
+    return this.chatsFiltrados.filter(chat => chat.is_pinned);
+  }
+
+  get chatsRecientes() {
+    return this.chatsFiltrados.filter(chat => !chat.is_pinned);
+  }
+
+  get tituloSeccionChats(): string {
+    if (this.filtroActivo === 'fecha') {
+      return this.ordenFechaActivo === 'recientes'
+        ? 'Recientes'
+        : 'Más antiguos';
+    }
+
+    const filtro = this.filtros.find(f => f.key === this.filtroActivo);
+    return filtro?.label ?? 'Chats';
+  }
+ 
   // ==================================================
   // FILTROS
   // ==================================================
@@ -218,19 +327,18 @@ export class Chat {
     // FECHA
     if (this.filtroActivo === 'fecha') {
 
-      if (this.ordenFechaActivo === 'recientes') {
-        resultado.sort((a, b) =>
-          new Date(b.creado_en ?? 0).getTime() -
-          new Date(a.creado_en ?? 0).getTime()
-        );
-      }
+      resultado.sort((a, b) => {
 
-      if (this.ordenFechaActivo === 'antiguos') {
-        resultado.sort((a, b) =>
-          new Date(a.creado_en ?? 0).getTime() -
-          new Date(b.creado_en ?? 0).getTime()
-        );
-      }
+        const dateA = new Date(a.creado_en ?? 0).getTime();
+        const dateB = new Date(b.creado_en ?? 0).getTime();
+
+        if (this.ordenFechaActivo === 'antiguos') {
+          return dateA - dateB;
+        }
+
+        // Por defecto: MÁS RECIENTES
+        return dateB - dateA;
+      });
     }
 
     // SEVERIDAD
@@ -250,25 +358,7 @@ export class Chat {
     this.chatsFiltrados = resultado;
   }
 
-  get chatsFijados() {
-    return this.chatsFiltrados.filter(chat => chat.is_pinned);
-  }
-
-  get chatsRecientes() {
-    return this.chatsFiltrados.filter(chat => !chat.is_pinned);
-  }
-
-  get tituloSeccionChats(): string {
-    if (this.filtroActivo === 'fecha') {
-      return this.ordenFechaActivo === 'recientes'
-        ? 'Recientes'
-        : 'Más antiguos';
-    }
-
-    const filtro = this.filtros.find(f => f.key === this.filtroActivo);
-    return filtro?.label ?? 'Chats';
-  }
-
+  // FILTRO DE SELECCION
   seleccionarFiltro(key: string, popover: any): void {
     this.filtroActivo = key;
     this.aplicarFiltros();
@@ -283,22 +373,44 @@ export class Chat {
     this.aplicarFiltros();
   }
 
-  // ==================================================
   // TOGGLE DE OPCIONES
-  // ==================================================
   toggleFijar(chat: any) {
     this.chatService.togglePinned(chat.id).subscribe(res => {
       chat.is_pinned = res.is_pinned;
     });
   }
 
-  toggleOrdenFecha(tipo: 'recientes' | 'antiguos'): void {
-    this.ordenFechaActivo = tipo;
+  obtenerValorFiltro(key: string): string {
+
+    switch (key) {
+
+        case 'fecha':
+            return this.ordenFechaActivo === 'recientes'
+                ? 'Recientes'
+                : 'Antiguos';
+
+        case 'severidad':
+            return this.severidadActivo ?? '';
+
+        case 'urgencia':
+            return this.urgenciaActivo ?? '';
+
+        default:
+            return '';
+    }
+}
+
+  toggleOrdenFecha(valor: 'recientes' | 'antiguos'): void {
+    if (this.ordenFechaActivo === valor) {
+      this.ordenFechaActivo = null;
+    } else {
+      this.ordenFechaActivo = valor;
+    }
+
     this.aplicarFiltros();
   }
 
   toggleSeveridad(valor: 'Leve' | 'Moderada' | 'Grave'): void {
-
     if (this.severidadActivo === valor) {
       this.severidadActivo = null;
     } else {
@@ -309,7 +421,6 @@ export class Chat {
   }
 
   toggleUrgencia(valor: 'Baja' | 'Media' | 'Alta'): void {
-
     if (this.urgenciaActivo === valor) {
       this.urgenciaActivo = null;
     } else {
@@ -324,8 +435,9 @@ export class Chat {
   }
 
   // ==================================================
-  // DATA (API)
+  // OBTENER DATOS
   // ==================================================
+
   cargarChats(): void {
 
     this.chatService.getMisChats()
@@ -338,10 +450,7 @@ export class Chat {
 
         this.aplicarFiltros();
 
-        // seleccionar primer chat automáticamente
-        const chatGuardadoId = localStorage.getItem(
-          'chatSeleccionadoId'
-        );
+        const chatGuardadoId = localStorage.getItem('chatSeleccionadoId');
 
         if (chatGuardadoId) {
 
@@ -355,11 +464,16 @@ export class Chat {
           }
         }
 
-        // fallback
-        if (this.chats.length > 0) {
-          this.seleccionarChat(this.chats[0]);
-        }
       });
+  }
+
+  private cargarMensajes(chat: ChatModel): void {
+
+    this.mensajes = chat.mensajes ?? [];
+
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 150);
   }
 
   cargarPlanes(): void {
@@ -391,160 +505,305 @@ export class Chat {
       chat.diagnostico?.actividades || []
     );
     
-    this.mensajeService.obtenerMensajes(chat.id!)
-      .subscribe({
-        next: (mensajes) => {
-          this.mensajes = mensajes;
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 150);
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
+    this.cargarMensajes(chat);
   }
 
+  obtenerIconoConfig(nombre: string): { icon: string; color: string } {
+
+    switch (nombre.toLowerCase()) {
+
+      case 'free':
+        return {
+          icon: 'leaf',
+          color: 'var(--color-grey)'
+        };
+
+      case 'pro':
+        return {
+          icon: 'zap',
+          color: 'var(--color-primary)'
+        };
+
+      case 'business':
+        return {
+          icon: 'building-2',
+          color: 'var(--color-purple)'
+        };
+
+      case 'enterprise':
+        return {
+          icon: 'crown',
+          color: 'var(--color-yellow-secondary)'
+        };
+
+      default:
+        return {
+          icon: 'package',
+          color: 'var(--text-secondary)'
+        };
+    }
+  }
+
+  // ==================================================
+  // ENVIAR ANALISIS
+  // ==================================================
+
+  progreso = 0;
+  private pollingSubscription?: Subscription;
+
   enviarAnalisis(): void {
-    if (!this.selectedFile) return;
 
+    // VALIDAR ARCHIVO
+    if (!this.selectedFile) {
+      console.warn('No hay imagen seleccionada.');
+      return;
+    }
+
+    // INICIAR ESTADO DE ANALISIS
     this.isAnalyzing = true;
+    this.progreso = 0;
 
-    this.plantaService.subirImagen(this.selectedFile).pipe(
+    // CANCELAR POLLING ANTERIOR
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = undefined;
 
-      switchMap((res: any) => {
+    // SUBIR IMAGEN
+    this.plantaService.subirImagen(this.selectedFile).subscribe({
+
+      next: (res: any) => {
+
+        // OBTENER CHAT ID
         const chatId = res?.chat?.id;
 
         if (!chatId) {
-          throw new Error('No chatId');
+          console.error('No se recibió el ID del chat.', res);
+
+          this.isAnalyzing = false;
+          this.mostrarErrorAnalisis({
+            error: {
+              error: 'No se recibió el ID del chat.'
+            }
+          });
+
+          return;
         }
 
-        return this.chatService.getChatPorId(chatId);
-      }),
+        // OBTENER DIAGNOSTICO ID
+        const diagnosticoId = res?.chat?.diagnostico?.id ?? res?.diagnostico?.id;
 
-      tap((chatCompleto) => {
+        if (!diagnosticoId) {
+          console.error('No se recibió el ID del diagnóstico.', res);
 
-        this.chatSeleccionado = chatCompleto;
-        this.diagnosticoSeleccionado = chatCompleto.diagnostico;
+          this.isAnalyzing = false;
+          this.mostrarErrorAnalisis({
+            error: {
+              error: 'No se recibió el ID del diagnóstico.'
+            }
+          });
 
-        const estado = chatCompleto.diagnostico?.estado_imagen;
-
-        if (estado === 'Pendiente' || estado === 'Procesando') {
-          this.iniciarPollingImagen(chatCompleto.id!);
+          return;
         }
 
-        // Recargar chats y seleccionar el correcto
-        this.chatService.getMisChats().subscribe(chats => {
-          this.chats = chats;
+        this.iniciarPollingImagen(diagnosticoId, chatId);
+      },
 
-          const nuevo = this.chats.find(c => c.id === chatCompleto.id);
-
-          if (nuevo) {
-
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Listo',
-              detail: 'Análisis completado'
-            });
-            
-            this.cargarChats();
-            this.seleccionarChat(nuevo);
-            
-          }
-        });
-
-      }),
-
-      finalize(() => {
-        this.isAnalyzing = false;
-      })
-
-    ).subscribe({
+      // ERROR
       error: (err) => {
-
-        console.log(err);
-        
-        const backendError =
-          err?.error?.detalle ||
-          err?.error?.error ||
-          err?.error?.imagen?.[0] ||
-          'Error inesperado al analizar la imagen';
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Imagen rechazada',
-          detail: backendError
-        });
+        console.error('ERROR ANALIZANDO:', err);
 
         this.isAnalyzing = false;
+        this.progreso = 0;
+
+        this.pollingSubscription?.unsubscribe();
+        this.pollingSubscription = undefined;
+
+        this.mostrarErrorAnalisis(err);
       }
     });
   }
 
-  iniciarPollingImagen(chatId: number): void {
+  iniciarPollingImagen(diagnosticoId: number, chatId: number): void {
+    this.pollingSubscription?.unsubscribe();
 
-    let intentos = 0;
-    const MAX_INTENTOS = 40;
-    
-    this.intervaloImagen = setInterval(() => {
+    this.pollingSubscription = timer(0, 3000)
+      .pipe(
+        exhaustMap(() =>
+          this.diagnosticoService.getDiagnosticoProgreso(diagnosticoId)
+        ),
 
-      intentos++;
+        tap((respuesta) => {
+          this.progreso = Number(respuesta?.progreso ?? 0);
+        }),
 
-      if (intentos >= MAX_INTENTOS) {
-        clearInterval(this.intervaloImagen);
+        takeWhile(
+          (respuesta) => {
+            const estado = respuesta?.estado_imagen;
 
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Tiempo agotado',
-          detail: 'La generación de imagen tardó demasiado.'
-        });
-
-        return;
-      }
-
-      this.chatService.getChatPorId(chatId)
-        .subscribe({
-
-          next: (chatActualizado) => {
-
-            this.chatSeleccionado = chatActualizado;
-            this.diagnosticoSeleccionado = chatActualizado.diagnostico;
-
-            const estado = chatActualizado.diagnostico?.estado_imagen;
-
-            if (estado === 'Completado') {
-              clearInterval(this.intervaloImagen);
-
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Imagen lista',
-                detail: 'La imagen ya fue generada.'
-              });
-            }
-
-            if (estado === 'Error') {
-              clearInterval(this.intervaloImagen);
-
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'No se pudo generar la imagen.'
-              });
-            }
+            return estado !== 'Completado' && estado !== 'Error';
           },
+          true
+        )
+      )
+      .subscribe({
+        next: (respuesta) => {
+          const estado = respuesta?.estado_imagen;
 
-          error: () => {
-            console.log("Error en polling");
+          if (estado === 'Completado') {
+            this.progreso = 100;
+
+            this.pollingSubscription?.unsubscribe();
+            this.pollingSubscription = undefined;
+
+            this.cargarResultadoFinal(chatId);
+            return;
           }
 
-        });
+          if (estado === 'Error') {
+            this.pollingSubscription?.unsubscribe();
+            this.pollingSubscription = undefined;
 
-    }, 8000);
+            this.isAnalyzing = false;
+            this.progreso = 0;
+
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error en el análisis',
+              detail: 'No se pudo completar el análisis.'
+            });
+          }
+        },
+
+        error: (err) => {
+          console.error('ERROR POLLING:', err);
+
+          this.pollingSubscription?.unsubscribe();
+          this.pollingSubscription = undefined;
+
+          this.isAnalyzing = false;
+          this.progreso = 0;
+        }
+      });
   }
 
-  // ==================================================
+
+  cargarResultadoFinal(chatId: number): void {
+
+    this.chatService.getChatPorId(chatId).subscribe({
+
+      next: (chatCompleto) => {
+
+        const estado = chatCompleto?.diagnostico?.estado_imagen;
+
+        if (estado !== 'Completado') {
+          console.warn(
+            'El diagnóstico todavía no está completado.',
+            estado
+          );
+
+          const diagnosticoId = chatCompleto?.diagnostico?.id;
+
+          if (diagnosticoId && chatCompleto?.id) {
+            this.iniciarPollingImagen(diagnosticoId, chatCompleto.id);
+          }
+
+          return;
+        }
+
+        this.chatSeleccionado = chatCompleto;
+
+        this.diagnosticoSeleccionado = chatCompleto.diagnostico;
+
+        this.actividadesAgrupadas = this.agruparActividades(
+          chatCompleto?.diagnostico?.actividades ?? []
+        );
+
+        this.progreso = 100;
+
+        this.isAnalyzing = false;
+
+        if (chatCompleto.id) {
+          localStorage.setItem(
+            'chatSeleccionadoId',
+            String(chatCompleto.id)
+          );
+        }
+
+        this.chatService.getMisChats().subscribe({
+          next: (chats) => {
+            this.chats = chats.sort(
+              (a, b) =>
+                new Date(b.creado_en ?? 0).getTime() -
+                new Date(a.creado_en ?? 0).getTime()
+            );
+
+            this.aplicarFiltros();
+          },
+        });
+
+        if (chatCompleto.id) {
+          this.mensajeService.obtenerMensajes(chatCompleto.id).subscribe({
+            next: (mensajes) => {
+              this.mensajes = mensajes;
+
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 150);
+            },
+
+            error: (err) => {
+              console.error('ERROR CARGANDO MENSAJES:', err);
+            }
+          });
+        }
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Análisis completado',
+          detail: 'El diagnóstico de tu cultivo está listo.'
+        });
+      },
+
+      error: (err) => {
+        console.error('ERROR OBTENIENDO RESULTADO FINAL:', err);
+
+        this.isAnalyzing = false;
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo obtener el resultado final del diagnóstico.'
+        });
+      }
+    });
+  }
+
+
+  mostrarErrorAnalisis(err: any): void {
+
+    const backendError =
+      err?.error?.detalle ||
+      err?.error?.error ||
+      err?.error?.imagen?.[0] ||
+      err?.error?.non_field_errors?.[0] ||
+      err?.error?.detail ||
+      (typeof err?.error === 'string' ? err.error : null) ||
+      err?.message ||
+      'Error inesperado al analizar la imagen.';
+
+    this.isAnalyzing = false;
+    this.progreso = 0;
+
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = undefined;
+
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Imagen rechazada',
+      detail: backendError
+    });
+  }
+
   // MENSAJE INTERACCION
-  // ==================================================
   enviarQuickMessage(texto: string): void {
     if (this.isSendingMessage) return;
 
@@ -652,9 +911,12 @@ export class Chat {
     if (this.isMobile) {
       this.sidebarVisible = false;
     }
+    localStorage.removeItem('chatSeleccionadoId');
   }
 
-  // Acciones CRUD
+  // ACCIONES CRUD
+
+  // EDITAR CHAT DIAGNOSTICO
   chatEditando: ChatModel | null = null;
   nuevoTitulo: string = '';
   mostrarModalEditar: boolean = false;
@@ -692,6 +954,7 @@ export class Chat {
     this.nuevoTitulo = '';
   }
 
+  // ELIMINAR CHAT DIAGNOSTICO
   mostrarDialogEliminar: boolean = false;
   chatAEliminar: ChatModel | null = null;
 
@@ -840,95 +1103,14 @@ export class Chat {
   // ==================================================
   
   // MODAL PLANES
-  obtenerIconoConfig(nombre: string): { icon: string; color: string } {
-
-    switch (nombre.toLowerCase()) {
-
-      case 'free':
-        return {
-          icon: 'leaf',
-          color: 'var(--color-grey)'
-        };
-
-      case 'pro':
-        return {
-          icon: 'zap',
-          color: 'var(--color-primary)'
-        };
-
-      case 'business':
-        return {
-          icon: 'building-2',
-          color: 'var(--color-purple)'
-        };
-
-      case 'enterprise':
-        return {
-          icon: 'crown',
-          color: 'var(--color-yellow)'
-        };
-
-      default:
-        return {
-          icon: 'package',
-          color: 'var(--color-grey)'
-        };
-    }
-  }
-
-  obtenerTextoBoton(nombre: string): string {
-
-    switch (nombre.toLowerCase()) {
-
-      case 'free':
-        return 'Plan actual';
-
-      case 'enterprise':
-        return 'Contactar ventas';
-
-      default:
-        return 'Elegir plan';
-    }
-
-  }
-
-  seleccionarPlan(plan: Plan): void {
-
-    if (plan.nombre === 'Free') {
-      return;
-    }
-
-    if (plan.nombre === 'Enterprise') {
-      this.contactSales();
-      return;
-    }
-
-    this.selectPlan(plan.nombre);
-
-  }
-  
-  showPlansModal: boolean = false;
-  billing: 'mensual' | 'anual' = 'mensual';
-
   upgradePlan() {
-    this.showPlansModal = true;
+    this.router.navigate(['/page/plan']);
   }
-
-  // MODAL CONGIGURACION
-  selectPlan(plan: string) {
-    console.log('Plan seleccionado:', plan, this.billing);
-    this.showPlansModal = false;
-  }
-
-  contactSales() {
-    console.log('Contactar ventas');
-  }
-
   
   // ==================================================
   // MODAL PERSONALIZACION
   // ==================================================
-  openPersonalizacion(){}
+  // openPersonalizacion(){}
 
   // ==================================================
   // MODAL PERFIL
@@ -1004,41 +1186,35 @@ export class Chat {
       icon: 'shield'
     },
     {
+      id: 'ai',
+      label: 'Preferencias IA',
+      icon: 'sparkles'
+    },
+    {
+      id: 'integrations',
+      label: 'Integraciones',
+      icon: 'plug'
+    },
+    {
       id: 'data',
       label: 'Mis datos',
       icon: 'download'
-    },
-    
+    }
   ];
 
-  changeTheme(theme: Theme) {
-
+  changeTheme(theme: Theme): void {
     this.settings.theme = theme;
 
     localStorage.setItem('user-theme', theme);
 
     this.themeService.setTheme(theme);
-
   }
 
   settings = {
-    theme: (localStorage.getItem('theme') as Theme) || 'system',
-    language: 'Español',
-    timezone: 'America/Lima'
+    theme: (localStorage.getItem('user-theme') as Theme) || 'system',
   };
 
-  timezones = [
-    { label: 'America/Lima', value: 'America/Lima' },
-    { label: 'UTC', value: 'UTC' }
-  ];
-
-  languages = [
-    { label: 'Español', value: 'Español' },
-    { label: 'English', value: 'English' },
-  ];
-  
   saveSettings() {
-    console.log(this.settings);
     this.guardarPerfil();
   }
 
@@ -1278,6 +1454,29 @@ export class Chat {
     );
   }
 
+  // Descargar imagen
+  exportarDiagnosticoImagen(diagnostico: any) {
+
+    if (!diagnostico?.imagen) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Sin imagen',
+        detail: 'Este diagnóstico no tiene una imagen disponible.'
+      });
+
+      return;
+    }
+
+    this.exportFile(
+      this.http.get(diagnostico.imagen, {
+        responseType: 'blob'
+      }),
+      `diagnostico_${diagnostico.id}.png`,
+      'Imagen descargada correctamente',
+      'Error al descargar imagen'
+    );
+  }
+
   // ==================================================
   // RESPONSIVE
   // ==================================================
@@ -1315,16 +1514,22 @@ export class Chat {
   // ==================================================
   // IMAGENES
   // ==================================================
-  mostrarDialogImagen: boolean = false;
-
-  imagenesGaleria: any[] = [];
-  imagenActual:'original' | 'analizada' = 'analizada';
+  
+  mostrarLesiones = true;
 
   // Detectar posición
   activeIndex: number = 0;
 
-  zoom: number = 1;
+  zoom: number = 1.5;
   rotation: number = 0;
+
+  get zoomPercentage(): number {
+    return Math.round(this.zoom * 100);
+  }
+
+  toggleLesiones() {
+    this.mostrarLesiones = !this.mostrarLesiones;
+  }
 
   zoomIn() {
     this.zoom += 0.2;
@@ -1401,54 +1606,65 @@ export class Chat {
     this.posY = touch.clientY - this.touchStartY;
   }
 
-  downloadImage() {
-    const imgUrl = this.imagenesGaleria?.[this.activeIndex]?.itemImageSrc;
+  // ACORDEON - PLAGAS RELACIONADAS
+  getPlagasClass(riesgo: string): string {
+    switch (riesgo?.toLowerCase().trim()) {
+      case 'alto':
+        return 'risk-high';
 
-    if (!imgUrl) return;
+      case 'medio':
+        return 'risk-medium';
 
-    const name =
-      this.activeIndex === 0 ? 'original.jpg' : 'analizada.jpg';
+      case 'bajo':
+        return 'risk-low';
 
-    fetch(imgUrl)
-      .then(res => res.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = name;
-
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        window.URL.revokeObjectURL(url);
-      });
+      default:
+        return 'risk-default';
+    }
   }
 
-  
-  abrirDialogImagen(diagnostico: any) {
+  // CALENDARIO INTERACCION
+  semanaSeleccionada:any = null;
 
-    this.diagnosticoSeleccionado = diagnostico;
-
-    this.imagenesGaleria = [
-      {
-        itemImageSrc: diagnostico.planta.imagen,
-        thumbnailImageSrc: diagnostico.planta.imagen,
-        alt: 'Imagen Original',
-        title: 'Original'
-      },
-      {
-        itemImageSrc: diagnostico.imagen,
-        thumbnailImageSrc: diagnostico.imagen,
-        alt: 'Imagen Analizada',
-        title: 'Analizada'
-      }
-    ];
-
-    this.mostrarDialogImagen = true;
+  seleccionarSemana(grupo:any){
+    this.semanaSeleccionada = grupo;
   }
 
+  // PORCENTAJE DEL ESTADO DE PLANTA
+  getHealthStatus(porcentaje: number) {
 
-  
+  if (porcentaje <= 20) {
+    return {
+      label: 'Estado crítico',      
+      class: 'health-critical'
+    };
+  }
+
+  if (porcentaje <= 40) {
+    return {
+      label: 'Estado muy bajo',      
+      class: 'health-very-low'
+    };
+  }
+
+  if (porcentaje <= 60) {
+    return {
+      label: 'Estado bajo',      
+      class: 'health-low'
+    };
+  }
+
+  if (porcentaje <= 80) {
+    return {
+      label: 'Estado moderado',      
+      class: 'health-moderate'
+    };
+  }
+
+  return {
+    label: 'Estado saludable',    
+    class: 'health-healthy'
+  };
+}
+    
 }

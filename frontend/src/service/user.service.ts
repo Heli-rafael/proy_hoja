@@ -33,20 +33,6 @@ export class UserService {
         return this.http.get(this.creditsUrl);
     }
 
-    // Obtener todos los usuarios
-    getUsuarios(): Observable<User[]> {
-        return this.http.get<User[]>(this.apiUrl);
-    }
-
-    // Obtener un solo usuario por ID
-    getUsuarioPorId(id: number): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}${id}/`);
-    }
-
-    // Crear nuevo usuario
-    agregarUsuario(usuario: User): Observable<User> {
-        return this.http.post<User>(this.apiUrl, usuario);
-    }
 
     // Actualizar un usuario existente
     editarUsuario(id: number, datos: FormData) {
@@ -60,9 +46,4 @@ export class UserService {
         return this.http.post(`${environment.apiUrl}api/me/password/`, data);
     }
 
-    // Eliminar un usuario
-    eliminarUsuario(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}${id}/`);
-    }
-    
 }

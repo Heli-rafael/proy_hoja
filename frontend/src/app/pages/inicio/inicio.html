@@ -3,423 +3,1391 @@
 
     <!-- NAVBAR -->
     <header class="navbar">
-        <div class="logo">
-            <img src="/AgroVisionAI.png" alt="AgroVision AI">
-            <span>AgroVision AI</span>
-        </div>
 
-        <nav class="nav-links">
-            <a href="#inicio">Inicio</a>
-            <a href="#funcionamiento">Cómo funciona</a>
-            <a href="#caracteristicas">Características</a>
-            <a href="#planes">Planes</a>
-            <a href="#testimonios">Testimonios</a>
-            <a href="#comunidad">Comunidad</a>
-        </nav>
-        
-        <button
-            pButton
-            type="button"
-            label="Empezar"
-            [routerLink]="['/auth/login']">
-        </button>
-    </header>
+        <div class="navbar-container">
 
-    <!-- HERO -->
-    <section class="hero" id="inicio">
+            <!-- LOGO -->
+            <a class="logo" href="#inicio">
+                <div class="logo-image">
+                    <img
+                        src="/AgroVisionAI-I.webp"
+                        alt="AgroVision AI">
+                </div>
 
-        <div class="hero-content">
+                <div class="logo-text">
+                    <span class="logo-name">AgroVision</span>
+                    <span class="logo-ai">AI</span>
+                </div>
+            </a>
 
-        <span class="tag">
-            <i class="pi pi-sparkles"></i> IA para Agricultura Inteligente
-        </span>
+            <!-- NAVEGACIÓN DESKTOP -->
+            <nav class="nav-links">
+                <a
+                    href="#inicio"
+                    class="nav-link"
+                    [class.active]="seccionActiva === 'inicio'"
+                >
+                    Inicio
+                </a>
 
-        <h1>
-            Detecta enfermedades en tus plantas en segundos con
-            <span>Inteligencia Artificial</span>
-        </h1>
+                <a
+                    href="#funcionamiento"
+                    class="nav-link"
+                    [class.active]="seccionActiva === 'funcionamiento'"
+                >
+                    Cómo funciona
+                </a>
 
-        <p>
-            PlantCare AI analiza imágenes en tiempo real y te ayuda a detectar,
-            prevenir y tratar enfermedades en cultivos, jardines y plantas domésticas
-            con precisión de nivel profesional.
-        </p>
+                <a
+                    href="#caracteristicas"
+                    class="nav-link"
+                    [class.active]="seccionActiva === 'caracteristicas'"
+                >
+                    Características
+                </a>
 
-        <div class="hero-actions">
-            <p-button
-                label="Probar gratis"
-                icon="pi pi-play"
-                [routerLink]="['/auth/login']">
-            </p-button>
+                <a
+                    href="#planes"
+                    class="nav-link"
+                    [class.active]="seccionActiva === 'planes'"
+                >
+                    Planes
+                </a>
 
-            <p-button
-                label="Ver demo"
-                icon="pi pi-video"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="showDemoMessage()">
-            </p-button>
-        </div>
+                <a
+                    href="#cuidados"
+                    class="nav-link"
+                    [class.active]="seccionActiva === 'cuidados'"
+                >
+                    Cuidados
+                </a>
+            </nav>
 
-        <div class="stats">
-            <span><i class="pi pi-bolt"></i> 98% precisión</span>
-            <span><i class="pi pi-globe"></i> 50k+ análisis</span>
-            <span><i class="pi pi-android"></i> IA agrícola avanzada</span>
-        </div>
+            <!-- ACCIONES -->
+            <div class="navbar-actions">
+                <a
+                    class="login-link"
+                    (click)="openLogin()">
+                    Iniciar sesión
+                </a>
 
-        </div>
+                <!-- PRUEBA -->
+                <button
+                    pButton
+                    type="button"
+                    class="navbar-primary-btn"
+                    (click)="openRegister()"
+                >
+                    <span class="hero-primary-content">
+                        <span>Comenzar gratis</span>
 
-        <div class="hero-card">
-
-            <div class="scan">
-                <span class="scan-badge">
-                <i class="pi pi-circle-fill"></i> Escaneo activo
-                </span>
-
-                <div class="scan-frame"></div>
+                        <span class="navbar-primary-icon">
+                            <lucide-icon
+                                name="arrow-right"
+                                [size]="17">
+                            </lucide-icon>
+                        </span>
+                    </span>
+                </button>
             </div>
 
-            <div class="diagnostic">
+            <!-- MOBILE -->
+            <button
+                pButton
+                type="button"
+                class="mobile-menu-btn"
+                [icon]="menuMobileAbierto ? 'pi pi-times' : 'pi pi-bars'"
+                [text]="true"
+                aria-label="Abrir menú"
+                (click)="toggleMenuMobile()">
+            </button>
 
-                <div class="diagnostic-header">
-                    <div class="diagnostic-title">
-                    <i class="pi pi-apple"></i>
-                    <span>Diagnóstico IA</span>
-                    </div>
+        </div>
 
-                    <span class="status">
-                    <i class="pi pi-check-circle"></i>
-                    Analizado
+        <!-- SOLO PARA MOBILES -->
+        <div
+            class="mobile-menu"
+            [class.open]="menuMobileAbierto">
+
+            <a
+                href="#inicio"
+                [class.active]="seccionActiva === 'inicio'"
+                (click)="cerrarMenuMobile()">
+                Inicio
+            </a>
+
+            <a
+                href="#funcionamiento"
+                [class.active]="seccionActiva === 'funcionamiento'"
+                (click)="cerrarMenuMobile()">
+                Cómo funciona
+            </a>
+
+            <a
+                href="#caracteristicas"
+                [class.active]="seccionActiva === 'caracteristicas'"
+                (click)="cerrarMenuMobile()">
+                Características
+            </a>
+
+            <a
+                href="#planes"
+                [class.active]="seccionActiva === 'planes'"
+                (click)="cerrarMenuMobile()">
+                Planes
+            </a>
+
+            <a
+                href="#cuidados"
+                [class.active]="seccionActiva === 'cuidados'"
+                (click)="cerrarMenuMobile()">
+                Cuidados
+            </a>
+
+            <div class="mobile-menu-divider"></div>
+
+            <a
+                class="mobile-login"
+                [routerLink]="['/auth/login']"
+                (click)="cerrarMenuMobile()">
+
+                Iniciar sesión
+
+            </a>
+
+            <button
+                pButton
+                type="button"
+                class="mobile-cta"
+                label="Empezar gratis"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                [routerLink]="['/auth/login']"
+                (click)="cerrarMenuMobile()">
+
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- =====================================================
+        HERO
+    ====================================================== -->
+    <section class="hero" id="inicio">
+
+        <!-- Fondo decorativo -->
+        <div class="hero-background">
+            <div class="hero-glow hero-glow-primary"></div>
+            <div class="hero-glow hero-glow-secondary"></div>
+            <div class="hero-grid"></div>
+        </div>
+
+        <!-- HERO CONTEINER -->
+        <div class="hero-container">
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="hero-content">
+
+                <!-- Badge -->
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <lucide-icon
+                        name="sparkles"
+                        [size]="15">
+                    </lucide-icon>
+                    <span>Inteligencia artificial para agricultura</span>
+                </div>
+
+                <!-- Título -->
+                <h1 class="hero-title">
+                    Detecta enfermedades
+                    <span class="hero-title-highlight">
+                        en tus plantas a tiempo.
                     </span>
+                </h1>
+
+                <!-- Descripción -->
+                <p class="hero-description">
+                    Analiza una foto de tu planta y detecta posibles enfermedades,
+                    daños y cómo cuidarla mejor en cuestión de segundos.
+                </p>
+
+                <!-- Acciones -->
+                <div class="hero-actions">
+                    <button
+                        pButton
+                        type="button"
+                        class="hero-primary-btn"
+                        (click)="openRegister()"
+                    >
+                        <span class="hero-primary-content">
+                            <span>Comenzar gratis</span>
+
+                            <span class="hero-primary-icon">
+                                <lucide-icon
+                                    name="arrow-up-right"
+                                    [size]="17">
+                                </lucide-icon>
+                            </span>
+                        </span>
+                    </button>
+
+                    <button
+                        pButton
+                        type="button"
+                        class="hero-demo-btn"
+                        (click)="showDemoMessage()"
+                    >
+                        <span class="demo-icon">
+                            <lucide-icon
+                                name="play"
+                                [size]="15">
+                            </lucide-icon>
+                        </span>
+
+                        <span>Ver cómo funciona</span>
+                    </button>
                 </div>
 
-                <div class="diagnostic-result">
-                    Posible <strong>roya del café</strong> detectada
-                </div>
+                <!-- TRUST / FEATURES -->
+                <div class="hero-trust">
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <lucide-icon
+                                name="zap"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
 
-                <div class="confidence">
-                    <div class="confidence-bar">
-                    <div class="confidence-fill"></div>
+                        <div>
+                            <strong>Análisis rápido</strong>
+                            <span>Resultados en segundos</span>
+                        </div>
                     </div>
-                    <span>98% de confianza</span>
+
+                    <div class="trust-divider"></div>
+
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <lucide-icon
+                                name="scan-eye"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
+
+                        <div>
+                            <strong>Análisis visual</strong>
+                            <span>Desde una fotografía</span>
+                        </div>
+                    </div>
+
+                    <div class="trust-divider"></div>
+
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <lucide-icon
+                                name="shield-check"
+                                [size]="17">
+                            </lucide-icon>
+                        </div>
+
+                        <div>
+                            <strong>Recomendaciones</strong>
+                            <span>Acciones para proteger</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISUAL / AI SCANNER -->
+            <div class="hero-visual">
+
+                <!-- Glow detrás -->
+                <div class="visual-glow"></div>
+
+                <!-- Tarjeta principal -->
+                <div class="scanner-card">
+
+                    <!-- Header -->
+                    <div class="scanner-header">
+                        <div class="scanner-brand">
+                            <div class="scanner-logo">
+                                <lucide-icon
+                                    name="scan-search"
+                                    [size]="19">
+                                </lucide-icon>
+                            </div>
+
+                            <div>
+                                <strong>AgroVision AI</strong>
+                                <span>Análisis inteligente</span>
+                            </div>
+                        </div>
+
+                        <div class="scanner-status">
+                            <span class="status-dot"></span>
+                            Analizando
+                        </div>
+                    </div>
+
+                    <!-- Imagen / Scanner -->
+                    <div class="scanner-image">
+
+                        <img
+                            src="/landingpage/planta-danada.png"
+                            alt="Planta analizada por AgroVision AI">
+
+                        <!-- Overlay -->
+                        <div class="scanner-overlay"></div>
+
+                        <!-- Línea de escaneo -->
+                        <div class="scan-line"></div>
+
+                        <!-- Esquinas -->
+                        <div class="scan-corner corner-top-left"></div>
+                        <div class="scan-corner corner-top-right"></div>
+                        <div class="scan-corner corner-bottom-left"></div>
+                        <div class="scan-corner corner-bottom-right"></div>
+
+                        <!-- Detecciones -->
+                        <ng-container *ngFor="let lesion of lesionesDetectadas">
+
+                            <div
+                                class="detection-box"
+
+                                [style.left.%]="lesion.bbox.x1 * 100"
+                                [style.top.%]="lesion.bbox.y1 * 100"
+
+                                [style.width.%]="
+                                    (lesion.bbox.x2 - lesion.bbox.x1) * 100
+                                "
+
+                                [style.height.%]="
+                                    (lesion.bbox.y2 - lesion.bbox.y1) * 100
+                                "
+                            >
+
+                                <span class="detection-dot"></span>
+
+                                <div class="detection-label">
+                                    <span class="detection-id">
+                                        #{{ lesion.id }}
+                                    </span>
+
+                                    {{ lesion.title }}
+                                </div>
+
+                            </div>
+
+                        </ng-container>
+
+                        <!-- Badge -->
+                        <div class="scan-active">
+                            <span class="active-dot"></span>
+                            Escaneo activo
+                        </div>
+                        
+                    </div>
+
+                    <!-- RESULTADO -->
+                    <div class="diagnostic-panel">
+                        <div class="diagnostic-top">
+                            <div class="diagnostic-heading">
+                                <div class="diagnostic-icon">
+                                    <lucide-icon
+                                        name="microscope"
+                                    >
+                                    </lucide-icon>
+                                </div>
+
+                                <div>
+                                    <span>Diagnóstico IA</span>
+                                    <small>Análisis completado</small>
+                                </div>
+                            </div>
+
+                            <div class="diagnostic-success">
+                                <lucide-icon
+                                    name="check-circle-2"
+                                    [size]="15">
+                                </lucide-icon>
+                                Analizado
+                            </div>
+                        </div>
+                        <div class="diagnostic-row">
+                            <!-- Resultado -->
+                            <div class="diagnostic-result">
+                                <span>Posible enfermedad detectada</span>
+                                <strong>Roya del helecho</strong>
+                            </div>
+
+                            <!-- Confianza -->
+                            <div class="confidence-section">
+                                <div class="confidence-info">
+                                    <span>Nivel de confianza</span>
+                                    <strong>98%</strong>
+                                </div>
+
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recomendación -->
+                        <div class="recommendation">
+                            <div class="recommendation-icon">
+                                <lucide-icon
+                                    name="lightbulb"
+                                    [size]="17">
+                                </lucide-icon>
+                            </div>
+
+                            <div>
+                                <span>Recomendación</span>
+                                <p>
+                                    Revisar las hojas afectadas y aplicar
+                                    un tratamiento preventivo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <p class="diagnostic-text">
-                    Se recomienda aplicar tratamiento antifúngico...
+                <!-- FLOATING CARD 1 -->
+                <div class="floating-card floating-card-top">
+                    <div class="floating-icon success">
+                        <lucide-icon
+                            name="shield-check"
+                            [size]="18">
+                        </lucide-icon>
+                    </div>
+
+                    <div>
+                        <strong>Problema detectado</strong>
+                        <span>Actúa a tiempo</span>
+                    </div>
+                </div>
+
+                <!-- FLOATING CARD 2 -->
+                <div class="floating-card floating-card-bottom">
+                    <div class="floating-mini-chart">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div>
+                        <strong>Salud de la planta</strong>
+                        <span class="health-value">Afectada · 86%</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- SCROLL INDICATOR -->
+        <div class="hero-scroll">
+            <span>Descubre AgroVision AI</span>
+            <lucide-icon
+                name="chevron-down"
+                [size]="18">
+            </lucide-icon>
+        </div>
+
+    </section>
+
+    <!-- CARRUSEL DE PLANTAS -->
+    <section class="plant-carousel">
+
+        <div class="carousel-track">
+
+            <div
+                class="plant-slide"
+                *ngFor="let imagen of imagenesPlantas; trackBy: trackByImagen"
+            >
+                <img
+                    [src]="imagen"
+                    alt="Planta agrícola"
+                    loading="lazy"
+                    decoding="async"
+                >
+            </div>
+
+            <!-- Duplicamos las imágenes para crear el efecto circular -->
+            <div
+                class="plant-slide"
+                *ngFor="let imagen of imagenesPlantas; trackBy: trackByImagen"
+            >
+                <img
+                    [src]="imagen"
+                    alt="Planta agrícola"
+                    loading="lazy"
+                    decoding="async"
+                >
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FUNCIONAMIENTO -->
+    <section class="section funcionamiento" id="funcionamiento">
+
+        <div class="section-header funcionamiento-header">
+            <span class="section-label">
+                Cómo funciona
+            </span>
+            <h2>De una foto a una 
+                <span>solución inteligente</span>
+            </h2>
+            <p>
+                Descubre cómo AgroVision AI analiza tus plantas y te ayuda
+                a tomar mejores decisiones en solo cuatro pasos.
+            </p>
+        </div>
+
+
+        <div class="steps-showcase">
+
+            <!-- CONTENIDO -->
+            <div class="steps-content">
+                <div
+                    class="step-info"
+                    *ngFor="let paso of pasos; let i = index"
+                    [class.active]="i === pasoActual"
+                >
+                    <span class="step-number-large">
+                        0{{ i + 1 }}
+                    </span>
+                    <div class="step-info-content">
+                        <span class="step-label">
+                            Paso {{ i + 1 }} de 4
+                        </span>
+                        <h3>{{ paso.titulo }}</h3>
+                        <p>{{ paso.descripcion }}</p>
+                    </div>
+
+                </div>
+
+                <!-- NAVEGACIÓN -->
+                <div class="steps-navigation">
+                    <div class="steps-dots">
+                        <button
+                            *ngFor="let paso of pasos; let i = index"
+                            type="button"
+                            class="step-dot"
+                            [class.active]="i === pasoActual"
+                            (click)="seleccionarPaso(i)"
+                            [attr.aria-label]="'Ir al paso ' + (i + 1)">
+                        </button>
+                    </div>
+
+                    <div class="steps-arrows">
+                        <button
+                            type="button"
+                            class="step-arrow"
+                            (click)="pasoAnterior()"
+                            aria-label="Paso anterior">
+                            <lucide-icon name="arrow-left"></lucide-icon>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="step-arrow"
+                            (click)="pasoSiguiente()"
+                            aria-label="Paso siguiente">
+
+                            <lucide-icon name="arrow-right"></lucide-icon>
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARRUSEL -->
+            <div class="steps-visual">
+                <div class="steps-image-container">
+                    <img
+                        *ngFor="let paso of pasos; let i = index"
+                        [src]="paso.imagen"
+                        [alt]="paso.titulo"
+                        class="step-image"
+                        [class.active]="i === pasoActual"
+                    >
+
+                    <!-- Overlay -->
+                    <div class="image-overlay"></div>
+
+
+                    <!-- Badge -->
+                    <div class="image-badge">
+                        <lucide-icon name="sparkles"></lucide-icon>
+                        <span>Análisis con IA</span>
+                    </div>
+
+                    <!-- Número -->
+                    <div class="image-step">
+                        <span>0{{ pasoActual + 1 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARACTERÍSTICAS -->
+    <section
+        class="section caracteristicas"
+        id="caracteristicas">
+
+        <!-- SECTION ROW-->
+        <div class="section-row">
+        
+            <div class="section-header features-header">
+
+                <span class="features-label">
+                    <lucide-icon name="sparkles"></lucide-icon>
+                    Plataforma inteligente
+                </span>
+
+                <h2>
+                    Todo lo que necesitas para
+                    <span>cuidar mejor tus plantas</span>
+                </h2>
+
+                <p>
+                    AgroVision AI combina inteligencia artificial, seguimiento
+                    y recomendaciones personalizadas para ayudarte a mantener
+                    tus plantas ornamentales saludables y bien cuidadas.
                 </p>
 
             </div>
 
-        </div>
-
-    </section>
-
-    <!-- Funcionamiento -->
-    <section class="section funcionamiento" id="funcionamiento">
-
-        <div class="section-header">
-            <h2>Cómo Funciona</h2>
-            <p>Diagnóstico inteligente en 4 simples pasos</p>
-        </div>
-
-        <div class="steps-grid">
-
-            <div class="step-card">
-
-                <div class="step-icon">
-                    <lucide-icon name="camera"></lucide-icon>
-                </div>
-
-                <span class="step-number">Paso 1</span>
-                <h3>Toma una foto</h3>
-                <p>Captura o sube una imagen de la planta para que nuestra IA analice posibles enfermedades o daños.</p>
-
-            </div>
-
-            <div class="step-card">
-
-                <div class="step-icon">
-                    <lucide-icon name="brain"></lucide-icon>
-                </div>
-
-                <span class="step-number">Paso 2</span>
-                <h3>La IA analiza</h3>
-                <p>Nuestro modelo de inteligencia artificial procesa la imagen e identifica posibles enfermedades.</p>
-
-            </div>
-
-            <div class="step-card">
-
-                <div class="step-icon">
-                    <lucide-icon name="microscope"></lucide-icon>
-                </div>
-
-                <span class="step-number">Paso 3</span>
-                <h3>Obtén el diagnóstico</h3>
-                <p>Recibe un diagnóstico con su nivel de confianza y conoce la enfermedad detectada
-            </div>
-
-            <div class="step-card">
-
-                <div class="step-icon">
-                    <lucide-icon name="book-open"></lucide-icon>
-                </div>
-
-                <span class="step-number">Paso 4</span>
-
-                <h3>Aplica la recomendación</h3>
-                <p>Consulta tratamientos, medidas preventivas y recomendaciones para proteger tus plantas.</p>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Características -->
-    <section class="section caracteristicas" id="caracteristicas">
-
-        <div class="section-header">
-            <h2>Características</h2>
-            <p>Todo lo que necesitas para el cuidado de tus cultivos</p>
-        </div>
-
-
-        <div class="features-grid">
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="scan-eye"></lucide-icon>
-                </div>
-
-                <h3>Escaneo IA</h3>
-                <p>Análisis fotográfico avanzado para detectar enfermedades y daños en tus cultivos.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="message-circle"></lucide-icon>
-                </div>
-
-                <h3>Chat Fitopatólogo IA</h3>
-                <p>Consulta con un experto virtual especializado en salud vegetal.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="history"></lucide-icon>
-                </div>
-
-                <h3>Historial de cultivos</h3>
-                <p>Guarda y revisa el seguimiento completo de tus plantas.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="chart-column"></lucide-icon>
-                </div>
-
-                <h3>Estadísticas</h3>
-                <p>Visualiza métricas detalladas sobre el estado de tus cultivos.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="zap"></lucide-icon>
-                </div>
-
-                <h3>Diagnóstico rápido</h3>
-                <p>Obtén resultados en segundos gracias a nuestra inteligencia artificial.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="shield-check"></lucide-icon>
-                </div>
-
-                <h3>Prevención</h3>
-                <p>Recibe alertas tempranas para evitar pérdidas en tus cultivos.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="sprout"></lucide-icon>
-                </div>
-
-                <h3>Tratamientos</h3>
-                <p>Encuentra soluciones personalizadas según el diagnóstico.</p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    <lucide-icon name="git-compare"></lucide-icon>
-                </div>
-
-                <h3>Comparación temporal</h3>
-                <p>Analiza la evolución de tus cultivos a través del tiempo.</p>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-    <!-- PLANS -->
-    <section class="section" id="planes">
-
-        <div class="section-header">
-            <h2>Planes diseñados para cada etapa de crecimiento</h2>
-            <p>Desde hobby agrícola hasta producción profesional</p>
-        </div>
-
-        <div class="plans-grid">
-
-            <div
-                class="plan-card"
-                *ngFor="let plan of planes"
-                [class.featured]="plan.destacado"
-            >
-
-                <div
-                    class="badge"
-                    *ngIf="plan.destacado"
-                >
-                    Más popular
-                </div>
-
-                <div class="plan-title">
-                    <lucide-icon
-                        [name]="obtenerIconoConfig(plan.nombre).icon"
-                        [size]="25"
-                        [style.color]="obtenerIconoConfig(plan.nombre).color">
-                    </lucide-icon>
-                    <h3>{{ plan.nombre }}</h3>
-                </div>
-
-                <div class="price">
-                    <ng-container *ngIf="plan.precio > 0; else gratis">
-                        S/{{ plan.precio }}
-                        <span>/mes</span>
-                    </ng-container>
-
-                    <ng-template #gratis>
-                        Gratis
-                    </ng-template>
-                </div>
-
-                <ul>
-                    <li *ngFor="let beneficio of plan.beneficios" class="beneficio-item">
-                        <lucide-icon
-                            name="check"
-                            [size]="16"
-                            class="beneficio-icon">
-                        </lucide-icon>
-                        <span>{{ beneficio }}</span>
-                    </li>
-                </ul>
+            <!-- FEATURE SELECTOR -->
+            <div class="feature-selector">
 
                 <button
-                    class="plan-btn"
-                    [class.primary]="plan.nombre === 'Pro'"
-                    [class.outline]="plan.nombre === 'Enterprise'"
-                    [class.outline]="plan.nombre === 'Free'"
-                    (click)="seleccionarPlan(plan)"
-                >
+                    type="button"
+                    [class.active]="featureDemo === 'diagnostico'"
+                    (click)="setFeatureDemo('diagnostico')">
 
-                    {{ obtenerTextoBoton(plan.nombre) }}
+                    <lucide-icon name="scan-search"></lucide-icon>
+
+                    <span>
+                        Diagnóstico con IA
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    [class.active]="featureDemo === 'asistente'"
+                    (click)="setFeatureDemo('asistente')">
+
+                    <lucide-icon name="message-circle"></lucide-icon>
+
+                    <span>
+                        Asistente IA
+                    </span>
 
                 </button>
 
             </div>
+            
+        </div>
 
+        <!-- FEATURE PRINCIPAL -->
+        <div class="feature-main"
+            [class.feature-main-ia]="featureDemo === 'asistente'"
+        >
+
+            <!-- DIAGNÓSTICO -->
+            <ng-container *ngIf="featureDemo === 'diagnostico'">
+
+                <!-- TEXTO -->
+                <div class="feature-main-content feature-animate">
+
+                    <div class="feature-main-icon">
+                        <lucide-icon name="scan-eye"></lucide-icon>
+                    </div>
+
+                    <span class="feature-main-label">
+                        INTELIGENCIA ARTIFICIAL
+                    </span>
+
+                    <h3>
+                        Detecta enfermedades
+                        <span>antes de que sea tarde</span>
+                    </h3>
+
+                    <p>
+                        Analiza tus plantas ornamentales con IA y detecta enfermedades,
+                        plagas y daños en segundos.
+                    </p>
+
+                    <div class="feature-main-benefits">
+                        <div>
+                            <lucide-icon name="check"></lucide-icon>
+                            <span>Análisis automático de imágenes</span>
+                        </div>
+
+                        <div>
+                            <lucide-icon name="check"></lucide-icon>
+                            <span>Nivel de confianza del diagnóstico</span>
+                        </div>
+
+                        <div>
+                            <lucide-icon name="check"></lucide-icon>
+                            <span>Resultados en segundos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISUAL -->
+                <div class="feature-main-visual feature-animate">
+
+                    <div class="ai-preview">
+
+                        <div class="ai-preview-header">
+
+                            <div class="ai-preview-title">
+                                <div class="ai-status"></div>
+                                <span>Análisis IA</span>
+                            </div>
+
+                            <span class="ai-live">PLANTA ANALIZADA</span>
+                        </div>
+
+                        <div class="ai-image">
+
+                            <img
+                                src="landingpage/planta-sana.webp"
+                                alt="Análisis de planta con inteligencia artificial">
+
+                            <div class="ai-scan-line"></div>
+
+                        </div>
+
+                        <div class="ai-result">
+
+                            <div>
+                                <span class="result-label">Resultado</span>
+                                <strong>Planta saludable</strong>
+                            </div>
+                            <div class="confidence-circle">98%</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </ng-container>
+
+            <!-- ASISTENTE IA -->
+            <ng-container *ngIf="featureDemo === 'asistente'">
+
+                <!-- VISUAL -->
+                <div class="feature-main-visual feature-animate">
+
+                    <div class="chat-preview">
+                        <!-- HEADER -->
+                        <div class="chat-preview-header">
+                            <div class="chat-preview-title">
+                                <div class="ai-status"></div>
+                                <span>Asistente IA</span>
+                            </div>
+                            <span class="chat-online">EN LÍNEA</span>
+                        </div>
+
+                        <!-- CHAT -->
+                        <div class="chat-messages">
+                            <!-- MENSAJE USUARIO -->
+                            <div class="chat-message user-message">
+                                <div class="message-bubble">
+                                    <span class="typing-question">¿Qué tratamiento necesita mi planta?</span>
+                                </div>
+                            </div>
+
+                            <!-- MENSAJE IA -->
+                            <div class="chat-message ai-message">
+                                <div class="ai-message-icon">
+                                    <lucide-icon 
+                                        name="sparkles"
+                                    ></lucide-icon>
+                                </div>
+
+                                <div class="message-bubble">
+
+                                    <span class="typing-answer">
+                                        {{ displayedAnswer }}
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- INPUT SIMULADO -->
+                        <div class="chat-input">
+                            <span>Pregunta sobre tu planta...</span>
+                            <div class="chat-send">
+                                <lucide-icon 
+                                    name="send"
+                                ></lucide-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TEXTO -->
+                <div class="feature-main-content feature-animate">
+                    <div class="feature-main-icon">
+                        <lucide-icon name="message-circle"></lucide-icon>
+                    </div>
+                    <span class="feature-main-label">ASISTENTE IA</span>
+                    <h3>Resuelve tus dudas <span>en segundos</span></h3>
+                    <p>Consulta sobre diagnósticos, tratamientos y cuidados. La IA responde de forma clara, breve y precisa.</p>
+
+                    <div class="feature-main-benefits">
+                        <div>
+                            <lucide-icon 
+                                name="check"
+                            ></lucide-icon>
+                            <span>Respuestas claras y precisas</span>
+                        </div>
+                        <div>
+                            <lucide-icon 
+                                name="check"
+                            ></lucide-icon>
+                            <span>Orientación sobre tratamientos</span>
+                        </div>
+                        <div>
+                            <lucide-icon 
+                                name="check"
+                            ></lucide-icon>
+                            <span>Consultas sobre salud vegetal</span>
+                        </div>
+                    </div>
+                </div>
+ 
+            </ng-container>
+
+        </div>
+
+        <!-- CARACTERÍSTICAS SECUNDARIAS -->
+        <div class="features-grid">
+
+            <!-- DIAGNÓSTICO -->
+            <article class="feature-card">
+                <div class="feature-card-top">
+                    <div class="feature-icon">
+                        <lucide-icon 
+                            name="scan-search"
+                        ></lucide-icon>
+                    </div>
+                    <span class="feature-number">01</span>
+                </div>
+
+                <div class="feature-card-content">
+                    <span class="feature-tag">DETECTA</span>
+                    <h3>Diagnóstico inteligente</h3>
+                    <p>Identifica enfermedades, plagas y señales de alerta en tus plantas.</p>
+                </div>
+
+                <div class="feature-card-features">
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Análisis con IA
+                    </span>
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Resultados rápidos
+                    </span>
+                </div>
+            </article>
+
+            <!-- ASISTENCIA -->
+            <article class="feature-card">
+                <div class="feature-card-top">
+                    <div class="feature-icon">
+                        <lucide-icon 
+                            name="message-circle"
+                        ></lucide-icon>
+                    </div>
+                    <span class="feature-number">02</span>
+                </div>
+
+                <div class="feature-card-content">
+                    <span class="feature-tag">CONSULTA</span>
+                    <h3>Asistente fitopatólogo</h3>
+                    <p>Pregunta a la IA y recibe orientación para cuidar mejor tus plantas.</p>
+                </div>
+
+                <div class="feature-card-features">
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Chat inteligente
+                    </span>
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Recomendaciones
+                    </span>
+                </div>
+            </article>
+
+            <!-- SEGUIMIENTO -->
+            <article class="feature-card">
+                <div class="feature-card-top">
+                    <div class="feature-icon">
+                        <lucide-icon 
+                            name="clipboard-clock"
+                        ></lucide-icon>
+                    </div>
+                    <span class="feature-number">03</span>
+                </div>
+
+                <div class="feature-card-content">
+                    <span class="feature-tag">EVOLUCIONA</span>
+                    <h3>Seguimiento de tus plantas</h3>
+                    <p>Guarda diagnósticos y compara su evolución a través del tiempo.</p>
+                </div>
+
+                <div class="feature-card-features">
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Historial
+                    </span>
+
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Comparación
+                    </span>
+                </div>
+            </article>
+
+            <!-- CUIDADO -->
+            <article class="feature-card">
+                <div class="feature-card-top">
+                    <div class="feature-icon">
+                        <lucide-icon 
+                            name="shield-check"
+                        ></lucide-icon>
+                    </div>
+                    <span class="feature-number">04</span>
+                </div>
+
+                <div class="feature-card-content">
+                    <span class="feature-tag">CUIDA</span>
+                    <h3>Prevención y cuidado</h3>
+                    <p>Anticípate a los problemas y descubre cómo actuar ante cada diagnóstico.</p>
+                </div>
+
+                <div class="feature-card-features">
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Prevención
+                    </span>
+
+                    <span>
+                        <lucide-icon 
+                            name="check"
+                        ></lucide-icon> 
+                        Tratamientos
+                    </span>
+                </div>
+            </article>
         </div>
 
     </section>
 
-    <!-- Testimonios -->
-    <section class="section testimonios" id="testimonios">
+    <!-- PLANES -->
+    <section class="pricing-section" id="planes">
 
-        <div class="section-header">
-            <h2>Lo que dicen nuestros usuarios</h2>
-            <p>Agricultores, ciudadanos y profesionales confían en AgroVision AI</p>
+        <!-- HEADER -->
+        <div class="pricing-header">
+
+            <div class="pricing-heading">
+
+                <span class="pricing-eyebrow">
+                    <lucide-icon
+                        name="sparkles"
+                        [size]="15">
+                    </lucide-icon>
+
+                    Planes flexibles
+                </span>
+
+                <h2>
+                    Elige el plan ideal para
+                    <span>cuidar tus plantas</span>
+                </h2>
+
+                <p>
+                    Comienza gratis y escala cuando lo necesites.
+                    Todas las herramientas que necesitas para tomar
+                    mejores decisiones sobre la salud de tus plantas.
+                </p>
+
+            </div>
+
+
+            <!-- BILLING -->
+            <div class="billing-container">
+                <div class="billing-label">
+                    <span>Facturación</span>
+                    <span class="billing-save">
+                        Ahorra con anual
+                    </span>
+                </div>
+
+                <div class="billing-toggle">
+                    <button
+                        type="button"
+                        [class.active]="billing === 'mensual'"
+                        (click)="cambiarPeriodo('mensual')">
+                        Mensual
+                    </button>
+
+                    <button
+                        type="button"
+                        [class.active]="billing === 'anual'"
+                        (click)="cambiarPeriodo('anual')">
+                        Anual
+                        <span class="save-badge">
+                            Ahorra
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="testimonios-grid">
 
-            <div class="testimonial-card">
-                <div class="quote-icon">
-                    <lucide-icon name="quote"></lucide-icon>
+        <!-- PLANS -->
+        <div class="plans-grid">
+
+            <article
+                class="plan-card"
+                *ngFor="let item of planesMostrar"
+                [class.featured]="item.plan.destacado"
+            >
+
+                <!-- POPULAR -->
+                <div
+                    class="plan-popular"
+                    *ngIf="item.plan.destacado"
+                >
+                    <lucide-icon
+                        name="star"
+                        [size]="14">
+                    </lucide-icon>
+
+                    Más popular
                 </div>
 
-                <p class="testimonial-text">
-                    "Ahora puedo identificar plagas desde mi celular en cuestión de segundos. Me ha ayudado a actuar antes de que el problema se extienda."
+
+                <!-- CARD HEADER -->
+                <header class="plan-header">
+
+                    <div class="plan-icon">
+                        <lucide-icon
+                            [name]="obtenerIconoConfig(item.plan.nombre).icon"
+                            [size]="26"
+                            [style.color]="obtenerIconoConfig(item.plan.nombre).color">
+                        </lucide-icon>
+                    </div>
+
+
+                    <div class="plan-title">
+                        <h3>{{ item.plan.nombre }}</h3>
+                        <p>
+                            {{ 
+                                item.plan.nombre === 'Free'
+                                    ? 'Para comenzar a explorar'
+                                    : item.plan.nombre === 'Pro'
+                                        ? 'Para productores que quieren crecer'
+                                        : item.plan.nombre === 'Business'
+                                            ? 'Para equipos y operaciones agrícolas'
+                                            : 'Para operaciones profesionales'
+                            }}
+                        </p>
+                    </div>
+
+                </header>
+
+                <!-- PRICE -->
+                <div class="plan-price">
+
+                    <ng-container *ngIf="item.precio.precio > 0; else gratis">
+                        <div class="price-main">
+                            <span class="currency">
+                                S/
+                            </span>
+                            <span class="amount">{{ item.precio.precio }}</span>
+                        </div>
+                        <span class="period">
+                            {{
+                                item.precio.periodo === 'MENSUAL'
+                                    ? 'por mes'
+                                    : 'por año'
+                            }}
+                        </span>
+                    </ng-container>
+
+                    <ng-template #gratis>
+                        <div class="price-main">
+                            <span class="free">
+                                Gratis
+                            </span>
+                        </div>
+                        <span class="period">Para siempre</span>
+                    </ng-template>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <p class="plan-description">
+                    {{
+                        item.plan.nombre === 'Free'
+                            ? 'Una forma sencilla de comenzar a conocer el poder de AgroVision AI.'
+                            : item.plan.nombre === 'Pro'
+                                ? 'Herramientas avanzadas para cuidar y monitorear tus plantas.'
+                                : item.plan.nombre === 'Business'
+                                    ? 'Potencia el trabajo de tu equipo con herramientas colaborativas.'
+                                    : 'Soluciones avanzadas para operaciones agrícolas a gran escala.'
+                    }}
                 </p>
 
-                <div class="testimonial-user">
-                    <div class="avatar">M</div>
+                <!-- DIVIDER -->
+                <div class="plan-divider"></div>
 
-                    <div>
-                        <h4>María López</h4>
-                        <span>Productora Agrícola</span>
+                <!-- BENEFITS -->
+                <div class="benefits-header">
+                    <span>Incluye:</span>
+                </div>
+
+                <ul class="plan-benefits">
+                    <li *ngFor="let beneficio of item.plan.beneficios">
+                        <span class="benefit-check">
+                            <lucide-icon
+                                name="check"
+                                [size]="14">
+                            </lucide-icon>
+                        </span>
+                        <span>{{ beneficio }}</span>
+                    </li>
+                </ul>
+
+                <!-- FOOTER -->
+                <footer class="plan-footer">
+                    <button
+                        class="plan-btn"
+                        [class.primary]="item.plan.destacado"
+                        [class.free-btn]="item.plan.nombre === 'Free'"
+                        (click)="seleccionarPlan()"
+                    >
+                        <span>
+                            {{
+                                item.plan.nombre === 'Free'
+                                    ? 'Comenzar gratis'
+                                    : item.plan.nombre === 'Enterprise'
+                                        ? 'Contactar ventas'
+                                        : 'Elegir ' + item.plan.nombre
+                            }}
+                        </span>
+                        <lucide-icon
+                            name="arrow-right"
+                            [size]="17">
+                        </lucide-icon>
+                    </button>
+
+                    <small class="plan-note">
+                        <lucide-icon
+                            name="shield-check"
+                            [size]="13">
+                        </lucide-icon>
+                        Sin compromiso · Cancela cuando quieras
+                    </small>
+                </footer>
+
+            </article>
+        </div>
+
+        <!-- BOTTOM TRUST -->
+        <div class="pricing-trust">
+            <div class="trust-item">
+                <lucide-icon
+                    name="shield-check"
+                    [size]="18">
+                </lucide-icon>
+                <span>Datos protegidos</span>
+            </div>
+
+            <div class="trust-item">
+                <lucide-icon
+                    name="zap"
+                    [size]="18">
+                </lucide-icon>
+                <span>Diagnósticos rápidos</span>
+            </div>
+
+            <div class="trust-item">
+                <lucide-icon
+                    name="refresh-cw"
+                    [size]="18">
+                </lucide-icon>
+                <span>Cambia de plan cuando quieras</span>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- CUIDADO DE PLANTAS -->
+    <section class="section cuidados" id="cuidados">
+
+        <!-- HEADER -->
+        <div class="section-header cuidados-header">
+            <span class="cuidados-label">
+                <lucide-icon name="sprout" [size]="17"></lucide-icon>
+                Cuidados de tus plantas
+            </span>
+
+            <h2>
+                Mantén tus plantas
+                <span>fuertes y saludables</span>
+            </h2>
+
+            <p>
+                Aprende los cuidados esenciales para mantener tus plantas
+                saludables y prevenir problemas antes de que aparezcan.
+            </p>
+        </div>
+
+        <!-- SHOWCASE -->
+        <div class="cuidados-showcase">
+
+            <!-- IMAGEN -->
+            <div class="cuidados-visual">
+                <div class="cuidados-image-container">
+                    <img
+                        *ngFor="let cuidado of cuidadosPlanta; let i = index"
+                        [src]="cuidado.imagen"
+                        [alt]="cuidado.titulo"
+                        class="cuidado-image"
+                        [class.active]="i === cuidadoActual"
+                    >
+
+                    <!-- Overlay -->
+                    <div class="cuidados-image-overlay"></div>
+
+                    <!-- Badge -->
+                    <div class="cuidados-image-badge">
+                        <lucide-icon name="leaf" [size]="16"></lucide-icon>
+                        <span>Cuidado recomendado</span>
+                    </div>
+
+                    <!-- Número -->
+                    <div class="cuidados-image-number">
+                        <span>0{{ cuidadoActual + 1 }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="testimonial-card">
-                <div class="quote-icon">
-                    <lucide-icon name="quote"></lucide-icon>
-                </div>
+            <!-- CONTENIDO -->
+            <div class="cuidados-content">
+                <div
+                    class="cuidado-info"
+                    *ngFor="let cuidado of cuidadosPlanta; let i = index"
+                    [class.active]="i === cuidadoActual"
+                >
+                    <span class="cuidado-number">
+                        0{{ i + 1 }}
+                    </span>
 
-                <p class="testimonial-text">
-                    "La plataforma es muy fácil de usar y las recomendaciones son claras. Se ha convertido en una herramienta esencial para mi trabajo diario."
-                </p>
+                    <div class="cuidado-info-content">
+                        <span class="cuidado-label">
+                            Cuidado {{ i + 1 }} de {{ cuidadosPlanta.length }}
+                        </span>
 
-                <div class="testimonial-user">
-                    <div class="avatar">J</div>
+                        <h3>
+                            {{ cuidado.titulo }}
+                        </h3>
 
-                    <div>
-                        <h4>José Ramírez</h4>
-                        <span>Técnico Agrícola</span>
+                        <p>
+                            {{ cuidado.descripcion }}
+                        </p>
+
+                        <div class="cuidado-tip">
+                            <div class="cuidado-tip-icon">
+                                <lucide-icon name="lightbulb" [size]="17"></lucide-icon>
+                            </div>
+
+                            <div>
+                                <span>
+                                    Consejo
+                                </span>
+
+                                <p>
+                                    {{ cuidado.consejo }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="testimonial-card">
-                <div class="quote-icon">
-                    <lucide-icon name="quote"></lucide-icon>
-                </div>
+                <!-- NAVEGACIÓN -->
+                <div class="cuidados-navigation">
+                    <div class="cuidados-dots">
+                        <button
+                            *ngFor="let cuidado of cuidadosPlanta; let i = index"
+                            type="button"
+                            class="cuidado-dot"
+                            [class.active]="i === cuidadoActual"
+                            (click)="seleccionarCuidado(i)"
+                            [attr.aria-label]="'Ver cuidado ' + (i + 1)"
+                        >
+                        </button>
+                    </div>
 
-                <p class="testimonial-text">
-                    "Como estudiante de agronomía, AgroVision AI me permite aprender sobre enfermedades de cultivos de forma rápida y práctica."
-                </p>
+                    <div class="cuidados-arrows">
+                        <button
+                            type="button"
+                            class="cuidado-arrow"
+                            (click)="cuidadoAnterior()"
+                            aria-label="Cuidado anterior"
+                        >
+                            <lucide-icon name="arrow-left" [size]="18"></lucide-icon>
+                        </button>
 
-                <div class="testimonial-user">
-                    <div class="avatar">A</div>
-
-                    <div>
-                        <h4>Ana Torres</h4>
-                        <span>Estudiante de Agronomía</span>
+                        <button
+                            type="button"
+                            class="cuidado-arrow"
+                            (click)="cuidadoSiguiente()"
+                            aria-label="Siguiente cuidado"
+                        >
+                            <lucide-icon name="arrow-right" [size]="18"></lucide-icon>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -427,106 +1395,255 @@
         </div>
     </section>
 
-    <!-- COMUNIDAD -->
-    <section class="section" id="comunidad">
 
-    <div class="section-header">
-        <h2>Comunidad de agricultores inteligentes</h2>
-        <p>Conecta, aprende y comparte experiencias con otros usuarios</p>
-    </div>
-
-    <div class="grid">
-
-        <div class="card">
-            <i class="pi pi-users icon"></i>
-            <h3>+10,000 usuarios</h3>
-            <p>Agricultores, estudiantes y expertos usando la plataforma.</p>
-        </div>
-
-        <div class="card">
-            <i class="pi pi-comments icon"></i>
-            <h3>Foros activos</h3>
-            <p>Resuelve dudas y comparte diagnósticos con la comunidad.</p>
-        </div>
-
-        <div class="card">
-            <i class="pi pi-book icon"></i>
-            <h3>Guías y aprendizaje</h3>
-            <p>Contenido educativo sobre plagas, clima y cultivo inteligente.</p>
-        </div>
-
-        <div class="card">
-            <i class="pi pi-heart icon"></i>
-            <h3>Casos reales</h3>
-            <p>Historias de éxito de agricultores que aumentaron su producción.</p>
-        </div>
-
-    </div>
-
-    </section>
     <!-- CTA -->
     <section class="cta">
 
         <div class="cta-box">
 
-        <h2>Protege tus cultivos antes de que sea tarde</h2>
+            <div class="cta-content">
 
-        <p>
-            Miles de agricultores ya usan PlantCare AI para detectar enfermedades a tiempo y aumentar su producción.
-        </p>
+                <!-- Badge -->
+                <div class="cta-badge">
+                    <lucide-icon name="sparkles" [size]="16"></lucide-icon>
+                    Cuidado inteligente de plantas con IA
+                </div>
+
+                <!-- Título -->
+                <h2>
+                    Cuida tus plantas.
+                    <span>Decide con inteligencia.</span>
+                </h2>
+
+                <!-- Descripción -->
+                <p>
+                    Detecta enfermedades a tiempo, recibe recomendaciones
+                    personalizadas y lleva el control de la salud de tus
+                    plantas desde una sola plataforma.
+                </p>
+
+                <!-- Acciones -->
+                <div class="cta-actions">
+                    
+                    <button
+                        pButton
+                        type="button"
+                        class="hero-primary-btn"
+                        (click)="openRegister()"
+                    >
+                        <span class="hero-primary-content">
+                            <span>
+                                Comenzar gratis
+                            </span>
+
+                            <span class="hero-primary-icon">
+                                <lucide-icon name="arrow-up-right" [size]="17"></lucide-icon>
+                            </span>
+                        </span>
+                    </button>
+
+                    <!-- EXPLORAR CARACTERÍSTICAS -->
+                    <button
+                        pButton
+                        type="button"
+                        class="hero-demo-btn"
+                        (click)="scrollToSection('caracteristicas')"
+                    >
+                        <span class="demo-icon">
+                            <lucide-icon name="compass" [size]="15"></lucide-icon>
+                        </span>
+
+                        <span>
+                            Explorar características
+                        </span>
+                    </button>
+
+                </div>
+
+                <!-- Confianza -->
+                <div class="cta-trust">
+
+                    <div class="cta-trust-item">
+                        <lucide-icon
+                            name="check-circle"
+                            [size]="17">
+                        </lucide-icon>
+
+                        <span>Sin compromiso</span>
+                    </div>
+
+                    <div class="cta-trust-item">
+                        <lucide-icon
+                            name="zap"
+                            [size]="17">
+                        </lucide-icon>
+
+                        <span>Resultados rápidos</span>
+                    </div>
+
+                    <div class="cta-trust-item">
+                        <lucide-icon
+                            name="shield-check"
+                            [size]="17">
+                        </lucide-icon>
+
+                        <span>Datos protegidos</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Elementos decorativos -->
+            <div class="cta-decoration cta-decoration-one"></div>
+            <div class="cta-decoration cta-decoration-two"></div>
+
+            <div class="cta-leaf">
+                <lucide-icon
+                    name="sprout"
+                    [size]="150">
+                </lucide-icon>
+            </div>
+
         </div>
 
     </section>
 
-  <footer class="footer">
-    <div class="footer-container">
+    <!-- FOOTER -->
+    <footer class="footer">
 
-        <!-- Logo -->
-        <div class="footer-column">
-            <div class="footer-logo">
-                <img src="/AgroVisionAI.png" alt="Logo">
-                <span>AgroVision AI</span>
+        <!-- Línea decorativa superior -->
+        <div class="footer-top-line"></div>
+
+        <div class="footer-container">
+
+            <!-- BRAND / CTA -->
+            <div class="footer-brand">
+                <a class="footer-logo" href="#inicio">
+                    <div class="footer-logo-image">
+                        <img src="/AgroVisionAI-B.webp" alt="AgroVision AI">
+                    </div>
+
+                    <div class="footer-logo-text">
+                        <span class="footer-logo-name">
+                            AgroVision
+                        </span>
+
+                        <span class="footer-logo-ai">
+                            AI
+                        </span>
+                    </div>
+                </a>
+
+                <p class="footer-description"> 
+                    Inteligencia artificial al servicio de tus plantas ornamentales. 
+                    Detecta, analiza y cuida la salud de tus plantas con tecnología inteligente. 
+                </p>
+
+                <!-- Mini CTA -->
+                 <button
+                    pButton
+                    type="button"
+                    class="footer-cta"
+                    (click)="openRegister()"
+                >
+                    <span class="hero-primary-content">
+                        <span>Comenzar gratis</span>
+
+                        <span class="navbar-primary-icon">
+                            <lucide-icon
+                                name="arrow-right"
+                                [size]="17">
+                            </lucide-icon>
+                        </span>
+                    </span>
+                </button>
             </div>
-            <p>
-                Inteligencia Artificial al servicio de la agricultura moderna.
-            </p>
+
+            <!-- NAVEGACIÓN -->
+            <div class="footer-links">
+
+                <!-- Producto -->
+                <div class="footer-column">
+                    <h4>Producto</h4>
+                    <a href="#funcionamiento">Cómo funciona</a>
+                    <a href="#caracteristicas">Características</a>
+                    <a href="#planes">Planes</a>
+                    <a href="#cuidados">Cuidados</a>
+                </div>
+
+                <!-- Plataforma -->
+                <div class="footer-column">
+                    <h4>Plataforma</h4>
+                    <a (click)="openLogin()">Iniciar sesión</a>
+                    <a (click)="openRegister()">Crear cuenta</a>
+                    <a href="#inicio">Diagnóstico IA</a>
+                    <a href="#caracteristicas">Asistente IA</a>
+                </div>
+
+                <!-- Empresa -->
+                <div class="footer-column">
+                    <h4>AgroVision AI</h4>
+                    <a href="#inicio">Sobre nosotros</a>
+                    <a href="#inicio">Nuestro propósito</a>
+                    <a href="#inicio">Contacto</a>
+                    <a href="#inicio">Preguntas frecuentes</a>
+                </div>
+
+                <!-- Legal -->
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <a href="#privacy">Privacidad</a>
+                    <a href="#terms">Términos y condiciones</a>
+                    <a href="#cookies">Cookies</a>
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- Producto -->
-        <div class="footer-column">
-            <h4>Producto</h4>
-            <ul>
-                <li><a href="#features">Características</a></li>
-                <li><a href="#plans">Planes</a></li>
-                <li><a href="#api">API</a></li>
-            </ul>
+        <!-- FOOTER MIDDLE -->
+        <div class="footer-middle">
+            <div class="footer-middle-container">
+
+                <!-- Titulo -->
+                <span class="footer-status">
+                    Plataforma inteligente para el cuidado de plantas ornamentales
+                </span>
+
+                <!-- Redes -->
+                <div class="footer-social">
+                    <span>Síguenos</span>
+                    <a href="#" aria-label="Instagram">
+                        <lucide-icon name="instagram" [size]="17"></lucide-icon>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <lucide-icon name="linkedin" [size]="17"></lucide-icon>
+                    </a>
+                    <a href="#" aria-label="Facebook">
+                        <lucide-icon name="facebook" [size]="17"></lucide-icon>
+                    </a>
+                </div>
+
+            </div>
         </div>
 
-        <!-- Empresa -->
-        <div class="footer-column">
-            <h4>Empresa</h4>
-            <ul>
-                <li><a href="#about">Sobre nosotros</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
+        <!-- FOOTER BOTTOM -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-container">
+                <span>© 2026 AgroVision AI. Todos los derechos reservados.</span>
+                <span class="footer-made">
+                    Hecho con
+                    <lucide-icon name="heart" [size]="13"></lucide-icon>
+                    para el cuidado inteligente de tus plantas.
+                </span>
+            </div>
         </div>
 
-        <!-- Legal -->
-        <div class="footer-column">
-            <h4>Legal</h4>
-            <ul>
-                <li><a href="#privacy">Privacidad</a></li>
-                <li><a href="#terms">Términos</a></li>
-                <li><a href="#cookies">Cookies</a></li>
-            </ul>
-        </div>
+        <!-- Decoraciones -->
+        <div class="footer-glow footer-glow-one"></div>
+        <div class="footer-glow footer-glow-two"></div>
 
-    </div>
-
-    <div class="footer-bottom">
-        © 2026 AgroVision AI. Todos los derechos reservados.
-    </div>
     </footer>
 
 </div>

@@ -1,0 +1,637 @@
+<div class="layout-container">
+    
+    <button
+        pButton
+        type="button"
+        class="back-button p-button-rounded p-button-text"
+        [routerLink]="['/page/chat']">
+
+        <lucide-icon
+            name="x"
+            [size]="20">
+        </lucide-icon>
+
+    </button>
+    
+    <div class="plans-container">
+        
+        <div class="plans-header">
+           
+            <div class="plans-header-title">
+
+                <span class="plans-label">
+                    Suscripción
+                </span>
+
+                <h2>Elige tu plan</h2>
+
+                <p class="subtitle">
+                    Encuentra el plan que mejor se adapte a ti.
+                </p>
+
+            </div>
+
+            <div class="toggle-billing">
+
+                <button
+                    pButton
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="billing === 'mensual'"
+                    (click)="cambiarPeriodo('mensual')">
+
+                    Mensual
+
+                </button>
+
+                <button
+                    pButton
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="billing === 'anual'"
+                    (click)="cambiarPeriodo('anual')">
+
+                    Anual
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="plans-grid">
+
+            <article
+                class="plan-card"
+                *ngFor="let item of planesMostrar"
+                [class.featured]="item.plan.destacado"
+                [class.request-card]="obtenerSolicitudPendiente(item.precio.id)">
+
+                <ng-container
+                    *ngIf="obtenerSolicitudPendiente(item.precio.id) as solicitud; else tarjetaPlan">
+
+
+                    <!-- Badge -->
+                    <div class="request-badge">
+                        <lucide-icon
+                            name="clock"
+                            [size]="16">
+                        </lucide-icon>
+
+                        <span>Solicitud en revisión</span>
+                    </div>
+
+                    <!-- Header -->
+
+                    <header class="plan-header">
+
+                        <div class="plan-name">
+
+                            <div class="plan-icon">
+
+                                <lucide-icon
+                                    [name]="obtenerIconoConfig(item.plan.nombre).icon"
+                                    [size]="25"
+                                    [style.color]="obtenerIconoConfig(item.plan.nombre).color">
+                                </lucide-icon>
+
+                            </div>
+
+                            <div>
+
+                                <h3>{{ item.plan.nombre }}</h3>
+
+                                <small>
+                                    Solicitud enviada correctamente
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </header>
+
+                    <!-- Precio -->
+
+                    <section class="plan-price">
+
+                        <ng-container *ngIf="item.precio.precio > 0; else gratisSolicitud">
+
+                            <span class="currency">
+                                S/
+                            </span>
+
+                            <span class="amount">
+                                {{ item.precio.precio }}
+                            </span>
+
+                            <span class="period">
+                                / mes
+                            </span>
+
+                        </ng-container>
+
+                        <ng-template #gratisSolicitud>
+                            <span class="free">
+                                Gratis
+                            </span>
+                        </ng-template>
+
+                    </section>
+
+                    <hr>
+
+                    <!-- Timeline -->
+                    <section class="request-progress">
+                        <div class="progress-item done">
+                            <lucide-icon
+                                name="send"
+                                [size]="18">
+                            </lucide-icon>
+                            <span>Solicitud enviada</span>
+                        </div>
+
+                        <div class="progress-item done">
+                            <lucide-icon
+                                name="receipt-text"
+                                [size]="18">
+                            </lucide-icon>
+                            <span>Comprobante recibido</span>
+                        </div>
+
+                        <div class="progress-item active">
+                            <div class="spinner"></div>
+                            <span>Esperando aprobación</span>
+                        </div>
+
+                    </section>
+
+                    <!-- Estado -->
+                    <div class="request-status-box">
+                        <span class="status-title">
+                            Estado
+                        </span>
+                        <span class="status pending">
+                            {{ solicitud.estado }}
+                        </span>
+                    </div>
+
+                    <div class="request-date">
+
+                        <div class="date-item">
+                            <lucide-icon
+                                name="calendar-days"
+                                [size]="15">
+                            </lucide-icon>
+
+                            {{ solicitud.creado_en | date:'dd/MM/yyyy' }}
+                        </div>
+                        
+                        <div class="date-item">
+                            <lucide-icon
+                                name="clock"
+                                [size]="15">
+                            </lucide-icon>
+
+                            {{ solicitud.creado_en | date:'hh:mm a' }}
+                        </div>
+
+                    </div>
+
+                </ng-container>
+
+                <ng-template #tarjetaPlan>
+
+                    <!-- Badge -->
+
+                    <div
+                        class="plan-badge"
+                        *ngIf="item.plan.destacado">
+
+                        Más popular
+
+                    </div>
+
+                    <!-- Header -->
+
+                    <header class="plan-header">
+
+                        <div class="plan-name">
+
+                            <div
+                                class="plan-icon"
+                                >
+
+                                <lucide-icon
+                                    [name]="obtenerIconoConfig(item.plan.nombre).icon"
+                                    [size]="25"
+                                    [style.color]="obtenerIconoConfig(item.plan.nombre).color">
+                                </lucide-icon>
+
+                            </div>
+
+                            <div>
+
+                                <h3>{{ item.plan.nombre }}</h3>
+
+                                <small>
+                                    Todo lo que necesitas para comenzar y crecer.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </header>
+
+                    <!-- Precio -->
+
+                    <section class="plan-price">
+
+                        <ng-container *ngIf="item.precio.precio > 0; else gratis">
+
+                            <span class="currency">
+
+                                S/
+
+                            </span>
+
+                            <span class="amount">
+
+                                {{ item.precio.precio}}
+
+                            </span>
+
+                            <span class="period">
+
+                                {{ item.precio.periodo === 'MENSUAL'
+                                    ? '/mes'
+                                    : '/año' }}
+
+                            </span>
+
+                        </ng-container>
+
+                        <ng-template #gratis>
+
+                            <span class="free">
+
+                                Gratis
+
+                            </span>
+
+                        </ng-template>
+
+                    </section>
+
+                    <hr>
+
+                    <!-- Beneficios -->
+
+                    <section class="plan-benefits">
+
+                        <div
+                            class="benefit"
+                            *ngFor="let beneficio of item.plan.beneficios">
+
+                            <lucide-icon
+                                name="check"
+                                [size]="17"
+                                class="benefit-icon">
+                            </lucide-icon>
+
+                            <span>
+
+                                {{ beneficio }}
+
+                            </span>
+
+                        </div>
+
+                    </section>
+
+                    <!-- Footer -->
+
+                    <footer class="plan-footer">
+
+                        <button
+
+                            class="plan-btn"
+                            [class.primary]="item.plan.nombre === 'Pro'"
+                            [class.current]="item.plan.nombre === user?.plan?.nombre"
+                            [disabled]="item.plan.nombre === user?.plan?.nombre"
+                            (click)="seleccionarPlan(item)">
+
+                            {{ obtenerTextoBoton(item.plan.nombre, user?.plan?.nombre ?? '') }}
+                        </button>
+
+                    </footer>
+                </ng-template>
+
+            </article>
+
+        </div>
+
+        <!-- DIALOG DE PLAN -->
+
+        <p-dialog
+            *ngIf="planSeleccionado"
+            [(visible)]="mostrarDialogPlan"
+            [modal]="true"
+            [style]="{width:'560px'}"
+            [closable]="true"
+            [draggable]="false"
+            styleClass="subscription-dialog">
+
+
+            <ng-template pTemplate="header">
+
+                <div class="dialog-header">
+
+                    <div>
+                        <span class="dialog-label">
+                            Suscripción
+                        </span>
+                        <h2>Actualizar a {{planSeleccionado.plan.nombre}}</h2>
+                    </div>
+
+                </div>
+
+            </ng-template>
+
+
+
+            <div class="dialog-plan">
+
+                <!-- PLAN SELECCIONADO -->
+                <section class="selected-plan"
+                    [style.--plan-color]="colorPlanSeleccionado()">
+
+                    <div class="plan-icon-box">
+                        <lucide-icon
+                            [name]="obtenerIconoConfig(planSeleccionado.plan.nombre).icon"
+                            [size]="28"
+                            [style.color]="obtenerIconoConfig(planSeleccionado.plan.nombre).color">
+                        </lucide-icon>
+                    </div>
+
+                    <div class="plan-info">
+                        <h3>Plan {{planSeleccionado.plan.nombre}}</h3>
+
+                        <div class="plan-price-dialog">
+
+                            <span *ngIf="planSeleccionado.precio.precio > 0">
+                                S/{{planSeleccionado.precio.precio}}
+                                <small>/ mes</small>
+                            </span>
+
+                            <span *ngIf="planSeleccionado.precio.precio === 0">
+                                Gratis
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+                
+                <p class="description">Estás solicitando actualizar tu suscripción.</p>
+
+                <section class="title-section">
+                    <h2>Completa los datos para enviar la solicitud.</h2>
+                </section>
+
+                <!-- METODO DE PAGO -->
+                <div class="payment-grid">
+
+                    <label
+                        class="payment-card"
+                        [class.active]="metodoPago==='TRANSFERENCIA'">
+
+                        <input
+                            type="radio"
+                            name="pago"
+                            value="TRANSFERENCIA"
+                            [(ngModel)]="metodoPago">
+
+                        <div class="payment-content">
+
+                            <div class="payment-icon bank">
+                                <lucide-icon
+                                    name="landmark"
+                                    [size]="22">
+                                </lucide-icon>
+                            </div>
+
+
+                            <div class="payment-details">
+                                <strong>Transferencia bancaria</strong>
+                                <span>Depósito o transferencia</span>
+                            </div>
+
+                        </div>
+
+                        <div class="radio-indicator">
+                            <i
+                                *ngIf="metodoPago==='TRANSFERENCIA'"
+                                class="pi pi-check">
+                            </i>
+                        </div>
+
+                    </label>
+
+                    <label
+                        class="payment-card"
+                        [class.active]="metodoPago==='YAPE'">
+
+                        <input
+                            type="radio"
+                            name="pago"
+                            value="YAPE"
+                            [(ngModel)]="metodoPago">
+
+                        <div class="payment-content">
+
+                            <div class="payment-icon yape">
+                                <lucide-icon
+                                    name="smartphone"
+                                    [size]="22">
+                                </lucide-icon>
+                            </div>
+
+                            <div class="payment-details">
+                                <strong>Yape</strong>
+                                <span>Pago móvil</span>
+                            </div>
+
+                        </div>
+
+                        <div class="radio-indicator">
+                            <i
+                                *ngIf="metodoPago==='YAPE'"
+                                class="pi pi-check">
+                            </i>
+                        </div>
+
+                    </label>
+
+                    <label
+                        class="payment-card"
+                        [class.active]="metodoPago==='PLIN'">
+
+                        <input
+                            type="radio"
+                            name="pago"
+                            value="PLIN"
+                            [(ngModel)]="metodoPago">
+
+                        <div class="payment-content">
+
+                            <div class="payment-icon plin">
+                                <lucide-icon
+                                    name="wallet"
+                                    [size]="22">
+                                </lucide-icon>
+                            </div>
+
+                            <div class="payment-details">
+                                <strong>Plin</strong>
+                                <span>Pago móvil</span>
+                            </div>
+
+                        </div>
+
+                        <div class="radio-indicator">
+                            <i
+                                *ngIf="metodoPago==='PLIN'"
+                                class="pi pi-check">
+                            </i>
+                        </div>
+
+                    </label>
+
+                </div>
+
+                <!-- COMPROBANTE -->
+                <section class="dialog-section">
+
+                    <h3>Adjuntar comprobante</h3>
+
+                    <div class="upload-container">
+
+                        <!-- SIN ARCHIVO -->
+                        <ng-container *ngIf="!voucher">
+
+                            <input
+                                #fileInput
+                                type="file"
+                                hidden
+                                accept="image/*,.pdf"
+                                (change)="seleccionarArchivo($event)"
+                            >
+
+                            <button
+                                pButton
+                                type="button"
+                                class="upload-btn"
+                                (click)="fileInput.click()">
+                                <i class="pi pi-upload"></i>
+                                Seleccionar comprobante
+                            </button>
+
+                            <small>JPG, PNG o PDF máximo 5MB</small>
+
+                        </ng-container>
+
+                        <!-- ARCHIVO CARGADO -->
+                        <ng-container *ngIf="voucher">
+
+                            <div class="preview-file">
+
+                                <!-- Imagen -->
+                                <img
+                                    *ngIf="imagePreview"
+                                    [src]="imagePreview"
+                                    alt="voucher">
+
+                                <!-- PDF -->
+                                <div
+                                    *ngIf="!imagePreview"
+                                    class="pdf-preview">
+                                    <i class="pi pi-file-pdf"></i>
+                                </div>
+
+                                <button
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-times"
+                                    class="remove-image-btn"
+                                    (click)="eliminarArchivo()">
+                                </button>
+
+                            </div>
+
+                            <div class="file-name">
+                                {{voucher.name}}
+                            </div>
+
+                        </ng-container>
+
+                    </div>
+
+                </section>
+
+                <!-- OBSERVACIONES -->
+                <section class="dialog-section">
+
+                    <label>
+                        Observaciones
+                        <small>(opcional)</small>
+                    </label>
+
+                    <textarea
+                        pInputTextarea
+                        rows="4"
+                        placeholder="Escribe alguna observación..."
+                        [(ngModel)]="observacion">
+                    </textarea>
+
+                </section>
+
+            </div>
+
+            <ng-template pTemplate="footer">
+
+                <button
+                    pButton
+                    label="Cancelar"
+                    class="p-button-text"
+                    (click)="cerrarDialog()">
+                </button>
+
+                <button
+                    pButton
+                    label="Enviar solicitud"
+                    (click)="enviarSolicitud()">
+                </button>
+            </ng-template>
+
+        </p-dialog>
+
+        <div class="plan-card-footer">
+
+            <div class="payment-info">
+                <h3>Métodos de pago aceptados</h3>
+                <small>Visa, Transferencia bancaria, Yape y Plin</small>
+            </div>
+
+            <div class="payment-img">
+                <img src="/payment/visa.png" alt="Visa">
+                <img src="/payment/yape.png" alt="Yape">
+                <img src="/payment/plin.png" alt="Plin">
+            </div>
+
+        </div>
+
+    </div>
+</div>
