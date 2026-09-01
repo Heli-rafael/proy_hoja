@@ -3582,6 +3582,7 @@ MAIN CONTENT
 
   width: 100%;
   height: auto;
+
 }
 
 /* IMAGEN CONTENEDOR */
@@ -8302,7 +8303,8 @@ MAIN CONTENT
   
   /* CONTENIDO DE LA OPCION */
   .content-option {
-    margin: 20px;
+    width: min(1010px, 100vw - 0px);
+    margin: 20px 0;
     padding: 0;
   }
   
@@ -8341,9 +8343,20 @@ MAIN CONTENT
 
   /* DIAGNOSTICO PANEL (IMAGEN) */
   .image-container {
-    width: auto;
+    width: 100%;
     height: auto !important;
     min-height: 0;
+    height: 200px;
+  }
+
+  .group{
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+  }
+
+  /* IMAGEN */
+  .damage-box {
+    border: 2px;
+    border: 2px dashed #ef4444;
   }
 
   .lesion-card {
@@ -8435,51 +8448,6 @@ MAIN CONTENT
   .dc-footer {
     width: 100%;
   }
-  
-  /*=========================================================
-          IMAGEN - HEADER
-  =========================================================*/
-  .image-container {
-    height: 200px;   
-  }
-
-  /* BOTONES */
-  .image-card{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    overflow-x:auto;
-    overflow-y:hidden;
-
-    flex-wrap:nowrap;
-
-    padding-bottom:5px;
-
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-  }
-
-  .image-card::-webkit-scrollbar{
-    display:none;
-  }
-
-  .image-card .group{
-    flex:0 0 auto;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-
-  .group{
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
-  }
-
-  /* IMAGEN */
-  .damage-box {
-    border: 2px;
-    border: 2px dashed #ef4444;
-  }
 
   /*=========================================================
           CONTENIDO CHAT - MENSAJES DE IA
@@ -8529,7 +8497,8 @@ MAIN CONTENT
           MAIN WELCOME / ANALYSIS COMPONENT
   =========================================================*/
   .welcome-container {
-      padding: 10px;
+    width: min(1010px, 100vw - 0px);
+    padding: 20px 0;
   }
 
   .welcome-card {

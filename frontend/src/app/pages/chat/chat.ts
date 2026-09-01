@@ -226,6 +226,25 @@ export class Chat {
       this.editableUser = { ...user };
       this.originalPicture = user.picture;
     });
+
+    // BIENVENIDA DE GOOGLE
+    const loginWelcome = sessionStorage.getItem('loginWelcome');
+
+    if (loginWelcome) {
+      const res = JSON.parse(loginWelcome);
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Bienvenido',
+        detail: `Hola, ${res.first_name}`,
+        icon: 'pi pi-google'
+      });
+      sessionStorage.removeItem('loginWelcome');
+    }
+  }
+
+  toggleMenu(): void {
+    this.sidebarVisible = !this.sidebarVisible;
   }
 
   // OBTENER DATOS

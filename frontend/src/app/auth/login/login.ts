@@ -363,13 +363,8 @@ export class Login {
     const idToken = response.credential;
     this.authService.googleLogin(idToken).subscribe({
       next: (res) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sesión con Google',
-          detail: `Hola, ${res.first_name}`,
-          icon: 'pi pi-google',
-        });
-        this.router.navigate(['/page/chat']);
+        sessionStorage.setItem('loginWelcome',JSON.stringify(res));
+        window.location.reload();
       },
 
       error: () => {

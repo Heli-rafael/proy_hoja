@@ -3955,8 +3955,8 @@ body {
   }
 
   .pricing-trust {
-    padding-top: 0;
-    margin: 20px 8% 0;
+    padding-top: 20px;
+    margin: 10px 8% 0;
     gap: 16px;
   }
 }
@@ -4430,8 +4430,8 @@ body {
   }
 
   .pricing-trust {
-    padding-top: 0;
-    margin: 20px 8% 0;
+    padding-top: 20px;
+    margin: 10px 8% 0;
     gap: 16px;
   }
 
