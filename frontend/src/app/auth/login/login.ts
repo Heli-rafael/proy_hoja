@@ -733,7 +733,8 @@ export class Login {
           summary: 'Cuenta creada',
           detail: 'Tu cuenta fue creada correctamente.'
         });
-        this.backToLogin();
+        
+        this.router.navigate(['/page/chat']);
       },
       error: (err) => {
         console.error(err);

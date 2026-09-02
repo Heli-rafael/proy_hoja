@@ -68,6 +68,7 @@ class RegisterView(APIView):
 
         try:
             user = serializer.save()
+            login(request, user)
 
             return Response(
                 {

@@ -21,23 +21,11 @@ import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 
 
-import {
-  Subscription,
-  interval
-} from 'rxjs';
+import { ImageCompressionService } from '../../../service/image-compression.service';
 
-import {
-  startWith,
-  takeWhile,
-} from 'rxjs/operators';
 
-import {
-  timer,
-} from 'rxjs';
-
-import {
-  exhaustMap,
-} from 'rxjs/operators';
+import {Subscription, timer} from 'rxjs';
+import {takeWhile, exhaustMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -197,6 +185,7 @@ export class Chat {
     private http:HttpClient,
 
     private chatService: ChatService,
+    private imageCompressionService: ImageCompressionService,
     private diagnosticoService: DiagnosticoIAService,
     private plantaService: PlantaService,
     private mensajeService: MensajeService,
@@ -1029,30 +1018,76 @@ export class Chat {
   // ==================================================
   // IMAGE HANDLING
   // ==================================================
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (!file) return;
 
-    this.selectedFile = file;
-    this.hasImage = true;
+  // PROCESAR IMAGEN
+  async procesarImagen(file: File): Promise<void> {
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
+    try {
+      const compressedFile =
+        await this.imageCompressionService.compressImage(
+          file,
+          {
+            maxWidth: 1920,
+            maxHeight: 1920,
+            quality: 0.80,
+            maxSizeMB: 2
+          }
+        );
 
-    reader.readAsDataURL(file);
+      // Guardamos LA IMAGEN COMPRIMIDA
+      this.selectedFile = compressedFile;
+      this.hasImage = true;
+
+      // Preview
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+
+      reader.readAsDataURL(compressedFile);
+
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo comprimir la imagen.'
+      })
+    }
   }
 
-  tomarFoto(): void {
+  // SELECIONAR IMAGEN
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+    this.procesarImagen(file);
+    input.value = '';
+  }
+
+  // TOMAR FOTO
+  async tomarFoto(): Promise<void> {
+
     const input = document.createElement('input');
+
     input.type = 'file';
     input.accept = 'image/*';
     input.capture = 'environment';
 
-    input.onchange = (e: any) => this.onFileSelected(e);
+    input.onchange = async (event: Event) => {
+
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+
+      if (!file) return;
+
+      await this.procesarImagen(file);
+    };
+
     input.click();
   }
+
 
   cancelarImagen(): void {
     this.imagePreview = null;
