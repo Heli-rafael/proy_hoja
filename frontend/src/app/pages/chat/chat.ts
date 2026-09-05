@@ -232,6 +232,11 @@ export class Chat {
     }
   }
 
+  ngOnDestroy(): void {
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = undefined;
+  }
+
   toggleMenu(): void {
     this.sidebarVisible = !this.sidebarVisible;
   }

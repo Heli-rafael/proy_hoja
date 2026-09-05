@@ -8,7 +8,7 @@ def send_security_otp_email(otp):
 
     subject = "Código de seguridad para iniciar sesión"
 
-    logo_url = f"{settings.SITE_URL}AgroVisionAI-B.webp"
+    logo_url = f"{settings.SITE_URL}AgroVisionAI.webp"
 
     text_content = f"""
 Hola,

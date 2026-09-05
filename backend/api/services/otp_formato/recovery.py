@@ -9,7 +9,7 @@ def send_recovery_otp_email(otp):
     subject = "Recupera tu contraseña"
 
     # URL pública de tu logo
-    logo_url = f"{settings.SITE_URL}AgroVisionAI-B.webp"
+    logo_url = f"{settings.SITE_URL}AgroVisionAI.webp"
 
     text_content = f"""
 Hola,

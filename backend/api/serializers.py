@@ -100,7 +100,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = models.Usuario
         fields = [
             'id', 
-            'autenticacion',
+            #'autenticacion',
             'username', 
             'password',
             'first_name', 
@@ -112,10 +112,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'picture',
             'plan',
 
-            'last_login', 
-            'is_superuser', 
-            'is_staff', 
-            'is_active'
+            #'last_login', 
+            #'is_superuser', 
+            #'is_staff', 
+            #'is_active'
         ]
 
     def create(self, validated_data):

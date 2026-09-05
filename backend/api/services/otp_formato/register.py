@@ -9,7 +9,7 @@ def send_register_otp_email(otp):
     subject = "Verifica tu cuenta"
 
     # URL pública del logo
-    logo_url = f"{settings.SITE_URL}AgroVisionAI-B.webp"
+    logo_url = f"{settings.SITE_URL}AgroVisionAI.webp"
 
     text_content = f"""
 Hola,

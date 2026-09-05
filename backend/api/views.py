@@ -48,10 +48,14 @@ from api.services.otp_service import (
 
 # USUARIO
 class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = models.Usuario.objects.all()
     serializer_class = serializers.UsuarioSerializer
     permission_classes = [IsAuthenticated]
 
+    http_method_names = ['get', 'patch', 'head', 'options']
+
+    def get_queryset(self):
+        return models.Usuario.objects.filter(id=self.request.user.id)
+    
 # USUARIO - REGISTER
 class RegisterView(APIView):
     authentication_classes = []
@@ -236,12 +240,12 @@ class ChangePasswordView(APIView):
 
         return Response({"message": "Contraseña actualizada"})
     
-class PlanViewSet(viewsets.ModelViewSet):
+class PlanViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Plan.objects.all()
     serializer_class = serializers.PlanSerializer
     permission_classes = [AllowAny]
 
-class PlanPrecioViewSet(viewsets.ModelViewSet):
+class PlanPrecioViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.PlanPrecio.objects.all()
     serializer_class = serializers.PlanPrecioSerializer
     permission_classes = [AllowAny]
@@ -262,10 +266,14 @@ class SolicitudCambioPlanViewSet(viewsets.ModelViewSet):
     )
 
     
-class CreditoDiarioViewSet(viewsets.ModelViewSet):
-    queryset = models.CreditoDiario.objects.all()
+class CreditoDiarioViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.CreditoDiarioSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return models.CreditoDiario.objects.filter(
+            usuario=self.request.user
+        )
 
 
 class PlantaViewSet(viewsets.ModelViewSet):
@@ -291,10 +299,15 @@ class PlantaViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED
         )
 
-class DiagnosticoIAViewSet(viewsets.ModelViewSet):
+class DiagnosticoIAViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.DiagnosticoIA.objects.all()
     serializer_class = serializers.DiagnosticoIASerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return models.DiagnosticoIA.objects.filter(
+            usuario=self.request.user
+        )
 
 class DiagnosticoProgresoView(APIView):
     permission_classes = [IsAuthenticated]
@@ -310,23 +323,28 @@ class DiagnosticoProgresoView(APIView):
         serializer = serializers.DiagnosticoProgresoSerializer(diagnostico)
         return Response(serializer.data)
     
-class ActividadTratamientoViewSet(viewsets.ModelViewSet):
-    queryset = models.ActividadTratamiento.objects.all()
+class ActividadTratamientoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.ActividadTratamientoSerializer
     permission_classes = [IsAuthenticated]
 
-class ChatViewSet(viewsets.ModelViewSet):
-    queryset = models.Chat.objects.all()
+    def get_queryset(self):
+        return models.ActividadTratamiento.objects.filter(
+            diagnostico__usuario=self.request.user
+        )
+
+class ChatViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.ChatSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return models.Chat.objects.filter(usuario=self.request.user)
 
-class MensajeViewSet(viewsets.ModelViewSet):
-    queryset = models.Mensaje.objects.all()
+class MensajeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.MensajeSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return models.Mensaje.objects.filter(chat__usuario=self.request.user)
 
 # =========================
 # ESTADO DEL USUARIO

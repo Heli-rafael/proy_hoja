@@ -12,14 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # ==============================
 # CARGAR VARIABLES DE ENTORNO
 # ==============================
-from dotenv import load_dotenv
+import environ
 import os
 
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+env = environ.Env()
+
+ENVIRONMENT = env("DJANGO_ENV", default="development")
+
+if ENVIRONMENT == "production":
+    env.read_env(BASE_DIR / ".env.production")
+else:
+    env.read_env(BASE_DIR / ".env")
+
 
 #CARGAMOS GOOGLE ID
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -130,11 +139,8 @@ CORS_ALLOW_CREDENTIALS = True
 # Google
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
-# Imagenes
-# Produccion
-#MEDIA_URL = '/backend-media/'
-# Local
-MEDIA_URL = '/media/'
+# ARCHIVOS
+MEDIA_URL = env("MEDIA_URL", default="/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS

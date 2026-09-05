@@ -111,6 +111,7 @@ lucide-icon{
 
 /* BRAND */
 .brand {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 13px;
@@ -172,6 +173,37 @@ lucide-icon{
         0 0 0 4px rgba(134, 239, 172, 0.10),
         0 0 14px rgba(134, 239, 172, 0.65);
     animation: statusPulse 2.2s ease-in-out infinite;
+}
+
+.btn-volver-inicio {
+    position: absolute;
+    left: 3%;
+    top: 15%;
+    transform: translateY(-50%);
+
+    z-index: 100;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.btn-volver-inicio:hover {
+    color: var(--color-primary) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
 }
 
 /* HERO / PRODUCT CAROUSEL */

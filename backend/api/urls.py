@@ -4,15 +4,15 @@ from django.urls import path,include
 
 router = DefaultRouter()
 
-router.register('usuario', views.UsuarioViewSet)
-router.register('plan', views.PlanViewSet)
-router.register('plan-precio', views.PlanPrecioViewSet)
-router.register('credito-diario', views.CreditoDiarioViewSet)
-router.register('planta', views.PlantaViewSet)
-router.register('diagnostico', views.DiagnosticoIAViewSet)
-router.register('chat', views.ChatViewSet)
-router.register('mensaje', views.MensajeViewSet)
-router.register("actividad-tratamiento", views.ActividadTratamientoViewSet)
+router.register('usuario', views.UsuarioViewSet, basename='usuario')
+router.register('plan', views.PlanViewSet, basename='plan')
+router.register('plan-precio', views.PlanPrecioViewSet, basename='plan-precio')
+router.register('credito-diario', views.CreditoDiarioViewSet, basename='credito-diario')
+router.register('planta', views.PlantaViewSet, basename='planta')
+router.register('diagnostico', views.DiagnosticoIAViewSet, basename='diagnostico')
+router.register('chat', views.ChatViewSet, basename='chat')
+router.register('mensaje', views.MensajeViewSet, basename='mensaje')
+router.register("actividad-tratamiento", views.ActividadTratamientoViewSet, basename='actividad-tratamiento')
 router.register('solicitud-plan', views.SolicitudCambioPlanViewSet, basename='solicitud-plan')
 
 urlpatterns = [
@@ -46,4 +46,5 @@ urlpatterns = [
     path('diagnostico/export/excel/', views.export_diagnosticos_excel),
     path('diagnostico/export/pdf/', views.export_diagnosticos_pdf),
     path('diagnostico/export/pdfindividual/<int:id>/', views.export_diagnostico_pdf),
+
 ]
