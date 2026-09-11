@@ -4,9 +4,14 @@ import json
 from openai import OpenAI
 from django.conf import settings
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+# CLIENTE API_OPENAI
+def get_openai_client():
+    return OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def analizar_planta_con_openai(image_file):
+
+    # CLIENTE API_OPENAI
+    client = get_openai_client()
 
     image_bytes = image_file.read()
     base64_image = base64.b64encode(image_bytes).decode("utf-8")
@@ -646,6 +651,8 @@ Prevención: {diagnostico.prevencion}
 PREGUNTA:
 {pregunta_usuario}
 """
+    # CLIENTE API_OPENAI
+    client = get_openai_client()
 
     response = client.responses.create(
         model="gpt-4.1-mini",

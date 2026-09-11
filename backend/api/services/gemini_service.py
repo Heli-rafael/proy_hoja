@@ -11,16 +11,6 @@ from openai import OpenAI
 
 from .promt_service import construir_prompt
 
-
-# ============================================================
-# CONFIGURACIÓN OPENAI
-# ============================================================
-
-client = OpenAI(
-    api_key=settings.OPENAI_API_KEY
-)
-
-
 # ============================================================
 # UTILIDADES
 # ============================================================
@@ -51,6 +41,9 @@ def imagen_a_data_url(image: Image.Image) -> str:
 # ============================================================
 
 def generar_imagen_anotada(image_file, diagnostico=None):
+
+    # CLIENTE API_OPENAI
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
     # CARGAR IMAGEN
     image_file.seek(0)
