@@ -4,11 +4,9 @@ import json
 from openai import OpenAI
 from django.conf import settings
 
-
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
-
-
 def validar_imagen_planta(image_file):
+
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
     # ============================================================
     # PREPARAR IMAGEN
