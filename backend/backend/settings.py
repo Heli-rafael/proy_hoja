@@ -22,16 +22,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 
-ENVIRONMENT = env("DJANGO_ENV", default="development")
 
+# ==============================
+# CONFIGURACIÓN 
+# ==============================
+
+# DETERMINAMOS EL ENTORNO
+ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
+
+# CARGAMOS ARCHIVOS .env SEGÚN EL ENTORNO
 if ENVIRONMENT == "production":
-    env.read_env(BASE_DIR / ".env.production")
+    env.read_env(BASE_DIR / ".env.env")
 else:
     env.read_env(BASE_DIR / ".env")
 
+# INDICAMOS SI ESTAMOS EN PRODUCCIÓN
+IS_PRODUCTION = ENVIRONMENT == "production"
 
-#CARGAMOS GOOGLE ID
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -40,19 +47,23 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 SECRET_KEY = 'django-insecure-!xqg$2q$rl-o=c+!+4g@58tm=d^_cgc!qhu^!++4rg+9na^s*n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS
+ALLOWED_HOSTS = env(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1"
+).split(",")
 
-SITE_URL = "https://proy-hoja.duckdns.org/"
+# URLS
+SITE_URL = env("SITE_URL", default="http://localhost:8000")
 
 # SERVICIOS
-
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # OTP EMAIL
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = os.getenv("EMAIL_HOST")
@@ -65,7 +76,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 # Application definition
-
 INSTALLED_APPS = [
     'api',
     "django_crontab",
@@ -117,12 +127,11 @@ REST_FRAMEWORK = {
 # -------------------
 # Cookies y sesiones
 # -------------------
-SESSION_COOKIE_SECURE = False       # No HTTPS en desarrollo
-CSRF_COOKIE_SECURE = False          # No HTTPS
-#SESSION_COOKIE_AGE = 1209600       # 2 semanas
+SESSION_COOKIE_SECURE = IS_PRODUCTION
+CSRF_COOKIE_SECURE = IS_PRODUCTION
 SESSION_COOKIE_AGE = 21600          # 6horas
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_SAMESITE = 'Lax'      # Importante para Angular + CORS
+SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 
 SESSION_COOKIE_PATH = '/'
@@ -134,6 +143,7 @@ SESSION_COOKIE_HTTPONLY = True
 
 SESSION_SAVE_EVERY_REQUEST = True
 
+#CORS
 CORS_ALLOW_CREDENTIALS = True
 
 # Google
@@ -144,19 +154,15 @@ MEDIA_URL = env("MEDIA_URL", default="/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://10.84.207.214:4200",
-    "http://10.58.187.214:4200",
-    "https://proy-hoja.duckdns.org",
-    "http://localhost:4200",
-]
+CORS_ALLOWED_ORIGINS = env(
+    "CORS_ALLOWED_ORIGINS",
+    default=""
+).split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://10.84.207.214:4200",
-    "http://10.58.187.214:4200",
-    "https://proy-hoja.duckdns.org",
-    "http://localhost:4200",
-]
+CSRF_TRUSTED_ORIGINS = env(
+    "CSRF_TRUSTED_ORIGINS",
+    default=""
+).split(",")
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -184,7 +190,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / env(
+            'SQLITE_DB_PATH',
+            default='db.sqlite3'
+        ),
     }
 }
 

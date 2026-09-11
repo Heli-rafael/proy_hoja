@@ -9,6 +9,9 @@ dist/
 .env
 .env.env
 
+db-sqlite/
+*.sqlite3
+
 venv/
 __pycache__/
 
