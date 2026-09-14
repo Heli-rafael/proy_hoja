@@ -21,9 +21,9 @@ export class DiagnosticoIAService {
   }
 
   // Actualizar calendario
-  actualizarActividad(id: number, data: Partial<ActividadTratamientoModel>) {
+  actualizarActividad(id: number, data: { completada: boolean }) {
     return this.http.patch(
-      `${environment.apiUrl}api/actividad-tratamiento/${id}/`,
+      `${environment.apiUrl}api/actividad-tratamiento/${id}/actualizar/`,
       data
     );
   }

@@ -35,7 +35,10 @@ urlpatterns = [
     path('mensajes/chats/<int:chat_id>/mensajes/',views.obtener_mensajes, name='obtener_mensajes'),
 
     # PROGRESO DIAGNÓSTICO
-    path("diagnostico/<int:diagnostico_id>/progreso/",views.DiagnosticoProgresoView.as_view(),name="diagnostico-progreso"),
+    path("diagnostico/<int:diagnostico_id>/progreso/",views.DiagnosticoProgresoView.as_view(), name="diagnostico-progreso"),
+
+    # ACTUALIZAR ACTIVIDAD
+    path('actividad-tratamiento/<int:pk>/actualizar/', views.ActualizarActividadTratamientoAPIView.as_view(), name='actualizar-actividad-tratamiento')
 
     # FIJAR CHAT
     path('chat/<int:id>/fijar/', views.toggle_pinned),

@@ -34,7 +34,23 @@ def export_chats(chats):
 
     return response
 
+# FOMATEO
+def formatear_tratamientos(tratamientos):
+    if not tratamientos:
+        return ""
 
+    return "\n\n".join(
+        (
+            f"Producto: {t.get('producto', '')}\n"
+            f"Dosis: {t.get('dosis', '')}\n"
+            f"Aplicación: {t.get('aplicacion', '')}\n"
+            f"Frecuencia: {t.get('frecuencia', '')}"
+        )
+        for t in tratamientos
+        if isinstance(t, dict)
+    )
+
+# EXPORTACION
 def export_diagnosticos(data):
 
     wb, ws = create_workbook("Diagnosticos")
@@ -73,18 +89,38 @@ def export_diagnosticos(data):
         clima = d.factores_climaticos_favorables or {}
 
         evolucion = "\n".join(
-            f"{e['periodo']}: {e['descripcion']}"
-            for e in d.prediccion_evolucion
+            f"{e.get('periodo', '')}: {e.get('descripcion', '')}"
+            for e in (d.prediccion_evolucion or [])
+            if isinstance(e, dict)
         )
 
         plagas = "\n".join(
-            f"{p['plaga']} ({p['riesgo']})"
-            for p in d.plagas_relacionadas
+            f"{p.get('plaga', '')} ({p.get('riesgo', '')})"
+            for p in (d.plagas_relacionadas or [])
+            if isinstance(p, dict)
         )
 
         actividades = "\n".join(
             f"Semana {a.semana}: {a.actividad}"
             for a in d.actividades.all()
+        )
+
+        sintomas = "\n".join(
+            str(s)
+            for s in (d.sintomas_detectados or [])
+        )
+
+        tratamiento_natural = formatear_tratamientos(
+            d.tratamiento_natural
+        )
+
+        tratamiento_quimico = formatear_tratamientos(
+            d.tratamiento_quimico
+        )
+
+        prevencion = "\n".join(
+            str(p)
+            for p in (d.prevencion or [])
         )
 
         add_row(ws, [
@@ -105,16 +141,18 @@ def export_diagnosticos(data):
             clima.get("humedad", ""),
             clima.get("viento", ""),
 
-            "\n".join(d.sintomas_detectados),
+            sintomas,
 
-            "\n".join(d.tratamiento_natural),
+            tratamiento_natural,
 
-            "\n".join(d.tratamiento_quimico),
+            tratamiento_quimico,
 
-            "\n".join(d.prevencion),
+            prevencion,
 
             evolucion,
+
             plagas,
+
             actividades,
 
             d.creado_en.strftime("%Y-%m-%d %H:%M")

@@ -332,6 +332,34 @@ class ActividadTratamientoViewSet(viewsets.ReadOnlyModelViewSet):
             diagnostico__usuario=self.request.user
         )
 
+class ActualizarActividadTratamientoAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            actividad = models.ActividadTratamiento.objects.get(pk=pk,diagnostico__usuario=request.user)
+        
+        except models.ActividadTratamiento.DoesNotExist:
+            return Response({'detail': 'Actividad no encontrada.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if 'completada' not in request.data:
+            return Response({'detail': 'El campo completada es obligatorio.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        actividad.completada = request.data['completada']
+        actividad.save(update_fields=['completada'])
+
+        return Response(
+            {
+                'id': actividad.id,
+                'completada': actividad.completada
+            },
+            status=status.HTTP_200_OK
+        )
+
 class ChatViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.ChatSerializer
     permission_classes = [IsAuthenticated]
